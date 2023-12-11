@@ -2,6 +2,7 @@ import "./global.css"
 import type { Metadata } from "next"
 import { Open_Sans } from "next/font/google"
 import { ClerkProvider } from "@clerk/nextjs"
+import ThemeProvider from "@/components/providers/ThemeProvider"
 
 const font = Open_Sans({ subsets: ["latin"] })
 
@@ -17,8 +18,18 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en" className="h-full">
-        <body className={`h-full ${font.className}`}>{children}</body>
+      <html lang="en" className="h-full" suppressHydrationWarning>
+        <body className={`h-full ${font.className} `}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            storageKey="theme"
+            enableSystem={false}
+            themes={["dark", "light"]}
+          >
+            {children}
+          </ThemeProvider>
+        </body>
       </html>
     </ClerkProvider>
   )
