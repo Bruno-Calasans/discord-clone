@@ -1,8 +1,11 @@
 import "./global.css"
 import type { Metadata } from "next"
 import { Open_Sans } from "next/font/google"
-import { ClerkProvider } from "@clerk/nextjs"
+import { ClerkProvider, UserButton } from "@clerk/nextjs"
 import ThemeProvider from "@/components/providers/ThemeProvider"
+import Link from "next/link"
+import ModeToggle from "@/components/ui/ModeToggle"
+import Button from "@/components/ui/Button"
 
 const font = Open_Sans({ subsets: ["latin"] })
 
@@ -19,7 +22,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" className="h-full" suppressHydrationWarning>
-        <body className={`h-full ${font.className} `}>
+        <body className={`h-full ${font.className}`}>
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
@@ -27,6 +30,36 @@ export default function RootLayout({
             enableSystem={false}
             themes={["dark", "light"]}
           >
+            <header className="flex justify-between p-5 bg-slate-800">
+              <div className="text-lg font-bold text-indigo-500">
+                <Link href="/">DISCORD CLONE</Link>
+              </div>
+              <UserButton afterSignOutUrl="/" showName />
+              <div className="flex gap-2">
+                <nav className="flex">
+                  <ul className="flex gap-3">
+                    <Link href="/sign-in">
+                      <Button
+                        variant="destructive"
+                        className="bg-indigo-400 hover:bg-indigo-500"
+                      >
+                        Sign In
+                      </Button>
+                    </Link>
+
+                    <Link href="/sign-up">
+                      <Button
+                        variant="destructive"
+                        className="bg-indigo-400 hover:bg-indigo-500"
+                      >
+                        Sign Up
+                      </Button>
+                    </Link>
+                  </ul>
+                </nav>
+                <ModeToggle />
+              </div>
+            </header>
             {children}
           </ThemeProvider>
         </body>
