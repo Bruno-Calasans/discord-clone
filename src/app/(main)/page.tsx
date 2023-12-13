@@ -1,20 +1,40 @@
-import profileController from "@/controlllers/ProfileController"
-import serverController from "@/controlllers/ServerController"
+"use client"
+import * as profileActions from "@/actions/profileActions"
+import * as serverActions from "@/actions/serverActions"
 import { redirect } from "next/navigation"
+import CreateServerForm from "@/components/custom/CreateServerForm"
+import { useEffect, useState } from "react"
+import type { Profile } from "../../../prisma/output"
 
-export default async function Home() {
-  const profile = await profileController().createInitialProfile()
+export default function Home() {
+  const [profile, setProfile] = useState<Profile | null>(null)
+
+  const loadProfile = async () => {
+    const profile = await profileActions.createInitialProfile()
+    setProfile(profile)
+  }
+
+  const loadStartServer = async () => {
+    if (!profile) return
+
+    const servers = await serverActions.getServersByProfileId(profile.id)
+
+    if (servers && servers.length > 0) {
+      const firstServer = servers[0]
+      return redirect(`/server/${firstServer.id}`)
+    }
+  }
+
+  useEffect(() => {
+    loadProfile()
+    loadStartServer()
+  }, [])
 
   if (!profile) {
-    return <div>You are not logged in</div>
+    return null
   }
 
-  const servers = await serverController().getServersByProfileId(profile.id)
+  console.log(profile)
 
-  if (servers && servers.length > 0) {
-    const firstServer = servers[0]
-    return redirect(`/server/${firstServer.id}`)
-  }
-
-  return <div>Welcome, {profile.username}</div>
+  return <CreateServerForm onSubmit={console.log} />
 }

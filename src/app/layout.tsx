@@ -34,14 +34,12 @@ export default function RootLayout({
               <div className="text-lg font-bold text-indigo-500">
                 <Link href="/">DISCORD CLONE</Link>
               </div>
-              <UserButton afterSignOutUrl="/" showName />
               <div className="flex gap-2">
                 <nav className="flex">
                   <ul className="flex gap-3">
                     <Link href="/sign-in">
                       <Button
-                        variant="destructive"
-                        className="bg-indigo-400 hover:bg-indigo-500"
+                        variant="primary"
                       >
                         Sign In
                       </Button>
@@ -49,8 +47,7 @@ export default function RootLayout({
 
                     <Link href="/sign-up">
                       <Button
-                        variant="destructive"
-                        className="bg-indigo-400 hover:bg-indigo-500"
+                        variant="primary"
                       >
                         Sign Up
                       </Button>
