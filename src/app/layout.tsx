@@ -3,9 +3,12 @@ import type { Metadata } from "next"
 import { Open_Sans } from "next/font/google"
 import { ClerkProvider, UserButton } from "@clerk/nextjs"
 import ThemeProvider from "@/components/providers/ThemeProvider"
-import Link from "next/link"
-import ModeToggle from "@/components/ui/ModeToggle"
-import Button from "@/components/ui/Button"
+import Header from "@/components/layout/Header"
+
+// upload thing
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin"
+import { extractRouterConfig } from "uploadthing/server"
+import { ourFileRouter } from "@/app/api/uploadthing/core"
 
 const font = Open_Sans({ subsets: ["latin"] })
 
@@ -30,33 +33,8 @@ export default function RootLayout({
             enableSystem={false}
             themes={["dark", "light"]}
           >
-            <header className="flex justify-between p-5 bg-slate-800">
-              <div className="text-lg font-bold text-indigo-500">
-                <Link href="/">DISCORD CLONE</Link>
-              </div>
-              <div className="flex gap-2">
-                <nav className="flex">
-                  <ul className="flex gap-3">
-                    <Link href="/sign-in">
-                      <Button
-                        variant="primary"
-                      >
-                        Sign In
-                      </Button>
-                    </Link>
-
-                    <Link href="/sign-up">
-                      <Button
-                        variant="primary"
-                      >
-                        Sign Up
-                      </Button>
-                    </Link>
-                  </ul>
-                </nav>
-                <ModeToggle />
-              </div>
-            </header>
+            <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
+            <Header />
             {children}
           </ThemeProvider>
         </body>

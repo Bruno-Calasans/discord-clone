@@ -1,4 +1,5 @@
 "use client"
+import "@uploadthing/react/styles.css"
 import * as z from "zod"
 import Input from "@/components/ui/Input"
 import Button from "@/components/ui/Button"
@@ -22,10 +23,13 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { useEffect, useState } from "react"
+import { UploadDropzone } from "@/utils/uploadthing"
+import { type UploadFileResponse } from "uploadthing/client"
+import FileUpload from "./FileUpload"
 
 const formSchema = z.object({
   name: z.string().min(3, "Server name must have 3 or more characters."),
-  imgUrl: z.string(),
+  imgUrl: z.string().min(1, "Server image is required"),
 })
 
 type CreateServerInputs = z.infer<typeof formSchema>
@@ -48,6 +52,12 @@ export default function CreateServerForm({ onSubmit }: CreateServerFormProps) {
 
   const submitHandler = (inputs: CreateServerInputs) => {
     onSubmit(inputs)
+  }
+
+  const fileUploadHandler = (urls: string[]) => {
+    if (urls.length === 0) return form.resetField("imgUrl")
+    form.setValue("imgUrl", urls[0])
+    form.clearErrors("imgUrl")
   }
 
   useEffect(() => {
@@ -75,7 +85,21 @@ export default function CreateServerForm({ onSubmit }: CreateServerFormProps) {
             onSubmit={form.handleSubmit(submitHandler)}
             className="space-y-8"
           >
-            <div>Todo: server image</div>
+            <FormField
+              control={form.control}
+              name="imgUrl"
+              render={() => (
+                <FormItem>
+                  <FormControl>
+                    <FileUpload
+                      endpoint="serverImg"
+                      onChange={fileUploadHandler}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="name"
@@ -86,7 +110,7 @@ export default function CreateServerForm({ onSubmit }: CreateServerFormProps) {
                   </FormLabel>
                   <FormControl>
                     <Input
-                      className="bg-zinc-300/40"
+                      className="bg-zinc-300/30"
                       placeholder="Enter server name"
                       {...field}
                     />

@@ -34,7 +34,5 @@ export default function Home() {
     return null
   }
 
-  console.log(profile)
-
   return <CreateServerForm onSubmit={console.log} />
 }
