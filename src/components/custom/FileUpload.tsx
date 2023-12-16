@@ -1,18 +1,18 @@
 "use client"
 
+import { useState } from "react"
+import { X } from "lucide-react"
 import { OurFileRouter } from "@/app/api/uploadthing/core"
 import { UploadDropzone } from "@/utils/uploadthing"
-import { useState } from "react"
 import { UploadFileResponse } from "uploadthing/client"
-import { X } from "lucide-react"
 import Image from "next/image"
+
+type UploadCompleteResponse = UploadFileResponse<null>[]
 
 type FileUploadProps = {
   endpoint: keyof OurFileRouter
   onChange: (fileUrls: string[], files: UploadCompleteResponse) => void
 }
-
-type UploadCompleteResponse = UploadFileResponse<null>[]
 
 function FileUpload({ endpoint, onChange }: FileUploadProps) {
   const [files, setFiles] = useState<UploadCompleteResponse>([])
@@ -77,7 +77,7 @@ function FileUpload({ endpoint, onChange }: FileUploadProps) {
   return (
     <UploadDropzone
       endpoint={endpoint}
-      className="bg-indigo-600/10 rounded-sm"
+      className="bg-zinc-300/30 rounded-sm"
       onClientUploadComplete={uploadHandler}
       onUploadError={console.log}
     />

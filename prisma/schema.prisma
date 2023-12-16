@@ -52,8 +52,8 @@ model Server {
   inviteCode String @db.Text
 
   // relations
-  owerId String
-  owner  Profile @relation(fields: [owerId], references: [id])
+  profileId String
+  profile   Profile @relation(fields: [profileId], references: [id])
 
   members  Member[]
   channels Channel[]
@@ -62,7 +62,7 @@ model Server {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([owerId])
+  @@index([profileId])
 }
 
 enum CHANNEL_TYPE {
@@ -77,8 +77,8 @@ model Channel {
   type CHANNEL_TYPE @default(TEXT)
 
   // relations
-  ownerId String
-  owner   Profile @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  profileId String
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   serverId String
   server   Server @relation(fields: [serverId], references: [id])
@@ -87,6 +87,6 @@ model Channel {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([ownerId])
+  @@index([profileId])
   @@index([serverId])
 }

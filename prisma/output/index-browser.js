@@ -131,7 +131,7 @@ exports.Prisma.ServerScalarFieldEnum = {
   name: 'name',
   imgUrl: 'imgUrl',
   inviteCode: 'inviteCode',
-  owerId: 'owerId',
+  profileId: 'profileId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -140,7 +140,7 @@ exports.Prisma.ChannelScalarFieldEnum = {
   id: 'id',
   name: 'name',
   type: 'type',
-  ownerId: 'ownerId',
+  profileId: 'profileId',
   serverId: 'serverId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

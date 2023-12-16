@@ -16,16 +16,19 @@ export async function createInitialProfile(): Promise<Profile | null> {
     }
 
     const email = user.emailAddresses[0].emailAddress
-    const isProfileExists = await findByEmail(email)
+    const isProfileExists = await findProfileByEmail(email)
 
     if (isProfileExists) {
       return isProfileExists
     }
 
-    const profile = await create({
-      email,
-      username: user.username || email.split("@")[0],
-      imgUrl: user.imageUrl,
+    const profile = await db.profile.create({
+      data: {
+        id: user.id,
+        email,
+        username: user.username || email.split("@")[0],
+        imgUrl: user.imageUrl,
+      },
     })
 
     return profile
@@ -34,19 +37,21 @@ export async function createInitialProfile(): Promise<Profile | null> {
   }
 }
 
-export async function create(profile: ProfileInput): Promise<Profile | null> {
+export async function createProfile(
+  input: ProfileInput
+): Promise<Profile | null> {
   try {
     return await db.profile.create({
-      data: {
-        ...profile,
-      },
+      data: input,
     })
   } catch (error) {
     return null
   }
 }
 
-export async function findByEmail(email: string): Promise<Profile | null> {
+export async function findProfileByEmail(
+  email: string
+): Promise<Profile | null> {
   try {
     return await db.profile.findUnique({ where: { email } })
   } catch (error) {
@@ -54,11 +59,21 @@ export async function findByEmail(email: string): Promise<Profile | null> {
   }
 }
 
-export async function findByUsername(
+export async function findProfileByUsername(
   username: string
 ): Promise<Profile | null> {
   try {
     return await db.profile.findUnique({ where: { username } })
+  } catch (error) {
+    return null
+  }
+}
+
+export async function getCurrentProfile() {
+  try {
+    const user = await currentUser()
+    if (!user) return null
+    return await db.profile.findUnique({ where: { id: user.id } })
   } catch (error) {
     return null
   }

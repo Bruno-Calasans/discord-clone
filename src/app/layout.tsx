@@ -34,7 +34,8 @@ export default function RootLayout({
             themes={["dark", "light"]}
           >
             <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-            <Header />
+      
+            {/* <UserButton afterSignOutUrl="/"/> */}
             {children}
           </ThemeProvider>
         </body>

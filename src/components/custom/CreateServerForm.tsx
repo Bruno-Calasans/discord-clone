@@ -1,6 +1,7 @@
 "use client"
 import "@uploadthing/react/styles.css"
 import * as z from "zod"
+import * as serverActions from "@/actions/serverActions"
 import Input from "@/components/ui/Input"
 import Button from "@/components/ui/Button"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -16,20 +17,18 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
+} from "@/components/ui/Form"
 import { useEffect, useState } from "react"
-import { UploadDropzone } from "@/utils/uploadthing"
-import { type UploadFileResponse } from "uploadthing/client"
 import FileUpload from "./FileUpload"
+import { useRouter } from "next/navigation"
 
 const formSchema = z.object({
-  name: z.string().min(3, "Server name must have 3 or more characters."),
-  imgUrl: z.string().min(1, "Server image is required"),
+  name: z.string().min(3, "Server name must have 3 or more characters long."),
+  imgUrl: z.string().url("Server image url is invalid"),
 })
 
 type CreateServerInputs = z.infer<typeof formSchema>
@@ -40,6 +39,7 @@ type CreateServerFormProps = {
 
 export default function CreateServerForm({ onSubmit }: CreateServerFormProps) {
   const [isMounted, setMounted] = useState(false)
+  const router = useRouter()
   const form = useForm<CreateServerInputs>({
     defaultValues: {
       name: "",
@@ -50,11 +50,14 @@ export default function CreateServerForm({ onSubmit }: CreateServerFormProps) {
 
   const isLoading = form.formState.isSubmitting
 
-  const submitHandler = (inputs: CreateServerInputs) => {
-    onSubmit(inputs)
+  const submitHandler = async (inputs: CreateServerInputs) => {
+    const server = await serverActions.createServer(inputs)
+    if (!server) return
+    form.reset()
+    router.refresh()
   }
 
-  const fileUploadHandler = (urls: string[]) => {
+  const uploadServerImageHandler = (urls: string[]) => {
     if (urls.length === 0) return form.resetField("imgUrl")
     form.setValue("imgUrl", urls[0])
     form.clearErrors("imgUrl")
@@ -88,12 +91,12 @@ export default function CreateServerForm({ onSubmit }: CreateServerFormProps) {
             <FormField
               control={form.control}
               name="imgUrl"
-              render={() => (
+              render={({ field }) => (
                 <FormItem>
                   <FormControl>
                     <FileUpload
                       endpoint="serverImg"
-                      onChange={fileUploadHandler}
+                      onChange={uploadServerImageHandler}
                     />
                   </FormControl>
                   <FormMessage />
@@ -105,7 +108,7 @@ export default function CreateServerForm({ onSubmit }: CreateServerFormProps) {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-bold text-lg">
+                  <FormLabel className="font-bold text-sm uppercase">
                     Server Name
                   </FormLabel>
                   <FormControl>
