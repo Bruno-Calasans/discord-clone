@@ -1,4 +1,6 @@
+"use client"
 import type { Metadata } from "next"
+import { useParams } from "next/navigation"
 
 export const metadata: Metadata = {
   title: "Server name",
@@ -6,7 +8,10 @@ export const metadata: Metadata = {
 }
 
 function ServerPage() {
-  return <div>Server</div>
+  const params = useParams()
+  const serverId = params.serverId
+
+  return <div>{serverId}</div>
 }
 
 export default ServerPage

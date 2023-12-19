@@ -1,14 +1,16 @@
 import "./global.css"
 import type { Metadata } from "next"
 import { Open_Sans } from "next/font/google"
-import { ClerkProvider, UserButton } from "@clerk/nextjs"
-import ThemeProvider from "@/components/providers/ThemeProvider"
-import Header from "@/components/layout/Header"
+import { ClerkProvider } from "@clerk/nextjs"
 
 // upload thing
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin"
-import { extractRouterConfig } from "uploadthing/server"
 import { ourFileRouter } from "@/app/api/uploadthing/core"
+import { extractRouterConfig } from "uploadthing/server"
+
+// providers
+import ThemeProvider from "@/components/providers/ThemeProvider"
+import ModalProvider from "@/components/providers/ModalProvider"
 
 const font = Open_Sans({ subsets: ["latin"] })
 
@@ -34,9 +36,7 @@ export default function RootLayout({
             themes={["dark", "light"]}
           >
             <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-      
-            {/* <UserButton afterSignOutUrl="/"/> */}
-            {children}
+            <ModalProvider>{children}</ModalProvider>
           </ThemeProvider>
         </body>
       </html>

@@ -17,7 +17,11 @@ export default function ModeToggle() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon">
+        <Button
+          variant="outline"
+          size="icon"
+          className="border-none dark:bg-slate-900"
+        >
           {theme === "light" ? (
             <Sun className="text-yellow-500" />
           ) : (

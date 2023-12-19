@@ -1,11 +1,12 @@
 "use client"
 import * as profileActions from "@/actions/profileActions"
 import * as serverActions from "@/actions/serverActions"
-import { redirect, useRouter } from "next/navigation"
-import CreateServerForm from "@/components/custom/CreateServerForm"
+import { useRouter } from "next/navigation"
+import CreateServerModal from "@/components/modals/InitialCreateServerModal"
 import { useEffect, useState } from "react"
 import type { Profile } from "../../../prisma/output"
 import Header from "@/components/layout/Header"
+import Mount from "@/components/custom/Mount"
 
 export default function Home() {
   const [profile, setProfile] = useState<Profile | null>(null)
@@ -37,7 +38,9 @@ export default function Home() {
   return (
     <main>
       <Header />
-      <CreateServerForm onSubmit={console.log} />
+      <Mount>
+        <CreateServerModal />
+      </Mount>
     </main>
   )
 }

@@ -54,7 +54,7 @@ export async function createServer(
             {
               name: profile.username,
               profileId: profile.id,
-              role: "guest",
+              role: "admin",
             },
           ],
         },

@@ -22,8 +22,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/Form"
-import { useEffect, useState } from "react"
-import FileUpload from "./FileUpload"
+import FileUpload from "../custom/FileUpload"
 import { useRouter } from "next/navigation"
 
 const formSchema = z.object({
@@ -33,12 +32,7 @@ const formSchema = z.object({
 
 type CreateServerInputs = z.infer<typeof formSchema>
 
-type CreateServerFormProps = {
-  onSubmit: (inputs: CreateServerInputs) => void
-}
-
-export default function CreateServerForm({ onSubmit }: CreateServerFormProps) {
-  const [isMounted, setMounted] = useState(false)
+export default function InitialCreateServerModal() {
   const router = useRouter()
   const form = useForm<CreateServerInputs>({
     defaultValues: {
@@ -61,14 +55,6 @@ export default function CreateServerForm({ onSubmit }: CreateServerFormProps) {
     if (urls.length === 0) return form.resetField("imgUrl")
     form.setValue("imgUrl", urls[0])
     form.clearErrors("imgUrl")
-  }
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!isMounted) {
-    return null
   }
 
   return (

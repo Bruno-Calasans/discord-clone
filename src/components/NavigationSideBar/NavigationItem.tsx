@@ -2,6 +2,7 @@
 import type { Server } from "../../../prisma/output"
 import ActionTooltip from "@/components/custom/ActionTooltip"
 import Image from "next/image"
+import { cn } from "@/utils/cn"
 
 type NavigationItemProps = {
   server: Server
@@ -13,25 +14,26 @@ function NavigationItem({ server, selected, onClick }: NavigationItemProps) {
   const clickHandler = () => {
     onClick(server.id)
   }
+
   return (
     <ActionTooltip label={server.name} align="center" side="right">
-      <div
-        className="flex cursor-pointer"
-        key={server.id}
-        onClick={clickHandler}
-      >
-        {selected && (
-          <div className="absolute left-0 top-0 h-full w-[4px] rounded-r-sm bg-white"></div>
-        )}
-        <div className={`relative w-14 h-14 ${selected ? "ml-2" : ""}`}>
+      <button className="flex relative" key={server.id} onClick={clickHandler}>
+        <div
+          className={cn(
+            "absolute left-0 top-0 w-[3px] rounded-r-sm bg-slate-600 dark:bg-white transition-all h-full",
+            !selected && "h-[4px] top-[50%]"
+          )}
+        ></div>
+
+        <div className={`relative w-10 h-10 ml-2`}>
           <Image
             src={server.imgUrl}
-            className="rounded-[16px]"
+            className="rounded-full hover:rounded-[16px] transition-all"
             alt={server.name}
             fill
           />
         </div>
-      </div>
+      </button>
     </ActionTooltip>
   )
 }

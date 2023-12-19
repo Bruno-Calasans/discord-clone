@@ -75,7 +75,7 @@
   }
 }
 
-[data-theme="dark"],
+/* [data-theme="dark"],
 [data-theme="dark"] body {
   --bgColor: #0d1117;
   --c: white;
@@ -119,4 +119,4 @@
 
   --foreground: var(--c);
   --background: var(--bgColor);
-}
+} */
