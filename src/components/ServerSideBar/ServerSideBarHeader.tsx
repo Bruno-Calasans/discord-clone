@@ -8,12 +8,15 @@ import {
   Settings,
   Users,
   PlusCircle,
+  Trash,
+  LogOut,
 } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
 } from "@radix-ui/react-dropdown-menu"
 import { useState } from "react"
 
@@ -57,6 +60,18 @@ function ServerSideBarHeader({ server, member }: ServerHeaderProps) {
         <DropdownMenuItem className="flex justify-between px-3 py-2 dark:bg-zinc-950 focus:outline-none font-semibold cursor-pointer rounded-l rounded-r hover:bg-zinc-200 hover:dark:bg-zinc-900 transition">
           Create channel
           <PlusCircle className="h-4 w-4" />
+        </DropdownMenuItem>
+
+        <DropdownMenuSeparator className="border-[1px]" />
+
+        <DropdownMenuItem className="flex justify-between px-3 py-2 dark:bg-zinc-950 focus:outline-none font-semibold cursor-pointer rounded-l rounded-r hover:bg-zinc-200 hover:dark:bg-zinc-900 transition text-rose-500">
+          Delete Server
+          <Trash className="h-4 w-4" />
+        </DropdownMenuItem>
+
+        <DropdownMenuItem className="flex justify-between px-3 py-2 dark:bg-zinc-950 focus:outline-none font-semibold cursor-pointer rounded-l rounded-r hover:bg-zinc-200 hover:dark:bg-zinc-900 transition text-rose-500">
+          Leave Server
+          <LogOut className="h-4 w-4" />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
