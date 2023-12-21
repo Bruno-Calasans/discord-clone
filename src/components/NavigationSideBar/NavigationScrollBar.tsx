@@ -1,21 +1,23 @@
+"use client"
 import { ScrollArea } from "@radix-ui/react-scroll-area"
 import type { Server } from "../../../prisma/output"
 import NavigationItem from "./NavigationItem"
 import ModeToggle from "../ui/ModeToggle"
+import { useRouter } from "next/navigation"
 
 type NavigationScrollBarProps = {
   servers: Server[]
   selectedServer?: string
-  onClick: (serverId: string) => void
 }
 
 function NavigationScrollBar({
   servers,
   selectedServer,
-  onClick,
 }: NavigationScrollBarProps) {
+  const router = useRouter()
+
   const clickServerHandler = (server: Server) => {
-    onClick(server.id)
+    router.push(`/servers/${server.id}`)
   }
 
   return (

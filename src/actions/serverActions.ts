@@ -1,10 +1,12 @@
 /* eslint-disable import/no-anonymous-default-export */
 "use server"
 import db from "@/config/db"
-import type { Server } from "../../prisma/output"
+import type { Server, Channel } from "../../prisma/output"
 import type { Omit } from "../../prisma/output/runtime/library"
 import { getCurrentProfile } from "@/actions/profileActions"
 import { v4 } from "uuid"
+import { create } from "zustand"
+import { ServerMembersProfile } from "@/types/ServerMembersProfile"
 
 type ServerInput = Omit<Server, "id" | "createdAt" | "updatedAt">
 
@@ -80,6 +82,54 @@ export async function getServerById(serverId: string): Promise<Server | null> {
 export async function getServers(): Promise<Server[] | null> {
   try {
     return db.server.findMany()
+  } catch (error) {
+    return null
+  }
+}
+
+export async function getServerChannels(
+  serverId: string
+): Promise<Channel[] | null> {
+  try {
+    return await db.channel.findMany({
+      where: {
+        serverId,
+      },
+      orderBy: {
+        name: "asc",
+      },
+    })
+  } catch (error) {
+    return null
+  }
+}
+
+export async function getServerMembers(serverId: string) {
+  try {
+    return await db.member.findMany({
+      where: {
+        serverId,
+      },
+      orderBy: {
+        name: "asc",
+      },
+    })
+  } catch (error) {}
+}
+
+export async function getCompleteServer(
+  serverId: string
+): Promise<ServerMembersProfile | null> {
+  try {
+    return (await db.server.findUnique({
+      where: {
+        id: serverId,
+      },
+      include: {
+        members: true,
+        channels: true,
+      },
+    })) as unknown as ServerMembersProfile
   } catch (error) {
     return null
   }

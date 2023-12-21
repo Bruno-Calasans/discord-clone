@@ -1,16 +1,20 @@
+"use client"
 import ActionTooltip from "@/components/custom/ActionTooltip"
 import { Plus } from "lucide-react"
+import useModal from "@/hooks/useModal/useModal"
 
-type NavigationSideBarActionProps = {
-  onClick: () => void
-}
+function NavigationSideBarAction() {
+  const { open } = useModal()
 
-function NavigationSideBarAction({ onClick }: NavigationSideBarActionProps) {
+  const modalHandler = () => {
+    open(`CreateServer`)
+  }
+
   return (
     <div className="group dark:bg-slate-600 hover:bg-emerald-500 hover:dark:bg-emerald-500 h-10 w-10 rounded-full transition">
       <ActionTooltip label="Add new server" align="center" side="right">
         <button
-          onClick={onClick}
+          onClick={modalHandler}
           className="flex items-center justify-center content-center h-full w-full"
         >
           <Plus
