@@ -1,45 +1,27 @@
-"use client"
-import * as profileActions from "@/actions/profileActions"
-import * as serverActions from "@/actions/serverActions"
-import { useRouter } from "next/navigation"
-import CreateServerModal from "@/components/modals/InitialCreateServerModal"
-import { useEffect, useState } from "react"
-import type { Profile } from "../../../prisma/output"
-import Header from "@/components/layout/Header"
+import { createInitialProfile } from "@/actions/profileActions"
+import { getServersByProfileId } from "@/actions/serverActions"
+import InitialCreateServerModal from "@/components/modals/InitialCreateServerModal"
 import Mount from "@/components/custom/Mount"
+import { redirect } from "next/navigation"
 
-export default function Home() {
-  const [profile, setProfile] = useState<Profile | null>(null)
-  const router = useRouter()
+export default async function Home() {
+  // getting profile
+  const profile = await createInitialProfile()
+  if (!profile) return redirect("/")
 
-  const loadProfile = async () => {
-    // getting profile
-    const profile = await profileActions.createInitialProfile()
+  const servers = await getServersByProfileId(profile.id)
+  if (!servers) return redirect("/")
 
-    if (!profile) return
-    const servers = await serverActions.getServersByProfileId(profile.id)
-
-    // getting start servers
-    if (servers && servers.length > 0) {
-      const firstServer = servers[0]
-      return router.replace(`/servers/${firstServer.id}`)
-    }
-    setProfile(profile)
-  }
-
-  useEffect(() => {
-    loadProfile()
-  }, [])
-
-  if (!profile) {
-    return null
+  // getting start server
+  if (servers.length > 0) {
+    const firstServer = servers[0]
+    return redirect(`/servers/${firstServer.id}`)
   }
 
   return (
     <main>
-      <Header />
       <Mount>
-        <CreateServerModal />
+        <InitialCreateServerModal />
       </Mount>
     </main>
   )

@@ -3,9 +3,8 @@
 import db from "@/config/db"
 import type { Server, Channel } from "../../prisma/output"
 import type { Omit } from "../../prisma/output/runtime/library"
-import { getCurrentProfile } from "@/actions/profileActions"
+import { getCurrentProfile, getProfileById } from "@/actions/profileActions"
 import { v4 } from "uuid"
-import { create } from "zustand"
 import { ServerMembersProfile } from "@/types/ServerMembersProfile"
 
 type ServerInput = Omit<Server, "id" | "createdAt" | "updatedAt">
@@ -114,7 +113,9 @@ export async function getServerMembers(serverId: string) {
         name: "asc",
       },
     })
-  } catch (error) {}
+  } catch (error) {
+    return []
+  }
 }
 
 export async function getCompleteServer(
@@ -130,6 +131,57 @@ export async function getCompleteServer(
         channels: true,
       },
     })) as unknown as ServerMembersProfile
+  } catch (error) {
+    return null
+  }
+}
+
+export async function updateServerInviteCode(serverId: string) {
+  try {
+    return await db.server.update({
+      where: {
+        id: serverId,
+      },
+      data: {
+        inviteCode: v4(),
+      },
+    })
+  } catch (error) {
+    return null
+  }
+}
+
+export async function joinServer(serverId: string, profileId: string) {
+  try {
+    const profile = await getProfileById(profileId)
+    if (!profile) throw new Error("Profile not found")
+
+    return await db.server.update({
+      where: {
+        id: serverId,
+      },
+      data: {
+        members: {
+          create: {
+            name: profile.username,
+            role: "guest",
+            profileId: profile.id,
+          },
+        },
+      },
+    })
+  } catch (error) {
+    return null
+  }
+}
+
+export async function getServerByInviteCode(inviteCode: string) {
+  try {
+    return await db.server.findFirst({
+      where: {
+        inviteCode,
+      },
+    })
   } catch (error) {
     return null
   }

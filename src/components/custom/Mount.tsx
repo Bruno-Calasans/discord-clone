@@ -6,8 +6,9 @@ type MountProps = {
   children: React.ReactNode
 }
 
-function Mount({ children }: MountProps) {
+export default function Mount({ children }: MountProps) {
   const [isMounted, setMounted] = useState(false)
+
   useEffect(() => {
     setMounted(true)
   }, [])
@@ -15,7 +16,5 @@ function Mount({ children }: MountProps) {
   if (!isMounted) {
     return null
   }
-  return children
+  return children ?? null
 }
-
-export default Mount

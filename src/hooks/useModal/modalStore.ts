@@ -1,24 +1,30 @@
 import { create } from "zustand"
+import type { Server } from "../../../prisma/output"
 
-type ModalType = "CreateServer" | "EditServer"
+type ModalType = "CreateServer" | "Invite"
 
-type ModalStore = {
+export type ModalData = {
+  server?: Server
+}
+
+export type ModalStore = {
   isOpen: boolean
+  data: ModalData
   type: ModalType | null
-  open: (type: ModalType) => void
+  open: (type: ModalType, data?: ModalData) => void
   close: () => void
 }
 
 const modalStore = create<ModalStore>((set) => ({
   isOpen: false,
   type: null,
-  open(type) {
-    set(() => ({ isOpen: true, type }))
+  data: {},
+  open(type, data = {}) {
+    set(() => ({ isOpen: true, type, data }))
   },
   close() {
     set(() => ({ isOpen: false, type: null }))
   },
 }))
-
 
 export default modalStore

@@ -1,11 +1,13 @@
 "use client"
 import "@uploadthing/react/styles.css"
 import * as z from "zod"
-import * as serverActions from "@/actions/serverActions"
-import Input from "@/components/ui/Input"
-import Button from "@/components/ui/Button"
+import { createServer } from "@/actions/serverActions"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
+import { useRouter } from "next/navigation"
+import FileUpload from "@/components/custom/FileUpload"
+import Input from "@/components/ui/Input"
+import Button from "@/components/ui/Button"
 import {
   Dialog,
   DialogContent,
@@ -22,8 +24,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/Form"
-import FileUpload from "../custom/FileUpload"
-import { useRouter } from "next/navigation"
 
 const formSchema = z.object({
   name: z.string().min(3, "Server name must have 3 or more characters long."),
@@ -45,7 +45,7 @@ export default function InitialCreateServerModal() {
   const isLoading = form.formState.isSubmitting
 
   const submitHandler = async (inputs: CreateServerInputs) => {
-    const server = await serverActions.createServer(inputs)
+    const server = await createServer(inputs)
     if (!server) return
     form.reset()
     router.refresh()

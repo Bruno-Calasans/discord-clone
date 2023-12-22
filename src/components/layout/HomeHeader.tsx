@@ -2,7 +2,7 @@ import Link from "next/link"
 import ModeToggle from "@/components/ui/ModeToggle"
 import Button from "@/components/ui/Button"
 
-function Header() {
+export default function HomeHeader() {
   return (
     <header className="flex justify-between p-5 bg-slate-800">
       <div className="text-lg font-bold text-indigo-500">
@@ -25,5 +25,3 @@ function Header() {
     </header>
   )
 }
-
-export default Header

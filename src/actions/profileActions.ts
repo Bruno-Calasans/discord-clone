@@ -78,3 +78,11 @@ export async function getCurrentProfile() {
     return null
   }
 }
+
+export async function getProfileById(id: string): Promise<Profile | null> {
+  try {
+    return await db.profile.findUnique({ where: { id } })
+  } catch (error) {
+    return null
+  }
+}
