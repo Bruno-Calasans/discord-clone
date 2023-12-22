@@ -51,10 +51,12 @@ export default function InitialCreateServerModal() {
     router.refresh()
   }
 
-  const uploadServerImageHandler = (urls: string[]) => {
-    if (urls.length === 0) return form.resetField("imgUrl")
-    form.setValue("imgUrl", urls[0])
-    form.clearErrors("imgUrl")
+  const uploadServerImageHandler = (files: string[]) => {
+    if (files.length === 0) return form.resetField("imgUrl")
+    if (files.length === 1) {
+      form.setValue("imgUrl", files[0])
+      form.clearErrors("imgUrl")
+    }
   }
 
   return (
@@ -77,7 +79,7 @@ export default function InitialCreateServerModal() {
             <FormField
               control={form.control}
               name="imgUrl"
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
                   <FormControl>
                     <FileUpload
@@ -110,8 +112,13 @@ export default function InitialCreateServerModal() {
             />
 
             <DialogFooter>
-              <Button variant="primary" type="submit" disabled={isLoading}>
-                Create Server
+              <Button
+                variant="primary"
+                type="submit"
+                className="w-full"
+                disabled={isLoading}
+              >
+                {isLoading ? "Creating..." : "Create"}
               </Button>
             </DialogFooter>
           </form>

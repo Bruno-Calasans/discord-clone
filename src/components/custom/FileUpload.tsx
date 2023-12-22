@@ -1,5 +1,4 @@
 "use client"
-
 import { useState } from "react"
 import { X } from "lucide-react"
 import { OurFileRouter } from "@/app/api/uploadthing/core"
@@ -11,59 +10,43 @@ type UploadCompleteResponse = UploadFileResponse<null>[]
 
 type FileUploadProps = {
   endpoint: keyof OurFileRouter
-  onChange: (fileUrls: string[], files: UploadCompleteResponse) => void
+  defaultFiles?: string[]
+  onChange: (files: string[]) => void
+  onError?: (error: unknown) => void
 }
 
-function FileUpload({ endpoint, onChange }: FileUploadProps) {
-  const [files, setFiles] = useState<UploadCompleteResponse>([])
+function FileUpload({
+  endpoint,
+  defaultFiles = [],
+  onChange,
+  onError,
+}: FileUploadProps) {
+  const [files, setFiles] = useState<string[]>(defaultFiles)
 
-  const uploadHandler = (files: UploadCompleteResponse) => {
+  const uploadHandler = (responses: UploadCompleteResponse) => {
+    const files = responses.map((response) => response.url)
     setFiles(files)
-    onChange(
-      files.map((file) => file.url),
-      files
-    )
+    onChange(files)
   }
 
   const clearFilesHandler = () => {
     setFiles([])
-    onChange([], [])
+    onChange([])
   }
 
-  if (files.length > 0) {
-    // single file upload
-    return files.length === 1 ? (
+  // single file upload
+  if (files.length === 1) {
+    return (
       <div className="w-full flex justify-center">
         <div className="relative h-28 w-28">
           <Image
             fill
-            title={files[0].name}
-            alt={files[0].name}
-            src={files[0].url}
+            alt="Server upload image"
+            src={files[0]}
             className="rounded-full"
           />
           <button
-            title="Remove images"
-            onClick={clearFilesHandler}
-            className="absolute  text-white bg-red-500 z-100000 right-0 top-0 rounded-full shadow-sm hover:bg-red-600"
-          >
-            <X />
-          </button>
-        </div>
-      </div>
-    ) : (
-      // todo multiple files upload
-      <div className="w-full flex justify-center">
-        <div className="relative h-28 w-28">
-          <Image
-            fill
-            title={files[0].name}
-            alt={files[0].name}
-            src={files[0].url}
-            className="rounded-full"
-          />
-          <button
-            title="Remove images"
+            title="Remove image"
             onClick={clearFilesHandler}
             className="absolute  text-white bg-red-500 z-100000 right-0 top-0 rounded-full shadow-sm hover:bg-red-600"
           >
@@ -79,7 +62,7 @@ function FileUpload({ endpoint, onChange }: FileUploadProps) {
       endpoint={endpoint}
       className="bg-zinc-300/30 rounded-sm"
       onClientUploadComplete={uploadHandler}
-      onUploadError={console.log}
+      onUploadError={onError}
     />
   )
 }

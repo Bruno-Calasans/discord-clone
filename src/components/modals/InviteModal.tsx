@@ -11,7 +11,7 @@ import Input from "@/components/ui/Input"
 import Button from "@/components/ui/Button"
 import { Copy, RefreshCcw, Check } from "lucide-react"
 import { useState } from "react"
-import { updateServerInviteCode } from "@/actions/serverActions"
+import { regenerateServerInviteCode } from "@/actions/serverActions"
 
 export default function InviteModal() {
   const { isOpen, type, data, open, close } = useModal()
@@ -35,7 +35,7 @@ export default function InviteModal() {
   const regenerateLink = async () => {
     if (!server) return
     setLoading(true)
-    const updatedServer = await updateServerInviteCode(server.id)
+    const updatedServer = await regenerateServerInviteCode(server.id)
     if (updatedServer) open(`Invite`, { server: updatedServer })
     setLoading(false)
   }

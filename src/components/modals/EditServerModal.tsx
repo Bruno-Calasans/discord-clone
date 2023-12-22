@@ -1,7 +1,7 @@
 "use client"
 import "@uploadthing/react/styles.css"
 import * as z from "zod"
-import { createServer } from "@/actions/serverActions"
+import { updateServer } from "@/actions/serverActions"
 import Input from "@/components/ui/Input"
 import Button from "@/components/ui/Button"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -24,19 +24,22 @@ import {
 } from "@/components/ui/Form"
 import FileUpload from "@/components/custom/FileUpload"
 import useModal from "@/hooks/useModal/useModal"
+import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 
 const formSchema = z.object({
-  name: z.string().min(3, "Server name must have 3 or more characters long."),
-  imgUrl: z.string().url("Server image url is invalid"),
+  name: z
+    .string()
+    .min(3, "Your server name must have 3 or more characters long."),
+  imgUrl: z.string().url("Your server must have an image."),
 })
 
-type CreateServerInputs = z.infer<typeof formSchema>
+type EditServerInputs = z.infer<typeof formSchema>
 
-export default function CreateServerModal() {
-  const { isOpen, type, close } = useModal()
+export default function EditServerModal() {
+  const { isOpen, type, data, close } = useModal()
   const router = useRouter()
-  const form = useForm<CreateServerInputs>({
+  const form = useForm<EditServerInputs>({
     defaultValues: {
       name: "",
       imgUrl: "",
@@ -45,13 +48,14 @@ export default function CreateServerModal() {
   })
 
   const isLoading = form.formState.isSubmitting
-  const isModalOpen = isOpen && type === "CreateServer"
+  const isModalOpen = isOpen && type === "EditServer"
+  const { server } = data
 
-  const submitHandler = async (inputs: CreateServerInputs) => {
-    const server = await createServer(inputs)
+  const submitHandler = async (inputs: EditServerInputs) => {
     if (!server) return
-    form.reset()
+    await updateServer(server.id, inputs)
     router.refresh()
+    form.reset()
     close()
   }
 
@@ -68,12 +72,19 @@ export default function CreateServerModal() {
     close()
   }
 
+  useEffect(() => {
+    if (server) {
+      form.setValue("name", server.name)
+      form.setValue("imgUrl", server.imgUrl)
+    }
+  }, [form, server, data])
+
   return (
     <Dialog open={isModalOpen} onOpenChange={closeModalHandler}>
       <DialogContent className="bg-white text-stone-900">
         <DialogHeader>
           <DialogTitle className="text-indigo-600 text-4xl font-bold text-center">
-            Customize your Server
+            Edit your Server
           </DialogTitle>
           <DialogDescription className="py-4 text-stone-500">
             Choose your server name and image to better show your personality.
@@ -88,12 +99,13 @@ export default function CreateServerModal() {
             <FormField
               control={form.control}
               name="imgUrl"
-              render={() => (
+              render={({ field }) => (
                 <FormItem>
                   <FormControl>
                     <FileUpload
                       endpoint="serverImg"
                       onChange={uploadServerImageHandler}
+                      defaultFiles={[field.value]}
                     />
                   </FormControl>
                   <FormMessage />
@@ -127,7 +139,7 @@ export default function CreateServerModal() {
                 className="w-full"
                 disabled={isLoading}
               >
-                {isLoading ? "Creating..." : "Create"}
+                {isLoading ? "Saving..." : "Save"}
               </Button>
             </DialogFooter>
           </form>

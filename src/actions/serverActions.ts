@@ -66,6 +66,20 @@ export async function createServer(
   }
 }
 
+export async function updateServer(
+  serverId: string,
+  inputs: Partial<ServerInput>
+) {
+  try {
+    return await db.server.update({
+      where: {
+        id: serverId,
+      },
+      data: inputs,
+    })
+  } catch (error) {}
+}
+
 export async function getServerById(serverId: string): Promise<Server | null> {
   try {
     return db.server.findUnique({
@@ -136,7 +150,7 @@ export async function getCompleteServer(
   }
 }
 
-export async function updateServerInviteCode(serverId: string) {
+export async function regenerateServerInviteCode(serverId: string) {
   try {
     return await db.server.update({
       where: {
