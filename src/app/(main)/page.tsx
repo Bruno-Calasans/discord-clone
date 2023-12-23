@@ -1,8 +1,8 @@
 import { createInitialProfile } from "@/actions/profileActions"
 import { getServersByProfileId } from "@/actions/serverActions"
 import InitialCreateServerModal from "@/components/modals/InitialCreateServerModal"
-import Mount from "@/components/custom/Mount"
 import { redirect } from "next/navigation"
+import Mount from "@/components/custom/Mount"
 
 export default async function Home() {
   // getting profile

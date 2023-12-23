@@ -1,10 +1,16 @@
 import { create } from "zustand"
-import type { Server } from "../../../prisma/output"
+import type { Member, Profile, Server } from "../../../prisma/output"
+import type { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
+import { MemberWithProfile } from "@/types/MemberProfile"
 
-type ModalType = "CreateServer" | "EditServer" | "Invite"
+type ModalType = "CreateServer" | "EditServer" | "Invite" | "ManageMembers"
 
 export type ModalData = {
-  server?: Server
+  server?: ServerWithMembersAndProfile
+  members?: Member[]
+  member?: MemberWithProfile | Member
+  profile?: Profile
+  serverId?: string
 }
 
 export type ModalStore = {

@@ -5,7 +5,7 @@ import type { Server, Channel } from "../../prisma/output"
 import type { Omit } from "../../prisma/output/runtime/library"
 import { getCurrentProfile, getProfileById } from "@/actions/profileActions"
 import { v4 } from "uuid"
-import { ServerMembersProfile } from "@/types/ServerMembersProfile"
+import { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
 
 type ServerInput = Omit<Server, "id" | "createdAt" | "updatedAt">
 
@@ -126,25 +126,31 @@ export async function getServerMembers(serverId: string) {
       orderBy: {
         name: "asc",
       },
+      include: {
+        profile: true,
+      },
     })
   } catch (error) {
-    return []
+    return null
   }
 }
 
-export async function getCompleteServer(
-  serverId: string
-): Promise<ServerMembersProfile | null> {
+export async function getCompleteServer(serverId: string) {
   try {
     return (await db.server.findUnique({
       where: {
         id: serverId,
       },
       include: {
-        members: true,
+        profile: true,
+        members: {
+          include: {
+            profile: true,
+          },
+        },
         channels: true,
       },
-    })) as unknown as ServerMembersProfile
+    })) as unknown as ServerWithMembersAndProfile
   } catch (error) {
     return null
   }
@@ -168,7 +174,7 @@ export async function regenerateServerInviteCode(serverId: string) {
 export async function joinServer(serverId: string, profileId: string) {
   try {
     const profile = await getProfileById(profileId)
-    if (!profile) throw new Error("Profile not found")
+    if (!profile) return null
 
     return await db.server.update({
       where: {
@@ -178,8 +184,8 @@ export async function joinServer(serverId: string, profileId: string) {
         members: {
           create: {
             name: profile.username,
-            role: "guest",
             profileId: profile.id,
+            role: "guest",
           },
         },
       },

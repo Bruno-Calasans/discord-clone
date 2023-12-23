@@ -1,5 +1,5 @@
 "use client"
-import type { ServerMembersProfile } from "@/types/ServerMembersProfile"
+import type { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
 import type { Member } from "../../../prisma/output"
 import {
   ChevronDown,
@@ -20,9 +20,10 @@ import {
 } from "@radix-ui/react-dropdown-menu"
 import { useState } from "react"
 import useModal from "@/hooks/useModal/useModal"
+import { getServerMembers } from "@/actions/serverActions"
 
 type ServerHeaderProps = {
-  server: ServerMembersProfile
+  server: ServerWithMembersAndProfile
   member: Member
 }
 
@@ -40,6 +41,10 @@ function ServerSideBarHeader({ server, member }: ServerHeaderProps) {
 
   const openEditServerModalHandler = () => {
     open("EditServer", { server })
+  }
+
+  const openManageMembersModalHandler = async () => {
+    open("ManageMembers", { server })
   }
 
   return (
@@ -68,7 +73,10 @@ function ServerSideBarHeader({ server, member }: ServerHeaderProps) {
           <Settings className="h-4 w-4" />
         </DropdownMenuItem>
 
-        <DropdownMenuItem className="flex justify-between px-3 py-2 dark:bg-zinc-950 focus:outline-none font-semibold cursor-pointer rounded-l rounded-r hover:bg-zinc-200 hover:dark:bg-zinc-900 transition">
+        <DropdownMenuItem
+          onClick={openManageMembersModalHandler}
+          className="flex justify-between px-3 py-2 dark:bg-zinc-950 focus:outline-none font-semibold cursor-pointer rounded-l rounded-r hover:bg-zinc-200 hover:dark:bg-zinc-900 transition"
+        >
           Manage members
           <Users className="h-4 w-4" />
         </DropdownMenuItem>

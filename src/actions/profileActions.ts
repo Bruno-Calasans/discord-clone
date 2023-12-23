@@ -16,7 +16,7 @@ export async function createInitialProfile(): Promise<Profile | null> {
     }
 
     const email = user.emailAddresses[0].emailAddress
-    const isProfileExists = await findProfileByEmail(email)
+    const isProfileExists = await getProfileByEmail(email)
 
     if (isProfileExists) {
       return isProfileExists
@@ -49,7 +49,7 @@ export async function createProfile(
   }
 }
 
-export async function findProfileByEmail(
+export async function getProfileByEmail(
   email: string
 ): Promise<Profile | null> {
   try {
@@ -59,7 +59,7 @@ export async function findProfileByEmail(
   }
 }
 
-export async function findProfileByUsername(
+export async function getProfileByUsername(
   username: string
 ): Promise<Profile | null> {
   try {
