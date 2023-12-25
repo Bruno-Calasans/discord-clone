@@ -18,14 +18,14 @@ export default function ManageMembersModal() {
   const router = useRouter()
 
   const isModalOpen = isOpen && type === "ManageMembers"
-  const { server } = data
+  const { server, profile } = data
 
   const updateServer = async () => {
     if (!server) return
     const updatedServer = await getCompleteServer(server.id)
     if (!updatedServer) return
     router.refresh()
-    open("ManageMembers", { server: updatedServer })
+    open("ManageMembers", { server: updatedServer, profile })
   }
 
   return (
@@ -46,7 +46,7 @@ export default function ManageMembersModal() {
                 onChange={updateServer}
                 key={member.id}
                 member={member}
-                profile={server?.profile}
+                profile={profile}
               />
             ))}
           </div>

@@ -1,6 +1,6 @@
 "use client"
 import type { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
-import type { Member } from "../../../prisma/output"
+import type { Member, Profile } from "../../../prisma/output"
 import {
   ChevronDown,
   ChevronUp,
@@ -24,10 +24,11 @@ import { getServerMembers } from "@/actions/serverActions"
 
 type ServerHeaderProps = {
   server: ServerWithMembersAndProfile
+  profile: Profile
   member: Member
 }
 
-function ServerSideBarHeader({ server, member }: ServerHeaderProps) {
+function ServerSideBarHeader({ server, profile, member }: ServerHeaderProps) {
   const { open } = useModal()
   const [opened, setOpened] = useState(false)
 
@@ -44,7 +45,7 @@ function ServerSideBarHeader({ server, member }: ServerHeaderProps) {
   }
 
   const openManageMembersModalHandler = async () => {
-    open("ManageMembers", { server })
+    open("ManageMembers", { server, profile })
   }
 
   return (
@@ -57,41 +58,41 @@ function ServerSideBarHeader({ server, member }: ServerHeaderProps) {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="flex flex-col gap-2 p-2 dark:bg-zinc-950 w-[190px] rounded-sm dark:text-white text-sm">
-        <DropdownMenuItem
-          onClick={openInviteModalHandler}
-          className="flex justify-between px-3 py-2 dark:bg-zinc-950 focus:outline-none font-semibold cursor-pointer rounded-l rounded-r hover:bg-zinc-200 text-indigo-700 hover:dark:bg-zinc-900 transition"
-        >
-          Invite People
-          <UserPlus className="h-4 w-4" />
-        </DropdownMenuItem>
+        {member.role === "admin" && (
+          <>
+            <DropdownMenuItem
+              onClick={openInviteModalHandler}
+              className="flex justify-between px-3 py-2 dark:bg-zinc-950 focus:outline-none font-semibold cursor-pointer rounded-l rounded-r hover:bg-zinc-200 text-indigo-700 hover:dark:bg-zinc-900 transition"
+            >
+              Invite People
+              <UserPlus className="h-4 w-4" />
+            </DropdownMenuItem>
 
-        <DropdownMenuItem
-          onClick={openEditServerModalHandler}
-          className="flex justify-between px-3 py-2 dark:bg-zinc-950 focus:outline-none font-semibold cursor-pointer rounded-l rounded-r hover:bg-zinc-200 hover:dark:bg-zinc-900 transition"
-        >
-          Server Settings
-          <Settings className="h-4 w-4" />
-        </DropdownMenuItem>
-
-        <DropdownMenuItem
-          onClick={openManageMembersModalHandler}
-          className="flex justify-between px-3 py-2 dark:bg-zinc-950 focus:outline-none font-semibold cursor-pointer rounded-l rounded-r hover:bg-zinc-200 hover:dark:bg-zinc-900 transition"
-        >
-          Manage members
-          <Users className="h-4 w-4" />
-        </DropdownMenuItem>
-
-        <DropdownMenuItem className="flex justify-between px-3 py-2 dark:bg-zinc-950 focus:outline-none font-semibold cursor-pointer rounded-l rounded-r hover:bg-zinc-200 hover:dark:bg-zinc-900 transition">
-          Create channel
-          <PlusCircle className="h-4 w-4" />
-        </DropdownMenuItem>
-
-        <DropdownMenuSeparator className="border-[1px]" />
-
-        <DropdownMenuItem className="flex justify-between px-3 py-2 dark:bg-zinc-950 focus:outline-none font-semibold cursor-pointer rounded-l rounded-r hover:bg-zinc-200 hover:dark:bg-zinc-900 transition text-rose-500">
-          Delete Server
-          <Trash className="h-4 w-4" />
-        </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={openEditServerModalHandler}
+              className="flex justify-between px-3 py-2 dark:bg-zinc-950 focus:outline-none font-semibold cursor-pointer rounded-l rounded-r hover:bg-zinc-200 hover:dark:bg-zinc-900 transition"
+            >
+              Server Settings
+              <Settings className="h-4 w-4" />
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={openManageMembersModalHandler}
+              className="flex justify-between px-3 py-2 dark:bg-zinc-950 focus:outline-none font-semibold cursor-pointer rounded-l rounded-r hover:bg-zinc-200 hover:dark:bg-zinc-900 transition"
+            >
+              Manage members
+              <Users className="h-4 w-4" />
+            </DropdownMenuItem>
+            <DropdownMenuItem className="flex justify-between px-3 py-2 dark:bg-zinc-950 focus:outline-none font-semibold cursor-pointer rounded-l rounded-r hover:bg-zinc-200 hover:dark:bg-zinc-900 transition">
+              Create channel
+              <PlusCircle className="h-4 w-4" />
+            </DropdownMenuItem>
+            <DropdownMenuSeparator className="border-[1px]" />
+            <DropdownMenuItem className="flex justify-between px-3 py-2 dark:bg-zinc-950 focus:outline-none font-semibold cursor-pointer rounded-l rounded-r hover:bg-zinc-200 hover:dark:bg-zinc-900 transition text-rose-500">
+              Delete Server
+              <Trash className="h-4 w-4" />
+            </DropdownMenuItem>
+          </>
+        )}
 
         <DropdownMenuItem className="flex justify-between px-3 py-2 dark:bg-zinc-950 focus:outline-none font-semibold cursor-pointer rounded-l rounded-r hover:bg-zinc-200 hover:dark:bg-zinc-900 transition text-rose-500">
           Leave Server

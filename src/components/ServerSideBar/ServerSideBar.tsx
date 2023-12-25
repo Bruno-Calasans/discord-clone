@@ -21,7 +21,7 @@ async function ServerSideBar({ serverId }: ServerSideBarProps) {
 
   return (
     <aside className="flex-col grow-1 dark:bg-zinc-900 w-[30%]">
-      <ServerSideBarHeader server={server} member={member} />
+      <ServerSideBarHeader server={server} profile={profile} member={member} />
     </aside>
   )
 }

@@ -25,12 +25,12 @@ import { useState } from "react"
 import type { Profile } from "../../../prisma/output"
 
 const iconRoleMap = {
-  admin: <ShieldAlert className="h-4 w-4 text-red-500" />,
+  admin: <ShieldAlert className="h-4 w-4 text-emerald-600" />,
 } as Record<string, JSX.Element>
 
 type MemberAvatarProps = {
   member: MemberWithProfile
-  profile: Profile
+  profile?: Profile
   onRoleChange?: (member: MemberWithProfile, role: string) => void
   onKick?: (member: MemberWithProfile) => void
   onBan?: (member: MemberWithProfile) => void
@@ -68,6 +68,8 @@ export default function MemberAvatar({
     console.log(`Banning ${member.name}...`)
   }
 
+  const isCurrentProfile = profile?.id == member.profileId
+
   return (
     <div className="flex items-center justify-between">
       <div className="flex gap-2 items-center">
@@ -77,7 +79,12 @@ export default function MemberAvatar({
 
         <div>
           <div className="flex gap-1 items-center">
-            <p className="text-sm font-bold text-zinc-700 hover:underline cursor-pointer transition-all">
+            <p
+              className={cn(
+                "text-sm font-bold text-zinc-700 hover:underline cursor-pointer transition-all",
+                isCurrentProfile && "text-indigo-500"
+              )}
+            >
               {member.name}
             </p>
             {iconRoleMap[member.role]}
@@ -86,7 +93,7 @@ export default function MemberAvatar({
         </div>
       </div>
       {loading && <Loader className="animate-spin text-zinc-500 w-4 h-4" />}
-      {!loading && profile.id !== member.profileId && (
+      {!loading && !isCurrentProfile && (
         <DropdownMenu>
           <DropdownMenuTrigger>
             <MoreVertical className="h-4 w-4" />

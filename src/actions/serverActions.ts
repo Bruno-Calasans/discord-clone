@@ -124,7 +124,7 @@ export async function getServerMembers(serverId: string) {
         serverId,
       },
       orderBy: {
-        name: "asc",
+        role: "asc",
       },
       include: {
         profile: true,
@@ -146,6 +146,9 @@ export async function getCompleteServer(serverId: string) {
         members: {
           include: {
             profile: true,
+          },
+          orderBy: {
+            role: "asc",
           },
         },
         channels: true,
@@ -174,7 +177,7 @@ export async function regenerateServerInviteCode(serverId: string) {
 export async function joinServer(serverId: string, profileId: string) {
   try {
     const profile = await getProfileById(profileId)
-    if (!profile) return null
+    if (!profile) throw new Error("Profile not found")
 
     return await db.server.update({
       where: {

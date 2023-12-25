@@ -25,7 +25,7 @@ async function InvitePage({ params }: InvitePageProps) {
 
   const members = await getServerMembers(server.id)
 
-  const isUserAlreadyOnServer = members.find(
+  const isUserAlreadyOnServer = members?.find(
     (member) => member.id === profile.id
   )
 
