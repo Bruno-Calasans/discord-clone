@@ -3181,9 +3181,9 @@ export namespace Prisma {
     name: string | null
     imgUrl: string | null
     inviteCode: string | null
-    profileId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    profileId: string | null
   }
 
   export type ServerMaxAggregateOutputType = {
@@ -3191,9 +3191,9 @@ export namespace Prisma {
     name: string | null
     imgUrl: string | null
     inviteCode: string | null
-    profileId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    profileId: string | null
   }
 
   export type ServerCountAggregateOutputType = {
@@ -3201,9 +3201,9 @@ export namespace Prisma {
     name: number
     imgUrl: number
     inviteCode: number
-    profileId: number
     createdAt: number
     updatedAt: number
+    profileId: number
     _all: number
   }
 
@@ -3213,9 +3213,9 @@ export namespace Prisma {
     name?: true
     imgUrl?: true
     inviteCode?: true
-    profileId?: true
     createdAt?: true
     updatedAt?: true
+    profileId?: true
   }
 
   export type ServerMaxAggregateInputType = {
@@ -3223,9 +3223,9 @@ export namespace Prisma {
     name?: true
     imgUrl?: true
     inviteCode?: true
-    profileId?: true
     createdAt?: true
     updatedAt?: true
+    profileId?: true
   }
 
   export type ServerCountAggregateInputType = {
@@ -3233,9 +3233,9 @@ export namespace Prisma {
     name?: true
     imgUrl?: true
     inviteCode?: true
-    profileId?: true
     createdAt?: true
     updatedAt?: true
+    profileId?: true
     _all?: true
   }
 
@@ -3316,9 +3316,9 @@ export namespace Prisma {
     name: string
     imgUrl: string
     inviteCode: string
-    profileId: string
     createdAt: Date
     updatedAt: Date
+    profileId: string
     _count: ServerCountAggregateOutputType | null
     _min: ServerMinAggregateOutputType | null
     _max: ServerMaxAggregateOutputType | null
@@ -3343,9 +3343,9 @@ export namespace Prisma {
     name?: boolean
     imgUrl?: boolean
     inviteCode?: boolean
-    profileId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    profileId?: boolean
     profile?: boolean | ProfileDefaultArgs<ExtArgs>
     members?: boolean | Server$membersArgs<ExtArgs>
     channels?: boolean | Server$channelsArgs<ExtArgs>
@@ -3357,9 +3357,9 @@ export namespace Prisma {
     name?: boolean
     imgUrl?: boolean
     inviteCode?: boolean
-    profileId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    profileId?: boolean
   }
 
   export type ServerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3382,9 +3382,9 @@ export namespace Prisma {
       name: string
       imgUrl: string
       inviteCode: string
-      profileId: string
       createdAt: Date
       updatedAt: Date
+      profileId: string
     }, ExtArgs["result"]["server"]>
     composites: {}
   }
@@ -3788,9 +3788,9 @@ export namespace Prisma {
     readonly name: FieldRef<"Server", 'String'>
     readonly imgUrl: FieldRef<"Server", 'String'>
     readonly inviteCode: FieldRef<"Server", 'String'>
-    readonly profileId: FieldRef<"Server", 'String'>
     readonly createdAt: FieldRef<"Server", 'DateTime'>
     readonly updatedAt: FieldRef<"Server", 'DateTime'>
+    readonly profileId: FieldRef<"Server", 'String'>
   }
     
 
@@ -4174,30 +4174,30 @@ export namespace Prisma {
     id: string | null
     name: string | null
     type: $Enums.CHANNEL_TYPE | null
-    profileId: string | null
     serverId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    profileId: string | null
   }
 
   export type ChannelMaxAggregateOutputType = {
     id: string | null
     name: string | null
     type: $Enums.CHANNEL_TYPE | null
-    profileId: string | null
     serverId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    profileId: string | null
   }
 
   export type ChannelCountAggregateOutputType = {
     id: number
     name: number
     type: number
-    profileId: number
     serverId: number
     createdAt: number
     updatedAt: number
+    profileId: number
     _all: number
   }
 
@@ -4206,30 +4206,30 @@ export namespace Prisma {
     id?: true
     name?: true
     type?: true
-    profileId?: true
     serverId?: true
     createdAt?: true
     updatedAt?: true
+    profileId?: true
   }
 
   export type ChannelMaxAggregateInputType = {
     id?: true
     name?: true
     type?: true
-    profileId?: true
     serverId?: true
     createdAt?: true
     updatedAt?: true
+    profileId?: true
   }
 
   export type ChannelCountAggregateInputType = {
     id?: true
     name?: true
     type?: true
-    profileId?: true
     serverId?: true
     createdAt?: true
     updatedAt?: true
+    profileId?: true
     _all?: true
   }
 
@@ -4309,10 +4309,10 @@ export namespace Prisma {
     id: string
     name: string
     type: $Enums.CHANNEL_TYPE
-    profileId: string
     serverId: string
     createdAt: Date
     updatedAt: Date
+    profileId: string
     _count: ChannelCountAggregateOutputType | null
     _min: ChannelMinAggregateOutputType | null
     _max: ChannelMaxAggregateOutputType | null
@@ -4336,10 +4336,10 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     type?: boolean
-    profileId?: boolean
     serverId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    profileId?: boolean
     profile?: boolean | ProfileDefaultArgs<ExtArgs>
     server?: boolean | ServerDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["channel"]>
@@ -4348,10 +4348,10 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     type?: boolean
-    profileId?: boolean
     serverId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    profileId?: boolean
   }
 
   export type ChannelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4370,10 +4370,10 @@ export namespace Prisma {
       id: string
       name: string
       type: $Enums.CHANNEL_TYPE
-      profileId: string
       serverId: string
       createdAt: Date
       updatedAt: Date
+      profileId: string
     }, ExtArgs["result"]["channel"]>
     composites: {}
   }
@@ -4774,10 +4774,10 @@ export namespace Prisma {
     readonly id: FieldRef<"Channel", 'String'>
     readonly name: FieldRef<"Channel", 'String'>
     readonly type: FieldRef<"Channel", 'CHANNEL_TYPE'>
-    readonly profileId: FieldRef<"Channel", 'String'>
     readonly serverId: FieldRef<"Channel", 'String'>
     readonly createdAt: FieldRef<"Channel", 'DateTime'>
     readonly updatedAt: FieldRef<"Channel", 'DateTime'>
+    readonly profileId: FieldRef<"Channel", 'String'>
   }
     
 
@@ -5149,9 +5149,9 @@ export namespace Prisma {
     name: 'name',
     imgUrl: 'imgUrl',
     inviteCode: 'inviteCode',
-    profileId: 'profileId',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    profileId: 'profileId'
   };
 
   export type ServerScalarFieldEnum = (typeof ServerScalarFieldEnum)[keyof typeof ServerScalarFieldEnum]
@@ -5161,10 +5161,10 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     type: 'type',
-    profileId: 'profileId',
     serverId: 'serverId',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    profileId: 'profileId'
   };
 
   export type ChannelScalarFieldEnum = (typeof ChannelScalarFieldEnum)[keyof typeof ChannelScalarFieldEnum]
@@ -5356,9 +5356,9 @@ export namespace Prisma {
     name?: StringFilter<"Server"> | string
     imgUrl?: StringFilter<"Server"> | string
     inviteCode?: StringFilter<"Server"> | string
-    profileId?: StringFilter<"Server"> | string
     createdAt?: DateTimeFilter<"Server"> | Date | string
     updatedAt?: DateTimeFilter<"Server"> | Date | string
+    profileId?: StringFilter<"Server"> | string
     profile?: XOR<ProfileRelationFilter, ProfileWhereInput>
     members?: MemberListRelationFilter
     channels?: ChannelListRelationFilter
@@ -5369,9 +5369,9 @@ export namespace Prisma {
     name?: SortOrder
     imgUrl?: SortOrder
     inviteCode?: SortOrder
-    profileId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    profileId?: SortOrder
     profile?: ProfileOrderByWithRelationInput
     members?: MemberOrderByRelationAggregateInput
     channels?: ChannelOrderByRelationAggregateInput
@@ -5385,9 +5385,9 @@ export namespace Prisma {
     name?: StringFilter<"Server"> | string
     imgUrl?: StringFilter<"Server"> | string
     inviteCode?: StringFilter<"Server"> | string
-    profileId?: StringFilter<"Server"> | string
     createdAt?: DateTimeFilter<"Server"> | Date | string
     updatedAt?: DateTimeFilter<"Server"> | Date | string
+    profileId?: StringFilter<"Server"> | string
     profile?: XOR<ProfileRelationFilter, ProfileWhereInput>
     members?: MemberListRelationFilter
     channels?: ChannelListRelationFilter
@@ -5398,9 +5398,9 @@ export namespace Prisma {
     name?: SortOrder
     imgUrl?: SortOrder
     inviteCode?: SortOrder
-    profileId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    profileId?: SortOrder
     _count?: ServerCountOrderByAggregateInput
     _max?: ServerMaxOrderByAggregateInput
     _min?: ServerMinOrderByAggregateInput
@@ -5414,9 +5414,9 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Server"> | string
     imgUrl?: StringWithAggregatesFilter<"Server"> | string
     inviteCode?: StringWithAggregatesFilter<"Server"> | string
-    profileId?: StringWithAggregatesFilter<"Server"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Server"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Server"> | Date | string
+    profileId?: StringWithAggregatesFilter<"Server"> | string
   }
 
   export type ChannelWhereInput = {
@@ -5426,10 +5426,10 @@ export namespace Prisma {
     id?: StringFilter<"Channel"> | string
     name?: StringFilter<"Channel"> | string
     type?: EnumCHANNEL_TYPEFilter<"Channel"> | $Enums.CHANNEL_TYPE
-    profileId?: StringFilter<"Channel"> | string
     serverId?: StringFilter<"Channel"> | string
     createdAt?: DateTimeFilter<"Channel"> | Date | string
     updatedAt?: DateTimeFilter<"Channel"> | Date | string
+    profileId?: StringFilter<"Channel"> | string
     profile?: XOR<ProfileRelationFilter, ProfileWhereInput>
     server?: XOR<ServerRelationFilter, ServerWhereInput>
   }
@@ -5438,10 +5438,10 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     type?: SortOrder
-    profileId?: SortOrder
     serverId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    profileId?: SortOrder
     profile?: ProfileOrderByWithRelationInput
     server?: ServerOrderByWithRelationInput
   }
@@ -5453,10 +5453,10 @@ export namespace Prisma {
     NOT?: ChannelWhereInput | ChannelWhereInput[]
     name?: StringFilter<"Channel"> | string
     type?: EnumCHANNEL_TYPEFilter<"Channel"> | $Enums.CHANNEL_TYPE
-    profileId?: StringFilter<"Channel"> | string
     serverId?: StringFilter<"Channel"> | string
     createdAt?: DateTimeFilter<"Channel"> | Date | string
     updatedAt?: DateTimeFilter<"Channel"> | Date | string
+    profileId?: StringFilter<"Channel"> | string
     profile?: XOR<ProfileRelationFilter, ProfileWhereInput>
     server?: XOR<ServerRelationFilter, ServerWhereInput>
   }, "id">
@@ -5465,10 +5465,10 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     type?: SortOrder
-    profileId?: SortOrder
     serverId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    profileId?: SortOrder
     _count?: ChannelCountOrderByAggregateInput
     _max?: ChannelMaxOrderByAggregateInput
     _min?: ChannelMinOrderByAggregateInput
@@ -5481,10 +5481,10 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Channel"> | string
     name?: StringWithAggregatesFilter<"Channel"> | string
     type?: EnumCHANNEL_TYPEWithAggregatesFilter<"Channel"> | $Enums.CHANNEL_TYPE
-    profileId?: StringWithAggregatesFilter<"Channel"> | string
     serverId?: StringWithAggregatesFilter<"Channel"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Channel"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Channel"> | Date | string
+    profileId?: StringWithAggregatesFilter<"Channel"> | string
   }
 
   export type MemberCreateInput = {
@@ -5647,9 +5647,9 @@ export namespace Prisma {
     name: string
     imgUrl: string
     inviteCode: string
-    profileId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    profileId: string
     members?: MemberUncheckedCreateNestedManyWithoutServerInput
     channels?: ChannelUncheckedCreateNestedManyWithoutServerInput
   }
@@ -5671,9 +5671,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     imgUrl?: StringFieldUpdateOperationsInput | string
     inviteCode?: StringFieldUpdateOperationsInput | string
-    profileId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    profileId?: StringFieldUpdateOperationsInput | string
     members?: MemberUncheckedUpdateManyWithoutServerNestedInput
     channels?: ChannelUncheckedUpdateManyWithoutServerNestedInput
   }
@@ -5683,9 +5683,9 @@ export namespace Prisma {
     name: string
     imgUrl: string
     inviteCode: string
-    profileId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    profileId: string
   }
 
   export type ServerUpdateManyMutationInput = {
@@ -5702,9 +5702,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     imgUrl?: StringFieldUpdateOperationsInput | string
     inviteCode?: StringFieldUpdateOperationsInput | string
-    profileId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    profileId?: StringFieldUpdateOperationsInput | string
   }
 
   export type ChannelCreateInput = {
@@ -5721,10 +5721,10 @@ export namespace Prisma {
     id?: string
     name: string
     type?: $Enums.CHANNEL_TYPE
-    profileId: string
     serverId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    profileId: string
   }
 
   export type ChannelUpdateInput = {
@@ -5741,20 +5741,20 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     type?: EnumCHANNEL_TYPEFieldUpdateOperationsInput | $Enums.CHANNEL_TYPE
-    profileId?: StringFieldUpdateOperationsInput | string
     serverId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    profileId?: StringFieldUpdateOperationsInput | string
   }
 
   export type ChannelCreateManyInput = {
     id?: string
     name: string
     type?: $Enums.CHANNEL_TYPE
-    profileId: string
     serverId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    profileId: string
   }
 
   export type ChannelUpdateManyMutationInput = {
@@ -5769,10 +5769,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     type?: EnumCHANNEL_TYPEFieldUpdateOperationsInput | $Enums.CHANNEL_TYPE
-    profileId?: StringFieldUpdateOperationsInput | string
     serverId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    profileId?: StringFieldUpdateOperationsInput | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -5933,9 +5933,9 @@ export namespace Prisma {
     name?: SortOrder
     imgUrl?: SortOrder
     inviteCode?: SortOrder
-    profileId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    profileId?: SortOrder
   }
 
   export type ServerMaxOrderByAggregateInput = {
@@ -5943,9 +5943,9 @@ export namespace Prisma {
     name?: SortOrder
     imgUrl?: SortOrder
     inviteCode?: SortOrder
-    profileId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    profileId?: SortOrder
   }
 
   export type ServerMinOrderByAggregateInput = {
@@ -5953,9 +5953,9 @@ export namespace Prisma {
     name?: SortOrder
     imgUrl?: SortOrder
     inviteCode?: SortOrder
-    profileId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    profileId?: SortOrder
   }
 
   export type EnumCHANNEL_TYPEFilter<$PrismaModel = never> = {
@@ -5969,30 +5969,30 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     type?: SortOrder
-    profileId?: SortOrder
     serverId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    profileId?: SortOrder
   }
 
   export type ChannelMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     type?: SortOrder
-    profileId?: SortOrder
     serverId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    profileId?: SortOrder
   }
 
   export type ChannelMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     type?: SortOrder
-    profileId?: SortOrder
     serverId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    profileId?: SortOrder
   }
 
   export type EnumCHANNEL_TYPEWithAggregatesFilter<$PrismaModel = never> = {
@@ -6424,9 +6424,9 @@ export namespace Prisma {
     name: string
     imgUrl: string
     inviteCode: string
-    profileId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    profileId: string
     channels?: ChannelUncheckedCreateNestedManyWithoutServerInput
   }
 
@@ -6495,9 +6495,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     imgUrl?: StringFieldUpdateOperationsInput | string
     inviteCode?: StringFieldUpdateOperationsInput | string
-    profileId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    profileId?: StringFieldUpdateOperationsInput | string
     channels?: ChannelUncheckedUpdateManyWithoutServerNestedInput
   }
 
@@ -6613,9 +6613,9 @@ export namespace Prisma {
     name?: StringFilter<"Server"> | string
     imgUrl?: StringFilter<"Server"> | string
     inviteCode?: StringFilter<"Server"> | string
-    profileId?: StringFilter<"Server"> | string
     createdAt?: DateTimeFilter<"Server"> | Date | string
     updatedAt?: DateTimeFilter<"Server"> | Date | string
+    profileId?: StringFilter<"Server"> | string
   }
 
   export type MemberUpsertWithWhereUniqueWithoutProfileInput = {
@@ -6670,10 +6670,10 @@ export namespace Prisma {
     id?: StringFilter<"Channel"> | string
     name?: StringFilter<"Channel"> | string
     type?: EnumCHANNEL_TYPEFilter<"Channel"> | $Enums.CHANNEL_TYPE
-    profileId?: StringFilter<"Channel"> | string
     serverId?: StringFilter<"Channel"> | string
     createdAt?: DateTimeFilter<"Channel"> | Date | string
     updatedAt?: DateTimeFilter<"Channel"> | Date | string
+    profileId?: StringFilter<"Channel"> | string
   }
 
   export type ProfileCreateWithoutServersInput = {
@@ -6744,9 +6744,9 @@ export namespace Prisma {
     id?: string
     name: string
     type?: $Enums.CHANNEL_TYPE
-    profileId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    profileId: string
   }
 
   export type ChannelCreateOrConnectWithoutServerInput = {
@@ -6867,9 +6867,9 @@ export namespace Prisma {
     name: string
     imgUrl: string
     inviteCode: string
-    profileId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    profileId: string
     members?: MemberUncheckedCreateNestedManyWithoutServerInput
   }
 
@@ -6938,9 +6938,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     imgUrl?: StringFieldUpdateOperationsInput | string
     inviteCode?: StringFieldUpdateOperationsInput | string
-    profileId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    profileId?: StringFieldUpdateOperationsInput | string
     members?: MemberUncheckedUpdateManyWithoutServerNestedInput
   }
 
@@ -7069,9 +7069,9 @@ export namespace Prisma {
     id?: string
     name: string
     type?: $Enums.CHANNEL_TYPE
-    profileId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    profileId: string
   }
 
   export type MemberUpdateWithoutServerInput = {
@@ -7114,18 +7114,18 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     type?: EnumCHANNEL_TYPEFieldUpdateOperationsInput | $Enums.CHANNEL_TYPE
-    profileId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    profileId?: StringFieldUpdateOperationsInput | string
   }
 
   export type ChannelUncheckedUpdateManyWithoutServerInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     type?: EnumCHANNEL_TYPEFieldUpdateOperationsInput | $Enums.CHANNEL_TYPE
-    profileId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    profileId?: StringFieldUpdateOperationsInput | string
   }
 
 

@@ -10,83 +10,64 @@ datasource db {
 }
 
 model Member {
-  id   String @id @default(uuid())
-  name String
-  role String
-
-  // relations
+  id        String   @id @default(uuid())
+  name      String
+  role      String
   profileId String
-  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-
-  serverId String
-  server   Server @relation(fields: [serverId], references: [id])
-
-  // others fields
+  serverId  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  server    Server   @relation(fields: [serverId], references: [id], onDelete: Cascade)
 
   @@index([profileId])
   @@index([serverId])
 }
 
 model Profile {
-  id       String @id @default(uuid())
-  username String @unique
-  email    String @unique
-  imgUrl   String @db.Text
-
-  // relations
-  servers  Server[]
-  members  Member[]
-  channels Channel[]
-
-  // others fields
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String    @id @default(uuid())
+  username  String    @unique
+  email     String    @unique
+  imgUrl    String    @db.Text
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  servers   Server[]
+  members   Member[]
+  channels  Channel[]
 }
 
 model Server {
-  id         String @id @default(uuid())
+  id         String    @id @default(uuid())
   name       String
-  imgUrl     String @db.Text
-  inviteCode String @db.Text
-
-  // relations
-  profileId String
-  profile   Profile @relation(fields: [profileId], references: [id])
-
-  members  Member[]
-  channels Channel[]
-
-  // other fields
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  imgUrl     String    @db.Text
+  inviteCode String    @db.Text
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  profileId  String
+  profile    Profile   @relation(fields: [profileId], references: [id])
+  members    Member[]
+  channels   Channel[]
 
   @@index([profileId])
+}
+
+model Channel {
+  id        String       @id @default(uuid())
+  name      String
+  type      CHANNEL_TYPE @default(TEXT)
+  serverId  String
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  profileId String
+  profile   Profile      @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  server    Server       @relation(fields: [serverId], references: [id], onDelete: Cascade)
+
+  @@index([profileId])
+  @@index([serverId])
 }
 
 enum CHANNEL_TYPE {
   TEXT
   AUDIO
   VIDEO
-}
-
-model Channel {
-  id   String       @id @default(uuid())
-  name String
-  type CHANNEL_TYPE @default(TEXT)
-
-  // relations
-  profileId String
-  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-
-  serverId String
-  server   Server @relation(fields: [serverId], references: [id])
-
-  // other fields
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([profileId])
-  @@index([serverId])
 }

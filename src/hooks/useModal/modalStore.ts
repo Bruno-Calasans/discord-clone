@@ -9,6 +9,8 @@ type ModalType =
   | "Invite"
   | "ManageMembers"
   | "CreateChannel"
+  | "LeaveServer"
+  | "DeleteServer"
 
 export type ModalData = {
   server?: ServerWithMembersAndProfile

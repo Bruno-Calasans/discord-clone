@@ -19,12 +19,11 @@ export default function InviteModal() {
   const [loading, setLoading] = useState(false)
 
   const isModalOpen = isOpen && type === "Invite"
-
   const currentUrl = location.origin
-  const server = data.server
+  const { server } = data
   const inviteLink = `${currentUrl}/invite/${server?.inviteCode}`
 
-  const copyLink = () => {
+  const copyLinkHandler = () => {
     navigator.clipboard.writeText(inviteLink)
     setCopied(true)
     setTimeout(() => {
@@ -32,11 +31,11 @@ export default function InviteModal() {
     }, 3000)
   }
 
-  const regenerateLink = async () => {
+  const regenerateLinkHandler = async () => {
     if (!server) return
     setLoading(true)
     const updatedServer = await regenerateServerInviteCode(server.id)
-    if (updatedServer) open(`Invite`, { server: updatedServer })
+    if (updatedServer) open("Invite", { server: updatedServer })
     setLoading(false)
   }
 
@@ -62,7 +61,7 @@ export default function InviteModal() {
                 disabled={loading}
                 variant="ghost"
                 size="icon"
-                onClick={copyLink}
+                onClick={copyLinkHandler}
               >
                 {copied ? (
                   <Check className="h-4 w-4 text-emerald-400" />
@@ -82,7 +81,7 @@ export default function InviteModal() {
         <div>
           <Button
             disabled={loading}
-            onClick={regenerateLink}
+            onClick={regenerateLinkHandler}
             variant="ghost"
             size="sm"
             className="text-sm flex gap-2"

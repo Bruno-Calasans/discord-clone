@@ -131,19 +131,19 @@ exports.Prisma.ServerScalarFieldEnum = {
   name: 'name',
   imgUrl: 'imgUrl',
   inviteCode: 'inviteCode',
-  profileId: 'profileId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  profileId: 'profileId'
 };
 
 exports.Prisma.ChannelScalarFieldEnum = {
   id: 'id',
   name: 'name',
   type: 'type',
-  profileId: 'profileId',
   serverId: 'serverId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  profileId: 'profileId'
 };
 
 exports.Prisma.SortOrder = {

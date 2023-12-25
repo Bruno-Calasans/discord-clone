@@ -159,7 +159,9 @@ export async function getCompleteServer(serverId: string) {
   }
 }
 
-export async function regenerateServerInviteCode(serverId: string) {
+export async function regenerateServerInviteCode(
+  serverId: string
+): Promise<Server | null> {
   try {
     return await db.server.update({
       where: {
@@ -206,6 +208,64 @@ export async function getServerByInviteCode(inviteCode: string) {
       },
     })
   } catch (error) {
+    return null
+  }
+}
+
+export async function leaveServer(serverId: string) {
+  try {
+    const profile = await getCurrentProfile()
+    if (!profile) throw new Error("Profile not found")
+
+    const server = await getCompleteServer(serverId)
+    if (!server) throw new Error("Server not found")
+
+    const isServerOwner = server.profileId === profile.id
+    if (isServerOwner) throw new Error("You cannot leave your own server")
+
+    const memberFound = server.members.find(
+      (member) => member.profileId === profile.id
+    )
+    if (!memberFound) throw new Error("Profile is not member")
+
+    return await db.server.update({
+      where: {
+        id: serverId,
+      },
+      data: {
+        members: {
+          delete: {
+            id: memberFound.id,
+            profileId: profile.id,
+          },
+        },
+      },
+    })
+  } catch (error) {
+    console.log(error)
+    return null
+  }
+}
+
+export async function deleteServer(serverId: string) {
+  try {
+    const profile = await getCurrentProfile()
+    if (!profile) throw new Error("Profile not found")
+
+    const server = await getServerById(serverId)
+    if (!server) throw new Error("Server not found")
+
+    const isServerOwner = server.profileId === profile.id
+    if (!isServerOwner) throw new Error("You are not the server owner")
+
+    return await db.server.delete({
+      where: {
+        id: serverId,
+        profileId: profile.id,
+      },
+    })
+  } catch (error) {
+    console.log(error)
     return null
   }
 }
