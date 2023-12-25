@@ -48,6 +48,10 @@ function ServerSideBarHeader({ server, profile, member }: ServerHeaderProps) {
     open("ManageMembers", { server, profile })
   }
 
+  const openCreateChannelModalHandler = async () => {
+    open("CreateChannel", { server, profile })
+  }
+
   return (
     <DropdownMenu open={opened} onOpenChange={toggleOpen}>
       <DropdownMenuTrigger asChild className="focus:outline-none">
@@ -82,7 +86,11 @@ function ServerSideBarHeader({ server, profile, member }: ServerHeaderProps) {
               Manage members
               <Users className="h-4 w-4" />
             </DropdownMenuItem>
-            <DropdownMenuItem className="flex justify-between px-3 py-2 dark:bg-zinc-950 focus:outline-none font-semibold cursor-pointer rounded-l rounded-r hover:bg-zinc-200 hover:dark:bg-zinc-900 transition">
+
+            <DropdownMenuItem
+              onClick={openCreateChannelModalHandler}
+              className="flex justify-between px-3 py-2 dark:bg-zinc-950 focus:outline-none font-semibold cursor-pointer rounded-l rounded-r hover:bg-zinc-200 hover:dark:bg-zinc-900 transition"
+            >
               Create channel
               <PlusCircle className="h-4 w-4" />
             </DropdownMenuItem>

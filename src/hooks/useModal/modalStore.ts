@@ -3,11 +3,15 @@ import type { Member, Profile, Server } from "../../../prisma/output"
 import type { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
 import { MemberWithProfile } from "@/types/MemberProfile"
 
-type ModalType = "CreateServer" | "EditServer" | "Invite" | "ManageMembers"
+type ModalType =
+  | "CreateServer"
+  | "EditServer"
+  | "Invite"
+  | "ManageMembers"
+  | "CreateChannel"
 
 export type ModalData = {
   server?: ServerWithMembersAndProfile
-  members?: Member[]
   member?: MemberWithProfile | Member
   profile?: Profile
   serverId?: string

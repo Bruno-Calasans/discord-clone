@@ -4,8 +4,8 @@ import db from "@/config/db"
 import type { Server, Channel } from "../../prisma/output"
 import type { Omit } from "../../prisma/output/runtime/library"
 import { getCurrentProfile, getProfileById } from "@/actions/profileActions"
-import { v4 } from "uuid"
 import { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
+import { v4 } from "uuid"
 
 type ServerInput = Omit<Server, "id" | "createdAt" | "updatedAt">
 

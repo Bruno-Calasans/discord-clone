@@ -2,7 +2,8 @@ import Mount from "@/components/custom/Mount"
 import CreateServerModal from "@/components/modals/CreateServerModal"
 import InviteModal from "@/components/modals/InviteModal"
 import EditServerModal from "@/components/modals/EditServerModal"
-import ManageMembersModal from "../modals/ManageMembersModal"
+import ManageMembersModal from "@/components/modals/ManageMembersModal"
+import CreateChannelModal from "@/components/modals/CreateChannelModal"
 
 type ModalProviderProps = {
   children: React.ReactNode
@@ -16,6 +17,7 @@ function ModalProvider({ children }: ModalProviderProps) {
         <InviteModal />
         <EditServerModal />
         <ManageMembersModal />
+        <CreateChannelModal />
         {children}
       </>
     </Mount>
