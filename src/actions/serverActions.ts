@@ -32,7 +32,7 @@ export async function createServer(
 ) {
   try {
     const profile = await getCurrentProfile()
-    if (!profile) return null
+    if (!profile) throw new Error("Profile not found")
 
     return db.server.create({
       data: {
@@ -242,7 +242,6 @@ export async function leaveServer(serverId: string) {
       },
     })
   } catch (error) {
-    console.log(error)
     return null
   }
 }
@@ -265,7 +264,6 @@ export async function deleteServer(serverId: string) {
       },
     })
   } catch (error) {
-    console.log(error)
     return null
   }
 }

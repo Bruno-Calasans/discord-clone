@@ -31,6 +31,7 @@ type ServerHeaderProps = {
 function ServerSideBarHeader({ server, profile, member }: ServerHeaderProps) {
   const { open } = useModal()
   const [opened, setOpened] = useState(false)
+  const isServerOwner = server.profileId === profile.id
 
   const toggleOpen = () => {
     setOpened((curr) => !curr)
@@ -115,13 +116,15 @@ function ServerSideBarHeader({ server, profile, member }: ServerHeaderProps) {
           </>
         )}
 
-        <DropdownMenuItem
-          onClick={openLeaveServerModalHandler}
-          className="flex justify-between px-3 py-2 dark:bg-zinc-950 focus:outline-none font-semibold cursor-pointer rounded-l rounded-r hover:bg-zinc-200 hover:dark:bg-zinc-900 transition text-rose-500"
-        >
-          Leave Server
-          <LogOut className="h-4 w-4" />
-        </DropdownMenuItem>
+        {member.role !== "admin" && (
+          <DropdownMenuItem
+            onClick={openLeaveServerModalHandler}
+            className="flex justify-between px-3 py-2 dark:bg-zinc-950 focus:outline-none font-semibold cursor-pointer rounded-l rounded-r hover:bg-zinc-200 hover:dark:bg-zinc-900 transition text-rose-500"
+          >
+            Leave Server
+            <LogOut className="h-4 w-4" />
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   )
