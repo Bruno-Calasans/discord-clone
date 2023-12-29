@@ -4,6 +4,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/Tooltip"
+import { cn } from "@/utils/cn"
 
 type ActionTooltipProps = {
   label: string

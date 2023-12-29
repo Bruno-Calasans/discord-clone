@@ -17,10 +17,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-} from "@radix-ui/react-dropdown-menu"
+} from "@/components/ui/DropdownMenu"
 import { useState } from "react"
 import useModal from "@/hooks/useModal/useModal"
-import { getServerMembers } from "@/actions/serverActions"
 
 type ServerHeaderProps = {
   server: ServerWithMembersAndProfile
@@ -31,7 +30,6 @@ type ServerHeaderProps = {
 function ServerSideBarHeader({ server, profile, member }: ServerHeaderProps) {
   const { open } = useModal()
   const [opened, setOpened] = useState(false)
-  const isServerOwner = server.profileId === profile.id
 
   const toggleOpen = () => {
     setOpened((curr) => !curr)

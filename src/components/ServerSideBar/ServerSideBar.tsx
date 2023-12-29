@@ -2,8 +2,7 @@ import { getCurrentProfile } from "@/actions/profileActions"
 import { getCompleteServer } from "@/actions/serverActions"
 import ServerSideBarHeader from "./ServerSideBarHeader"
 import ServerSearch from "./ServerSearch"
-
-
+import ServerSection from "./ServerSection"
 
 type ServerSideBarProps = {
   serverId: string
@@ -26,6 +25,7 @@ async function ServerSideBar({ serverId }: ServerSideBarProps) {
     <aside className="flex-col grow-1 dark:bg-zinc-900 w-[30%]">
       <ServerSideBarHeader server={server} profile={profile} member={member} />
       <ServerSearch server={server} />
+      <ServerSection server={server} member={member} />
     </aside>
   )
 }

@@ -1,5 +1,5 @@
 import { create } from "zustand"
-import type { Member, Profile, Server } from "../../../prisma/output"
+import type { CHANNEL_TYPE, Member, Profile } from "../../../prisma/output"
 import type { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
 import { MemberWithProfile } from "@/types/MemberProfile"
 
@@ -17,6 +17,7 @@ export type ModalData = {
   member?: MemberWithProfile | Member
   profile?: Profile
   serverId?: string
+  channelType?: CHANNEL_TYPE
 }
 
 export type ModalStore = {

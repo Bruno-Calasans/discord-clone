@@ -1,5 +1,4 @@
 "use client"
-import { ScrollArea } from "@/components/ui/ScrollArea"
 import type { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
 import { Search, Hash, Mic, Video, ShieldAlert, Shield } from "lucide-react"
 import {
@@ -10,14 +9,10 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
-  CommandShortcut,
 } from "@/components/ui/Command"
 import { useEffect, useState } from "react"
 import { CHANNEL_TYPE } from "../../../prisma/output"
-import { set } from "zod"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
 
 const channelIconMap = {
   [CHANNEL_TYPE.TEXT]: <Hash className="w-4 h-4" />,
@@ -74,7 +69,7 @@ export default function ServerSearch({ server }: ServerSearchProps) {
   }, [])
 
   return (
-    <div className="w-full font-semibold text-sm text-zinc-500 hover:text-zinc-700 hover:dark:text-white transition">
+    <div className="w-full font-semibold text-sm text-zinc-500 hover:text-zinc-700 hover:dark:text-white transition border-b-2 dark:border-neutral-800">
       <button
         onClick={() => setOpen(true)}
         className="w-full flex items-center justify-between p-2 hover:bg-zinc-700/10 hover:dark:bg-zinc-700/50 trasition"

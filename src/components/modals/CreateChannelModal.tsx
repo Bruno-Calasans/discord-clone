@@ -30,6 +30,7 @@ import useModal from "@/hooks/useModal/useModal"
 import { useRouter } from "next/navigation"
 import { CHANNEL_TYPE } from "../../../prisma/output"
 import { createChannel } from "@/actions/channelActions"
+import { useEffect } from "react"
 
 const formSchema = z.object({
   name: z
@@ -45,6 +46,8 @@ type CreateChannelFormInputs = z.infer<typeof formSchema>
 
 export default function CreateChannelModal() {
   const { isOpen, type, data, close } = useModal()
+  const { server, profile, channelType } = data
+
   const router = useRouter()
   const form = useForm<CreateChannelFormInputs>({
     defaultValues: {
@@ -54,7 +57,6 @@ export default function CreateChannelModal() {
     resolver: zodResolver(formSchema),
   })
 
-  const { server, profile } = data
   const isLoading = form.formState.isSubmitting
   const isModalOpen = isOpen && type === "CreateChannel"
 
@@ -74,6 +76,12 @@ export default function CreateChannelModal() {
     form.reset()
     close()
   }
+
+  useEffect(() => {
+    if (channelType) {
+      form.setValue("type", channelType)
+    }
+  }, [channelType])
 
   return (
     <Dialog open={isModalOpen} onOpenChange={closeModalHandler}>
@@ -121,7 +129,7 @@ export default function CreateChannelModal() {
                   <FormControl>
                     <Select
                       disabled={isLoading}
-                      defaultValue={field.value}
+                      value={field.value}
                       onValueChange={field.onChange}
                     >
                       <SelectTrigger className="font-semibold w-full bg-zinc-100 capitalize">
