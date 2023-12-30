@@ -2,9 +2,17 @@
 import { useParams } from "next/navigation"
 import { CHANNEL_TYPE, type Channel, type Member } from "../../../prisma/output"
 import ActionTooltip from "../custom/ActionTooltip"
-import { Hash, Mic, Plus, Settings, Video } from "lucide-react"
+import { Edit, Hash, Mic, MoreVertical, Plus, Trash, Video } from "lucide-react"
 import { cn } from "@/utils/cn"
 import { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/DropdownMenu"
 
 const channelIconMap = {
   [CHANNEL_TYPE.TEXT]: <Hash className="w-4 h-4 mr-2" />,
@@ -17,7 +25,10 @@ type ServerCategoryProps = {
   member: Member
   channels: Channel[]
   server: ServerWithMembersAndProfile
+  onClickChannel: (channel: Channel) => void
   onCreateChannel: () => void
+  onEditChannel: (channel: Channel) => void
+  onDeleteChannel: (channel: Channel) => void
 }
 
 export default function ServerCategory({
@@ -25,9 +36,18 @@ export default function ServerCategory({
   member,
   channels,
   onCreateChannel,
+  onEditChannel,
+  onDeleteChannel,
+  onClickChannel,
 }: ServerCategoryProps) {
   const params = useParams()
   let selectedChannel = params.channelId as string
+
+  const actionHandler = (e: React.MouseEvent, channel: Channel) => {
+    e.stopPropagation()
+    onEditChannel(channel)
+    onDeleteChannel(channel)
+  }
 
   return (
     <div>
@@ -50,6 +70,7 @@ export default function ServerCategory({
       <div className="font-semibold text-sm flex flex-col gap-1 ml-1 mt-2 item  overflow-hidden">
         {channels.map((channel) => (
           <div
+            onClick={() => onClickChannel(channel)}
             key={channel.id}
             className={cn(
               "group flex justify-between items-center p-[6px] hover:bg-zinc-700 text-zinc-600 hover:text-zinc-100  dark:text-zinc-400 hover:dark:text-zinc-200 rounded-sm transition cursor-pointer",
@@ -63,16 +84,33 @@ export default function ServerCategory({
             </div>
 
             {member.role.toLowerCase() === "admin" && (
-              <ActionTooltip label="Edit Channel">
-                <button
+              <DropdownMenu>
+                <DropdownMenuTrigger
                   className={cn(
-                    "text-zinc-400 hover:text-zinc-300 dark:text-zinc-500 hover:dark:text-zinc-300 transition ml-1",
-                    selectedChannel !== channel.id && "hidden group-hover:flex"
+                    selectedChannel !== channel.id &&
+                      "invisible group-hover:visible"
                   )}
                 >
-                  <Settings className="h-4 w-4" />
-                </button>
-              </ActionTooltip>
+                  <MoreVertical className="w-4 h-4" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>Channel Actions</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={(e) => actionHandler(e, channel)}>
+                    <div className="flex">
+                      <Edit className="h-4 w-4 mr-1" />
+                      Edit
+                    </div>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={(e) => actionHandler(e, channel)}>
+                    <div className="flex text-rose-500">
+                      <Trash className="h-4 w-4 mr-1 " />
+                      Delete
+                    </div>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             )}
           </div>
         ))}

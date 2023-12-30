@@ -4,8 +4,10 @@ import InviteModal from "@/components/modals/InviteModal"
 import EditServerModal from "@/components/modals/EditServerModal"
 import ManageMembersModal from "@/components/modals/ManageMembersModal"
 import CreateChannelModal from "@/components/modals/CreateChannelModal"
-import LeaveServerModal from "../modals/LeaveServerModal"
-import DeleteServerModal from "../modals/DeleteServerModal"
+import LeaveServerModal from "@/components/modals/LeaveServerModal"
+import DeleteServerModal from "@/components/modals/DeleteServerModal"
+import EditChannelModal from "@/components/modals/EditChannelModal"
+import DeleteChannelModal from "@/components/modals/DeleteChannelModal"
 
 type ModalProviderProps = {
   children: React.ReactNode
@@ -22,6 +24,8 @@ function ModalProvider({ children }: ModalProviderProps) {
         <CreateChannelModal />
         <LeaveServerModal />
         <DeleteServerModal />
+        <EditChannelModal />
+        <DeleteChannelModal />
         {children}
       </>
     </Mount>

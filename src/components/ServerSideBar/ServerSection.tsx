@@ -1,8 +1,9 @@
 "use client"
 import { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
 import ServerCategory from "./ServerCategory"
-import { Member } from "../../../prisma/output"
+import { Channel, Member } from "../../../prisma/output"
 import useModal from "@/hooks/useModal/useModal"
+import { useRouter } from "next/navigation"
 
 type ServerSectionProps = {
   server: ServerWithMembersAndProfile
@@ -10,6 +11,7 @@ type ServerSectionProps = {
 }
 
 export default function ServerSection({ server, member }: ServerSectionProps) {
+  const router = useRouter()
   const { open } = useModal()
 
   const textChannels = server.channels.filter(
@@ -36,6 +38,18 @@ export default function ServerSection({ server, member }: ServerSectionProps) {
     open("CreateChannel", { server, channelType: "VIDEO" })
   }
 
+  const editChannelHandler = (channel: Channel) => {
+    open("EditChannel", { channel })
+  }
+
+  const deleteChannelHandler = (channel: Channel) => {
+    open("DeleteChannel", { channel })
+  }
+
+  const clickChannelHandler = (channel: Channel) => {
+    router.push(`/servers/${server.id}/channels/${channel.id}`)
+  }
+
   return (
     <div className="flex flex-col gap-2 p-2 mt-1">
       {textChannels.length > 0 && (
@@ -45,6 +59,9 @@ export default function ServerSection({ server, member }: ServerSectionProps) {
           channels={textChannels}
           server={server}
           onCreateChannel={createTextChannelHandler}
+          onEditChannel={editChannelHandler}
+          onDeleteChannel={deleteChannelHandler}
+          onClickChannel={clickChannelHandler}
         />
       )}
 
@@ -55,6 +72,9 @@ export default function ServerSection({ server, member }: ServerSectionProps) {
           channels={audioChannels}
           server={server}
           onCreateChannel={createAudioChannelHandler}
+          onEditChannel={editChannelHandler}
+          onDeleteChannel={deleteChannelHandler}
+          onClickChannel={clickChannelHandler}
         />
       )}
 
@@ -65,6 +85,9 @@ export default function ServerSection({ server, member }: ServerSectionProps) {
           channels={videoChannels}
           server={server}
           onCreateChannel={createVideoChannelHandler}
+          onEditChannel={editChannelHandler}
+          onDeleteChannel={deleteChannelHandler}
+          onClickChannel={clickChannelHandler}
         />
       )}
     </div>

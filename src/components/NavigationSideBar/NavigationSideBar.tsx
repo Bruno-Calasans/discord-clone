@@ -4,9 +4,10 @@ import NavigationAction from "./NavigationAction"
 import NavigationScrollBar from "./NavigationScrollBar"
 import type { Server } from "../../../prisma/output"
 import { useParams } from "next/navigation"
+import type { ServerWithChannels } from "@/types/ServerWithChannels"
 
 type NavigationSideBarProps = {
-  servers: Server[]
+  servers: ServerWithChannels[]
 }
 
 function NavigationSideBar({ servers }: NavigationSideBarProps) {
