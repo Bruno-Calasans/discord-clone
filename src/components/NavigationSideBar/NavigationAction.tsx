@@ -11,7 +11,7 @@ function NavigationSideBarAction() {
   }
 
   return (
-    <div className="group dark:bg-slate-600 hover:bg-emerald-500 hover:dark:bg-emerald-500 h-10 w-10 rounded-full transition">
+    <div className="group p-1 bg-slate-200 dark:bg-slate-600 hover:bg-emerald-500 hover:dark:bg-emerald-500 h-10 w-10 rounded-full transition">
       <ActionTooltip label="Add new server" align="center" side="right">
         <button
           onClick={modalHandler}

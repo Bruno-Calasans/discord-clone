@@ -5,12 +5,11 @@ import ActionTooltip from "../custom/ActionTooltip"
 import { Hash, Mic, Plus, Settings, Video } from "lucide-react"
 import { cn } from "@/utils/cn"
 import { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
-import useModal from "@/hooks/useModal/useModal"
 
 const channelIconMap = {
-  [CHANNEL_TYPE.TEXT]: <Hash className="w-4 h-4 mr-1" />,
-  [CHANNEL_TYPE.AUDIO]: <Mic className="w-4 h-4 mr-1" />,
-  [CHANNEL_TYPE.VIDEO]: <Video className="w-4 h-4 mr-1" />,
+  [CHANNEL_TYPE.TEXT]: <Hash className="w-4 h-4 mr-2" />,
+  [CHANNEL_TYPE.AUDIO]: <Mic className="w-4 h-4 mr-2" />,
+  [CHANNEL_TYPE.VIDEO]: <Video className="w-4 h-4 mr-2" />,
 } as const
 
 type ServerCategoryProps = {
@@ -29,7 +28,6 @@ export default function ServerCategory({
 }: ServerCategoryProps) {
   const params = useParams()
   let selectedChannel = params.channelId as string
-
 
   return (
     <div>

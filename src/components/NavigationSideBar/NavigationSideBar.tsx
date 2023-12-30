@@ -14,7 +14,7 @@ function NavigationSideBar({ servers }: NavigationSideBarProps) {
   const selectedServer = params.serverId as string | undefined
 
   return (
-    <aside className="flex flex-col p-2 dark:bg-slate-900   w-18 items-center space-y-3 h-full overflow-hidden border-r-[1.5px]">
+    <aside className="flex flex-col bg-slate-100 p-2 dark:bg-slate-900  w-18 items-center space-y-3 h-full overflow-hidden border-r-[1.5px]">
       <NavigationAction />
       <Separator className="bg-slate-600 w-[80%]" />
       <NavigationScrollBar servers={servers} selectedServer={selectedServer} />

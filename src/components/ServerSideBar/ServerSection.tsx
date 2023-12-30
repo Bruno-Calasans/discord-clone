@@ -38,28 +38,35 @@ export default function ServerSection({ server, member }: ServerSectionProps) {
 
   return (
     <div className="flex flex-col gap-2 p-2 mt-1">
-      <ServerCategory
-        label="Text Channels"
-        member={member}
-        channels={textChannels}
-        server={server}
-        onCreateChannel={createTextChannelHandler}
-      />
-      <ServerCategory
-        label="Audio Channels"
-        member={member}
-        channels={audioChannels}
-        server={server}
-        onCreateChannel={createAudioChannelHandler}
-      />
+      {textChannels.length > 0 && (
+        <ServerCategory
+          label="Text Channels"
+          member={member}
+          channels={textChannels}
+          server={server}
+          onCreateChannel={createTextChannelHandler}
+        />
+      )}
 
-      <ServerCategory
-        label="Video Channels"
-        member={member}
-        channels={videoChannels}
-        server={server}
-        onCreateChannel={createVideoChannelHandler}
-      />
+      {audioChannels.length > 0 && (
+        <ServerCategory
+          label="Audio Channels"
+          member={member}
+          channels={audioChannels}
+          server={server}
+          onCreateChannel={createAudioChannelHandler}
+        />
+      )}
+
+      {videoChannels.length > 0 && (
+        <ServerCategory
+          label="Video Channels"
+          member={member}
+          channels={videoChannels}
+          server={server}
+          onCreateChannel={createVideoChannelHandler}
+        />
+      )}
     </div>
   )
 }
