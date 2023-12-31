@@ -1,6 +1,9 @@
 import type { Metadata } from "next"
 import { getCurrentProfile } from "@/actions/profileActions"
-import { getServerById, getServersByProfileId } from "@/actions/serverActions"
+import {
+  getCompleteServer,
+  getServersByProfileId,
+} from "@/actions/serverActions"
 import ServerSideBar from "@/components/ServerSideBar/ServerSideBar"
 import { redirect } from "next/navigation"
 
@@ -14,7 +17,10 @@ type ServerLayoutProps = {
   params: { serverId: string }
 }
 
-async function ServerLayout({ children, params }: ServerLayoutProps) {
+export default async function ServerLayout({
+  children,
+  params,
+}: ServerLayoutProps) {
   const serverId = params.serverId
 
   // cheking if user is logged in
@@ -22,25 +28,29 @@ async function ServerLayout({ children, params }: ServerLayoutProps) {
   if (!profile) return redirect(`/`)
 
   // checking is server is found
-  const server = await getServerById(serverId)
+  const server = await getCompleteServer(serverId)
   if (!server) return redirect(`/servers`)
 
-  // getting all user's servers
-  const userServers = await getServersByProfileId(profile.id)
-  if (!userServers) return redirect(`/`)
+  // Checking is user is member of this server
+  const member = server.members.find(
+    (member) => member.profileId === profile.id
+  )
+  if (!member) return redirect(`/`)
+
+  // getting all servers of the user
+  const servers = await getServersByProfileId(profile.id)
+  if (!servers) return redirect(`/`)
 
   // checking if user is currently on this server
-  const isUserOnServer = userServers.find(
+  const isUserOnServer = servers.find(
     (userServer) => userServer.id === server.id
   )
-  if (!isUserOnServer) return null
+  if (!isUserOnServer) return redirect(`/`)
 
   return (
     <div className="flex w-full">
-      <ServerSideBar serverId={serverId} />
+      <ServerSideBar server={server} profile={profile} member={member} />
       <section className="h-full w-full">{children}</section>
     </div>
   )
 }
-
-export default ServerLayout

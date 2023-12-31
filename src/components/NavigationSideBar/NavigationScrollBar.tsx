@@ -4,10 +4,10 @@ import { useRouter } from "next/navigation"
 import NavigationItem from "./NavigationItem"
 import ModeToggle from "../ui/ModeToggle"
 import { UserButton } from "@clerk/nextjs"
-import type { ServerWithChannels } from "@/types/ServerWithChannels"
+import type { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
 
 type NavigationScrollBarProps = {
-  servers: ServerWithChannels[]
+  servers: ServerWithMembersAndProfile[]
   selectedServer?: string
 }
 
@@ -17,7 +17,7 @@ function NavigationScrollBar({
 }: NavigationScrollBarProps) {
   const router = useRouter()
 
-  const clickServerHandler = async (server: ServerWithChannels) => {
+  const clickServerHandler = async (server: ServerWithMembersAndProfile) => {
     const firstChannel = server.channels[0]
     router.push(`/servers/${server.id}/channels/${firstChannel.id}`)
   }

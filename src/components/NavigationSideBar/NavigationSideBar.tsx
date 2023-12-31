@@ -2,15 +2,14 @@
 import Separator from "@/components/ui/Separator"
 import NavigationAction from "./NavigationAction"
 import NavigationScrollBar from "./NavigationScrollBar"
-import type { Server } from "../../../prisma/output"
 import { useParams } from "next/navigation"
-import type { ServerWithChannels } from "@/types/ServerWithChannels"
+import { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
 
 type NavigationSideBarProps = {
-  servers: ServerWithChannels[]
+  servers: ServerWithMembersAndProfile[]
 }
 
-function NavigationSideBar({ servers }: NavigationSideBarProps) {
+export default function NavigationSideBar({ servers }: NavigationSideBarProps) {
   const params = useParams()
   const selectedServer = params.serverId as string | undefined
 
@@ -22,5 +21,3 @@ function NavigationSideBar({ servers }: NavigationSideBarProps) {
     </aside>
   )
 }
-
-export default NavigationSideBar

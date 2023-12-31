@@ -1,26 +1,16 @@
-import { getCurrentProfile } from "@/actions/profileActions"
-import { getCompleteServer } from "@/actions/serverActions"
 import ServerSideBarHeader from "./ServerSideBarHeader"
 import ServerSearch from "./ServerSearch"
 import ServerSection from "./ServerSection"
+import type { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
+import type { Member, Profile } from "../../../prisma/output"
 
 type ServerSideBarProps = {
-  serverId: string
+  server: ServerWithMembersAndProfile
+  profile: Profile
+  member: Member
 }
 
-async function ServerSideBar({ serverId }: ServerSideBarProps) {
-  const profile = await getCurrentProfile()
-  if (!profile) return null
-
-  const server = await getCompleteServer(serverId)
-  if (!server) return null
-
-  const member = server.members.find(
-    (member) => member.profileId === profile.id
-  )
-
-  if (!member) return null
-
+function ServerSideBar({ server, profile, member }: ServerSideBarProps) {
   return (
     <aside className="flex-col grow-1 dark:bg-zinc-900 w-[30%]">
       <ServerSideBarHeader server={server} profile={profile} member={member} />

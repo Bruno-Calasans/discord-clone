@@ -12,7 +12,7 @@ type ServerInput = Omit<Server, "id" | "createdAt" | "updatedAt">
 
 export async function getServersByProfileId(
   profileId: string
-): Promise<ServerWithChannels[] | null> {
+): Promise<ServerWithMembersAndProfile[] | null> {
   try {
     return db.server.findMany({
       where: {
@@ -23,6 +23,15 @@ export async function getServersByProfileId(
         },
       },
       include: {
+        profile: true,
+        members: {
+          include: {
+            profile: true,
+          },
+          orderBy: {
+            role: "asc",
+          },
+        },
         channels: true,
       },
     })
