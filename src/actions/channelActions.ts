@@ -21,6 +21,7 @@ export async function findChannelById(id: string) {
       },
     })
     if (!channel) throw new Error("Channel not found")
+
     return channel
   } catch (error) {
     return null

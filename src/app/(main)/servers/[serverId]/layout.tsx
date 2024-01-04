@@ -48,9 +48,9 @@ export default async function ServerLayout({
   if (!isUserOnServer) return redirect(`/`)
 
   return (
-    <div className="flex w-full">
+    <>
       <ServerSideBar server={server} profile={profile} member={member} />
-      <section className="h-full w-full">{children}</section>
-    </div>
+      {children}
+    </>
   )
 }

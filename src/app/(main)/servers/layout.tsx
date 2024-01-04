@@ -2,8 +2,8 @@ import type { Metadata } from "next"
 import { redirect } from "next/navigation"
 import { getCurrentProfile } from "@/actions/profileActions"
 import { getServersByProfileId } from "@/actions/serverActions"
-import NavigationSideBar from "@/components/NavigationSideBar/NavigationSideBar"
 import { redirectToSignIn } from "@clerk/nextjs"
+import NavigationSideBar from "@/components/NavigationSideBar/NavigationSideBar"
 
 export const metadata: Metadata = {
   title: "Servers",
