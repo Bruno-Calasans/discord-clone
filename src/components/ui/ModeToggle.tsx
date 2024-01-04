@@ -20,7 +20,7 @@ export default function ModeToggle() {
         <Button
           variant="outline"
           size="icon"
-          className="border-none dark:bg-slate-900"
+          className="border-none dark:bg-zinc-900"
         >
           {theme === "light" ? (
             <Sun className="text-yellow-500" />

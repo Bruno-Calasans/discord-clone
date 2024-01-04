@@ -2,9 +2,8 @@
 import { ScrollArea } from "@radix-ui/react-scroll-area"
 import { useRouter } from "next/navigation"
 import NavigationItem from "./NavigationItem"
-import ModeToggle from "../ui/ModeToggle"
-import { UserButton } from "@clerk/nextjs"
 import type { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
+import NavigationFooter from "./NavigationFooter"
 
 type NavigationScrollBarProps = {
   servers: ServerWithMembersAndProfile[]
@@ -35,10 +34,7 @@ function NavigationScrollBar({
             />
           ))}
       </ScrollArea>
-      <div className="flex flex-col gap-2 justify-center items-center">
-        <ModeToggle />
-        <UserButton />
-      </div>
+      <NavigationFooter />
     </div>
   )
 }
