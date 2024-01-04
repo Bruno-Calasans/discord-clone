@@ -140,15 +140,50 @@ exports.Prisma.ChannelScalarFieldEnum = {
   id: 'id',
   name: 'name',
   type: 'type',
+  profileId: 'profileId',
   serverId: 'serverId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  profileId: 'profileId'
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.MessageScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  fileUrl: 'fileUrl',
+  deleted: 'deleted',
+  memberId: 'memberId',
+  channelId: 'channelId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ConversationScalarFieldEnum = {
+  id: 'id',
+  senderProfileId: 'senderProfileId',
+  receiverProfileId: 'receiverProfileId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DirectMessageScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  fileUrl: 'fileUrl',
+  deleted: 'deleted',
+  conversationId: 'conversationId',
+  profileId: 'profileId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
 };
 exports.CHANNEL_TYPE = exports.$Enums.CHANNEL_TYPE = {
   TEXT: 'TEXT',
@@ -160,7 +195,10 @@ exports.Prisma.ModelName = {
   Member: 'Member',
   Profile: 'Profile',
   Server: 'Server',
-  Channel: 'Channel'
+  Channel: 'Channel',
+  Message: 'Message',
+  Conversation: 'Conversation',
+  DirectMessage: 'DirectMessage'
 };
 
 /**

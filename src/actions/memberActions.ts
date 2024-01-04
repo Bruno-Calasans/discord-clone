@@ -2,7 +2,6 @@
 import db from "@/config/db"
 import type { Member } from "../../prisma/output"
 import { getCurrentProfile } from "./profileActions"
-import { getCompleteServer } from "./serverActions"
 
 export async function getMemberByProfileId(profileId: string) {}
 
@@ -39,5 +38,3 @@ export async function kickMember(memberId: string) {
     return null
   }
 }
-
-
