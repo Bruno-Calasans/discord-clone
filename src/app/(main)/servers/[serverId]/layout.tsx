@@ -1,11 +1,12 @@
 import type { Metadata } from "next"
 import { getCurrentProfile } from "@/actions/profileActions"
+import { redirect } from "next/navigation"
 import {
   getCompleteServer,
   getServersByProfileId,
 } from "@/actions/serverActions"
 import ServerSideBar from "@/components/ServerSideBar/ServerSideBar"
-import { redirect } from "next/navigation"
+import MembersSideBar from "@/components/MembersSideBar/MembersSideBar"
 
 export const metadata: Metadata = {
   title: "Server Name",
@@ -51,6 +52,7 @@ export default async function ServerLayout({
     <>
       <ServerSideBar server={server} profile={profile} member={member} />
       {children}
+      <MembersSideBar profile={profile} members={server.members} />
     </>
   )
 }

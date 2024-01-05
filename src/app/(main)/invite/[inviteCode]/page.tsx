@@ -4,7 +4,6 @@ import {
   getServerMembers,
   joinServer,
 } from "@/actions/serverActions"
-import { redirectToSignIn } from "@clerk/nextjs"
 import { redirect } from "next/navigation"
 
 type InvitePageProps = {
@@ -15,10 +14,10 @@ type InvitePageProps = {
 
 async function InvitePage({ params }: InvitePageProps) {
   const inviteCode = params.inviteCode
-  if (!inviteCode) return redirect(`/`)
+  if (!inviteCode) return redirect("/")
 
   const profile = await getCurrentProfile()
-  if (!profile) return redirectToSignIn()
+  if (!profile) return redirect("/")
 
   const server = await getServerByInviteCode(inviteCode)
   if (!server) return redirect("/servers")

@@ -15,7 +15,8 @@ export default async function Home() {
   // getting start server
   if (servers.length > 0) {
     const firstServer = servers[0]
-    return redirect(`/servers/${firstServer.id}`)
+    const firstChannel = firstServer.channels[0]
+    return redirect(`/servers/${firstServer.id}/channels/${firstChannel.id}`)
   }
 
   return (

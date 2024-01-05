@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation"
 import { findChannelById } from "@/actions/channelActions"
 import ChatHeader from "@/components/chat/ChatHeader"
-import MobileMenuToggle from "@/components/chat/MobileMenuToggle"
 
 type ChannelPageProps = {
   params: {
@@ -21,10 +20,7 @@ export default async function ChannelPage({ params }: ChannelPageProps) {
 
   return (
     <section className="w-full h-full">
-      <div className="flex gap-1 w-full items-center font-semibold text-md dark:bg-zinc-900 h-12 border-b-2 dark:border-neutral-800 px-2 transition">
-        <MobileMenuToggle serverId={serverId} />
-        <ChatHeader channel={channel} type="channel" />
-      </div>
+      <ChatHeader channel={channel} type="channel" />
     </section>
   )
 }
