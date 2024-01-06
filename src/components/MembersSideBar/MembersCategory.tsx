@@ -1,4 +1,5 @@
 "use client"
+
 import { cn } from "@/utils/cn"
 import type { Member } from "../../../prisma/output"
 import type { MemberWithProfile } from "@/types/MemberProfile"
@@ -10,20 +11,33 @@ import {
   ContextMenuSeparator,
 } from "@/components/ui/ContextMenu"
 import { Avatar, AvatarImage } from "@/components/ui/Avatar"
+import { findOrCreateConversation } from "@/actions/conversationActions"
+import { useRouter } from "next/navigation"
 
 type MemberItemProps = {
   label: React.ReactNode
   profileMember: MemberWithProfile
   members: MemberWithProfile[]
-  onClickMember: (member: Member) => void
 }
 
 export default function MembersCategory({
   label,
   profileMember,
   members,
-  onClickMember,
 }: MemberItemProps) {
+  const router = useRouter()
+
+  const clickMemberHandler = (member: Member) => {}
+
+  const createConversationHandler = async (member: Member) => {
+    const conversation = await findOrCreateConversation(
+      profileMember.profileId,
+      member.profileId
+    )
+    if (!conversation) return
+    router.push(`/conversations/${conversation.id}`)
+  }
+
   return (
     <div>
       {/* Header */}
@@ -42,7 +56,7 @@ export default function MembersCategory({
                   className={cn(
                     "group flex gap-2 items-center hover:bg-text-700 text-zinc-600 hover:text-zinc-100 dark:text-zinc-400 hover:dark:text-zinc-200 cursor-pointer p-[4px] hover:bg-zinc-700 rounded-sm transition "
                   )}
-                  onClick={() => onClickMember(member)}
+                  onClick={() => clickMemberHandler(member)}
                 >
                   <Avatar className="w-8 h-8">
                     <AvatarImage src={member.profile.imgUrl} />
@@ -50,7 +64,7 @@ export default function MembersCategory({
                   <p className="line-clamp-1">{member.name}</p>
                 </div>
               </ContextMenuTrigger>
-              <ContextMenuContent>
+              <ContextMenuContent className="p-2">
                 {member.profileId !== profileMember.profileId &&
                   profileMember.role === "admin" && (
                     <>
@@ -60,7 +74,11 @@ export default function MembersCategory({
                       <ContextMenuSeparator />
                     </>
                   )}
-                <ContextMenuItem>Direct message</ContextMenuItem>
+                <ContextMenuItem
+                  onClick={() => createConversationHandler(member)}
+                >
+                  Direct message
+                </ContextMenuItem>
                 <ContextMenuItem>See profile</ContextMenuItem>
                 <ContextMenuItem>Add friend</ContextMenuItem>
               </ContextMenuContent>

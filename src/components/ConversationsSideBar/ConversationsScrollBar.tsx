@@ -14,18 +14,12 @@ type ConversationScrollBarProps = {
 export default function ConversationScrollBar({
   profile,
   conversations,
-  selectedConversation,
 }: ConversationScrollBarProps) {
-  const router = useRouter()
-  const clickConversationHandler = async (conversation: Conversation) => {
-    router.push(`/conversations/${conversation.id}`)
-  }
-
   return (
     <div className="flex flex-col h-full w-full px-2">
-      <div className="w-full flex justify-between mb-2 text-sm text-zinc-400">
+      <div className="w-full flex justify-between mb-2 text-sm dark:text-zinc-400">
         <p className="font-bold">Direct messages</p>
-        <button>+</button>
+        <button className="font-bold">+</button>
       </div>
       {conversations.length > 0 && (
         <ScrollArea className="flex flex-col justify-center items-center gap-2">
@@ -34,8 +28,6 @@ export default function ConversationScrollBar({
               <ConversationItem
                 key={conversation.id}
                 conversation={conversation}
-                selected={conversation.id === selectedConversation}
-                onClick={() => clickConversationHandler(conversation)}
                 profile={profile}
               />
             ))}

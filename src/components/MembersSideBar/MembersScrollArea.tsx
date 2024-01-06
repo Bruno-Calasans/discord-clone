@@ -1,6 +1,6 @@
 "use client"
-import { MemberWithProfile } from "@/types/MemberProfile"
-import { Member, Profile } from "../../../prisma/output"
+import type { MemberWithProfile } from "@/types/MemberProfile"
+import type { Profile } from "../../../prisma/output"
 import { ScrollArea } from "../ui/ScrollArea"
 import MembersCategory from "./MembersCategory"
 import uniqueArray from "@/utils/uniqueValues"
@@ -8,13 +8,11 @@ import uniqueArray from "@/utils/uniqueValues"
 type MembersScrollAreaProps = {
   profile: Profile
   members: MemberWithProfile[]
-  onClickMember: (member: Member) => void
 }
 
 export default function MembersScrollArea({
   profile,
   members,
-  onClickMember,
 }: MembersScrollAreaProps) {
   const groupMembersByRole = () => {
     const roles = members.map((member) => member.role)
@@ -28,15 +26,17 @@ export default function MembersScrollArea({
 
     return membersGroupByRole
   }
+
   const membersByRole = groupMembersByRole()
 
   const profileMember = members.find(
     (member) => member.profileId === profile.id
-  )!
+  )
+  if (!profileMember) return null
 
   return (
     <div className="flex flex-col justify-between items-center">
-      <ScrollArea className="flex flex-col justify-center items-center gap-3 w-full">
+      <ScrollArea className="flex flex-col justify-center items-center gap-3 w-full p-1">
         {Object.keys(membersByRole).map((role) => (
           <MembersCategory
             key={role}
@@ -47,7 +47,6 @@ export default function MembersScrollArea({
             }
             members={membersByRole[role]}
             profileMember={profileMember}
-            onClickMember={onClickMember}
           />
         ))}
       </ScrollArea>

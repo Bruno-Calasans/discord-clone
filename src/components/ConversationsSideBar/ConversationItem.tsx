@@ -1,26 +1,28 @@
 "use client"
-import ActionTooltip from "@/components/custom/ActionTooltip"
-import Image from "next/image"
 import { cn } from "@/utils/cn"
 import type { ConversationWithProfiles } from "@/types/ConversationWithProfiles"
 import { Profile } from "../../../prisma/output"
+import { Avatar, AvatarImage } from "@/components/ui/Avatar"
+import { useParams, useRouter } from "next/navigation"
 
 type NavigationItemProps = {
   profile: Profile
   conversation: ConversationWithProfiles
-  selected?: boolean
-  onClick: (id: string) => void
 }
 
 export default function ConversationItem({
   profile,
   conversation,
-  selected,
-  onClick,
 }: NavigationItemProps) {
-  const clickHandler = () => {
-    onClick(conversation.id)
+  const params = useParams()
+  const router = useRouter()
+
+  const clickMemberHandler = () => {
+    router.push(`/conversations/${conversation.id}`)
   }
+
+  const conversationId = params.conversationId as string | undefined
+  const selected = conversation.id === conversationId
 
   const { senderProfileId, senderProfile, receiverProfile } = conversation
   let conversationProfile = profile
@@ -28,28 +30,18 @@ export default function ConversationItem({
     profile.id === senderProfileId ? receiverProfile : senderProfile
 
   return (
-    <ActionTooltip label={"some label"} align="center" side="right">
-      <button
-        className="flex relative"
-        key={conversation.id}
-        onClick={clickHandler}
-      >
-        <div
-          className={cn(
-            "absolute left-0 top-0 w-[3px] rounded-r-sm bg-slate-600 dark:bg-white transition-all h-full",
-            !selected && "h-[4px] top-[50%]"
-          )}
-        ></div>
-
-        <div className="relative w-10 h-10 ml-2">
-          <Image
-            src={conversationProfile.imgUrl}
-            className="rounded-full hover:rounded-[16px] transition-all"
-            alt={conversationProfile.username}
-            fill
-          />
-        </div>
-      </button>
-    </ActionTooltip>
+    <div
+      className={cn(
+        "group flex gap-2 items-center font-semibold text-zinc-600 hover:text-zinc-200 hover:bg-zinc-700 dark:text-zinc-400  hover:dark:text-zinc-200 hover:dark:bg-zinc-700  cursor-pointer p-[4px] rounded-sm transition",
+        selected &&
+          "text-zinc-200 bg-zinc-700 dark:bg-zinc-700 dark:text-zinc-200 pointer-events-none"
+      )}
+      onClick={clickMemberHandler}
+    >
+      <Avatar className="w-8 h-8">
+        <AvatarImage src={conversationProfile.imgUrl} />
+      </Avatar>
+      <p className="line-clamp-1">{conversationProfile.username}</p>
+    </div>
   )
 }

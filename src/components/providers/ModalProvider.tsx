@@ -13,7 +13,7 @@ type ModalProviderProps = {
   children: React.ReactNode
 }
 
-function ModalProvider({ children }: ModalProviderProps) {
+export default function ModalProvider({ children }: ModalProviderProps) {
   return (
     <Mount>
       <>
@@ -31,5 +31,3 @@ function ModalProvider({ children }: ModalProviderProps) {
     </Mount>
   )
 }
-
-export default ModalProvider

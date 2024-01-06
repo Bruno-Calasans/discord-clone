@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 import { findChannelById } from "@/actions/channelActions"
-import ChatHeader from "@/components/chat/ChatHeader"
+import ChatHeader from "@/components/chat/ChannelChatHeader"
 
 type ChannelPageProps = {
   params: {
@@ -19,8 +19,8 @@ export default async function ChannelPage({ params }: ChannelPageProps) {
   if (!channel) return redirect("/")
 
   return (
-    <section className="w-full h-full">
-      <ChatHeader channel={channel} type="channel" />
+    <section className="w-full h-full bg-zinc-800">
+      <ChatHeader channel={channel} />
     </section>
   )
 }

@@ -24,7 +24,7 @@ export default function ConversationsSideBar({
   return (
     <aside
       className={cn(
-        "flex flex-col bg-slate-100 p-2 dark:bg-zinc-900 items-center space-y-3 h-full overflow-hidden border-r-[1.5px] w-[200px] transition max-md:hidden"
+        "flex flex-col bg-slate-100 p-2 dark:bg-zinc-900 items-center space-y-3 h-full overflow-hidden text-ellipsis  border-r-[1.5px] w-[250px] transition max-md:hidden"
       )}
     >
       <div className="w-full flex flex-col justify-around gap-3 p-1">

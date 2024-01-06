@@ -8,7 +8,7 @@ import type {
 import type { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
 import { MemberWithProfile } from "@/types/MemberProfile"
 
-type ModalType =
+export type ModalType =
   | "CreateServer"
   | "EditServer"
   | "Invite"

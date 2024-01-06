@@ -1,5 +1,5 @@
 function ConversationPage() {
-  return <div>Conversation</div>
+  return <div>Conversations</div>
 }
 
 export default ConversationPage

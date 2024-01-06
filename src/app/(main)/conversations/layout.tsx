@@ -25,7 +25,7 @@ export default async function ConversationsLayout({
 
   return (
     <main className="flex h-full">
-      <ConversationsSideBar conversations={conversations} profile={profile} />
+      <ConversationsSideBar profile={profile} conversations={conversations} />
       {children}
     </main>
   )

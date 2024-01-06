@@ -12,20 +12,12 @@ export default function MembersSideBar({
   profile,
   members,
 }: MembersSideBarProps) {
-  const clickMemberHandler = (member: Member) => {
-    console.log(member)
-  }
-
   return (
-    <div className="dark:bg-zinc-900 w-[300px] h-full">
+    <div className="dark:bg-zinc-900 max-w-[300px] h-full">
       <div className="flex justify-center items-center h-12">
         <div>Members</div>
       </div>
-      <MembersScrollArea
-        profile={profile}
-        members={members}
-        onClickMember={clickMemberHandler}
-      />
+      <MembersScrollArea profile={profile} members={members} />
     </div>
   )
 }

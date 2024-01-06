@@ -1,13 +1,13 @@
 "use client"
-import ActionTooltip from "@/components/custom/ActionTooltip"
 import { Plus } from "lucide-react"
 import useModal from "@/hooks/useModal/useModal"
+import ActionTooltip from "@/components/custom/ActionTooltip"
 
 export default function CreateServerAction() {
   const { open } = useModal()
 
   const modalHandler = () => {
-    open(`CreateServer`)
+    open("CreateServer")
   }
 
   return (
