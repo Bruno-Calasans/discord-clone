@@ -6,7 +6,7 @@ import type {
   Channel,
 } from "../../../prisma/output"
 import type { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
-import { MemberWithProfile } from "@/types/MemberProfile"
+import type { MemberWithProfile } from "@/types/MemberProfile"
 
 export type ModalType =
   | "CreateServer"
@@ -18,6 +18,7 @@ export type ModalType =
   | "DeleteServer"
   | "EditChannel"
   | "DeleteChannel"
+  | "MessageFile"
 
 export type ModalData = {
   server?: ServerWithMembersAndProfile

@@ -8,6 +8,7 @@ import LeaveServerModal from "@/components/modals/LeaveServerModal"
 import DeleteServerModal from "@/components/modals/DeleteServerModal"
 import EditChannelModal from "@/components/modals/EditChannelModal"
 import DeleteChannelModal from "@/components/modals/DeleteChannelModal"
+import MessageFileModal from "@/components/modals/MessageFileModal"
 
 export default function ModalProvider() {
   return (
@@ -22,6 +23,7 @@ export default function ModalProvider() {
         <DeleteServerModal />
         <EditChannelModal />
         <DeleteChannelModal />
+        <MessageFileModal />
       </>
     </Mount>
   )

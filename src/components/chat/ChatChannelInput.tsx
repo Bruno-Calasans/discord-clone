@@ -10,6 +10,7 @@ import { Channel } from "../../../prisma/output"
 import { createChannelMessage } from "@/actions/messageActions"
 import { MemberWithProfile } from "@/types/MemberProfile"
 import useSocket from "@/hooks/useSocket/useSocket"
+import useModal from "@/hooks/useModal/useModal"
 
 const chatInputSchema = z.object({
   content: z
@@ -25,6 +26,7 @@ type ChatInputProps = {
 }
 
 export default function ChatChannelInput({ channel, member }: ChatInputProps) {
+  const { open } = useModal()
   const { socket } = useSocket()
 
   const form = useForm<ChatInputFormInputs>({
@@ -48,6 +50,10 @@ export default function ChatChannelInput({ channel, member }: ChatInputProps) {
     socket?.emit("send-channel-msg", message)
   }
 
+  const attachFileHandler = () => {
+    open("MessageFile", { channel, member })
+  }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(submitHandler)} className="space-y-8">
@@ -59,6 +65,7 @@ export default function ChatChannelInput({ channel, member }: ChatInputProps) {
               <FormControl>
                 <div className="flex items-center gap-2 p-1 px-2 bg-zinc-300 dark:bg-zinc-700 rounded-sm  mx-2 mb-2">
                   <Button
+                    onClick={attachFileHandler}
                     type="button"
                     size="icon"
                     className="text-zinc-100 dark:text-zinc-800 bg-zinc-600 hover:bg-zinc-900 hover:text-zinc-200 dark:bg-zinc-500 hover:dark:bg-zinc-900 hover:dark:text-white w-[24px] h-[24px] p-1 rounded-full transition"
