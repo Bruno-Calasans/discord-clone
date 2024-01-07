@@ -37,8 +37,10 @@ export default function RootLayout({
             themes={["dark", "light"]}
           >
             <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-            <ModalProvider />
-            <SocketProvider>{children}</SocketProvider>
+            <SocketProvider>
+              <ModalProvider />
+              {children}
+            </SocketProvider>
           </ThemeProvider>
         </body>
       </html>

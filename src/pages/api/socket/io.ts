@@ -16,6 +16,9 @@ export default function socketHandler(
 
     io.on("connection", (socket) => {
       console.log(`Client connected: ${socket.id}`)
+      socket.on("send-channel-msg", (message) => {
+        console.log(`Channel msg: ${message?.content}`)
+      })
     })
 
     res.socket.server.io = io

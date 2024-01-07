@@ -1,6 +1,10 @@
 import { redirect } from "next/navigation"
 import { findChannelById } from "@/actions/channelActions"
 import ChatHeader from "@/components/chat/ChannelChatHeader"
+import ChatChannelInput from "@/components/chat/ChatChannelInput"
+import ChastMessages from "@/components/chat/ChatMessages"
+import { getCurrentProfile } from "@/actions/profileActions"
+import { getCompleteServer } from "@/actions/serverActions"
 
 type ChannelPageProps = {
   params: {
@@ -18,9 +22,20 @@ export default async function ChannelPage({ params }: ChannelPageProps) {
   const channel = await findChannelById(channelId)
   if (!channel) return redirect("/")
 
+  const profile = await getCurrentProfile()
+  if (!profile) return redirect("/")
+
+  const server = await getCompleteServer(serverId)
+  if (!server) return redirect("/servers")
+
+  const member = server.members.find((member) => member.profileId == profile.id)
+  if (!member) return redirect("/servers")
+
   return (
-    <section className="w-full h-full bg-zinc-800">
+    <section className="flex flex-col w-full h-full dark:bg-zinc-800">
       <ChatHeader channel={channel} />
+      <ChastMessages />
+      <ChatChannelInput channel={channel} member={member} />
     </section>
   )
 }

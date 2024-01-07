@@ -3,6 +3,18 @@ import db from "@/config/db"
 import type { Member } from "../../prisma/output"
 import { getCurrentProfile } from "./profileActions"
 
+export async function findMemberById(memberId: string) {
+  try {
+    return await db.member.findUnique({
+      where: {
+        id: memberId,
+      },
+    })
+  } catch (error) {
+    return null
+  }
+}
+
 export async function getMemberByProfileId(profileId: string) {}
 
 export async function changeMemberRole(memberId: string, role: string) {

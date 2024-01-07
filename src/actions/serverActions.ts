@@ -3,7 +3,6 @@
 import db from "@/config/db"
 import type { Server, Channel } from "../../prisma/output"
 import type { Omit } from "../../prisma/output/runtime/library"
-import type { ServerWithChannels } from "@/types/ServerWithChannels"
 import { getCurrentProfile, getProfileById } from "@/actions/profileActions"
 import { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
 import { v4 } from "uuid"

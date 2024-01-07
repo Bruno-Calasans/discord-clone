@@ -13,7 +13,7 @@ export default function ChannelChatHeader({ channel }: ChatHeaderProps) {
       <div>
         <MobileMenuToggle serverId={channel.serverId} />
         <div className="flex gap-2 items-center">
-          <p className="flex gap-1 items-center capitalize">
+          <p className="flex gap-1 items-center">
             <Hash className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />
             {channel.name}
           </p>
