@@ -9,8 +9,9 @@ import { ourFileRouter } from "@/app/api/uploadthing/core"
 import { extractRouterConfig } from "uploadthing/server"
 
 // providers
-import ThemeProvider from "@/components/providers/ThemeProvider"
-import ModalProvider from "@/components/providers/ModalProvider"
+import ThemeProvider from "@/providers/ThemeProvider"
+import ModalProvider from "@/providers/ModalProvider"
+import SocketProvider from "@/providers/SocketProvider"
 
 const font = Open_Sans({ subsets: ["latin"] })
 
@@ -36,7 +37,8 @@ export default function RootLayout({
             themes={["dark", "light"]}
           >
             <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-            <ModalProvider>{children}</ModalProvider>
+            <ModalProvider />
+            <SocketProvider>{children}</SocketProvider>
           </ThemeProvider>
         </body>
       </html>

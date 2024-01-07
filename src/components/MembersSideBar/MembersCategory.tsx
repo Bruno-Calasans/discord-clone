@@ -42,9 +42,9 @@ export default function MembersCategory({
     <div>
       {/* Header */}
       <div className="flex flex-col justify-between font-semibold text-xs mt-3 overflow-hidden">
-        <p className="flex w-full text-start text-sm line-clamp-1 ml-2 mb-2">
+        <div className="flex w-full text-start text-sm line-clamp-1 ml-2 mb-2">
           {label}
-        </p>
+        </div>
 
         {/* members */}
         <div className="font-semibold text-sm flex flex-col gap-2 item  overflow-hidden ml-2 mr-1">

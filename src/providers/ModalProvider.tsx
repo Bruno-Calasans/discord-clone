@@ -9,11 +9,7 @@ import DeleteServerModal from "@/components/modals/DeleteServerModal"
 import EditChannelModal from "@/components/modals/EditChannelModal"
 import DeleteChannelModal from "@/components/modals/DeleteChannelModal"
 
-type ModalProviderProps = {
-  children: React.ReactNode
-}
-
-export default function ModalProvider({ children }: ModalProviderProps) {
+export default function ModalProvider() {
   return (
     <Mount>
       <>
@@ -26,7 +22,6 @@ export default function ModalProvider({ children }: ModalProviderProps) {
         <DeleteServerModal />
         <EditChannelModal />
         <DeleteChannelModal />
-        {children}
       </>
     </Mount>
   )
