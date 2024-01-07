@@ -11,6 +11,8 @@ import { createChannelMessage } from "@/actions/messageActions"
 import { MemberWithProfile } from "@/types/MemberProfile"
 import useSocket from "@/hooks/useSocket/useSocket"
 import useModal from "@/hooks/useModal/useModal"
+import EmojiPicker, { Emoji } from "./EmojiPicker"
+import { useRouter } from "next/navigation"
 
 const chatInputSchema = z.object({
   content: z
@@ -28,6 +30,7 @@ type ChatInputProps = {
 export default function ChatChannelInput({ channel, member }: ChatInputProps) {
   const { open } = useModal()
   const { socket } = useSocket()
+  const router = useRouter()
 
   const form = useForm<ChatInputFormInputs>({
     defaultValues: {
@@ -46,12 +49,18 @@ export default function ChatChannelInput({ channel, member }: ChatInputProps) {
     })
     if (!message) return
 
-    form.resetField("content")
     socket?.emit("send-channel-msg", message)
+    form.reset()
+    router.refresh()
   }
 
   const attachFileHandler = () => {
     open("MessageFile", { channel, member })
+  }
+
+  const selecEmojiHandler = (emoji: Emoji) => {
+    const currentContent = form.getValues("content")
+    form.setValue("content", `${currentContent}${emoji.native}`)
   }
 
   return (
@@ -78,9 +87,7 @@ export default function ChatChannelInput({ channel, member }: ChatInputProps) {
                     disabled={loading}
                     {...field}
                   />
-                  <button type="button">
-                    <Smile className="hover:fill-yellow-500 hover:text-zinc-900" />
-                  </button>
+                  <EmojiPicker onSelect={selecEmojiHandler} />
                 </div>
               </FormControl>
             </FormItem>
