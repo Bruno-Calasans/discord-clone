@@ -48,3 +48,18 @@ export async function createChannelMessage({
     return null
   }
 }
+
+export async function getChannelMessages(channelId: string) {
+  try {
+    const channel = await findChannelById(channelId)
+    if (!channel) throw new Error("Channel not Found")
+
+    return await db.message.findMany({
+      where: {
+        channelId,
+      },
+    })
+  } catch (error) {
+    return null
+  }
+}
