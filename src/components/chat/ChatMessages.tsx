@@ -1,21 +1,57 @@
+"use client"
 import type { MemberWithProfile } from "@/types/MemberProfile"
-import type { Channel, Message } from "../../../prisma/output"
+import type { Channel } from "../../../prisma/output"
 import ChatWelcome from "./ChatWelcome"
+import useChannelMsgQuery from "@/hooks/useChannelMsgQuery"
+import { Loader2, ServerCrash } from "lucide-react"
+import ChannelMessage from "./ChannelMessage"
+import { ScrollArea } from "@/components/ui/ScrollArea"
+import React from "react"
 
 type ChatMessagesProps = {
   channel: Channel
   member: MemberWithProfile
-  messages: Message[]
 }
 
-export default function ChatMessages({
-  channel,
-  member,
-  messages,
-}: ChatMessagesProps) {
+export default function ChatMessages({ channel, member }: ChatMessagesProps) {
+  const { data, isLoading, isError } = useChannelMsgQuery({
+    channelId: channel.id,
+    batch: 10,
+  })
+  const messages = data?.pages[0]?.messages
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col flex-1 gap-1 justify-center items-center">
+        <Loader2 className="h-6 w-6 text-zinc-500 animate-spin" />
+        <p className="text-zinc-500">Loading Messages...</p>
+      </div>
+    )
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-col flex-1 gap-1 justify-center items-center">
+        <ServerCrash className="h-6 w-6 text-zinc-500" />
+        <p className="text-zinc-500">Something went wrong :(</p>
+      </div>
+    )
+  }
+
   return (
-    <div className="flex-1 flex-col">
-      {messages.length === 0 && <ChatWelcome channel={channel} />}
-    </div>
+    <ScrollArea className="flex flex-col flex-1 px-2 py-3">
+      <ChatWelcome channel={channel} />
+      {messages && messages.length > 0 && (
+        <div className="flex flex-col-reverse gap-3">
+          {messages.map((message) => (
+            <ChannelMessage
+              key={message.id}
+              member={member}
+              message={message}
+            />
+          ))}
+        </div>
+      )}
+    </ScrollArea>
   )
 }

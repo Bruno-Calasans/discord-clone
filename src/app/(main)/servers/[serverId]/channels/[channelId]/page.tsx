@@ -32,14 +32,13 @@ export default async function ChannelPage({ params }: ChannelPageProps) {
   const member = server.members.find((member) => member.profileId == profile.id)
   if (!member) return redirect("/servers")
 
-  const messages = await getChannelMessages(channel.id)
-  if (!messages) return redirect(`/servers/${serverId}`)
-
   return (
     <section className="flex flex-col w-full h-full dark:bg-zinc-800">
       <ChatHeader channel={channel} />
-      <ChatMessages channel={channel} member={member} messages={messages} />
-      <ChatChannelInput channel={channel} member={member} />
+      <div className="flex flex-col justify-end flex-1">
+        <ChatMessages channel={channel} member={member} />
+        <ChatChannelInput channel={channel} member={member} />
+      </div>
     </section>
   )
 }

@@ -24,8 +24,9 @@ export default function FileUpload({
   const [files, setFiles] = useState<UploadCompleteResponse>([])
 
   const uploadHandler = (response: UploadCompleteResponse) => {
+    const fileUrls = response.map((file) => file.url)
+    onChange(fileUrls)
     setFiles(response)
-    onChange(files.map((file) => file.url))
   }
 
   const clearFilesHandler = () => {

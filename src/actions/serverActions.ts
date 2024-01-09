@@ -92,7 +92,7 @@ export async function updateServer(
   } catch (error) {}
 }
 
-export async function getServerById(serverId: string): Promise<Server | null> {
+export async function findServerById(serverId: string): Promise<Server | null> {
   try {
     return db.server.findUnique({
       where: {
@@ -263,7 +263,7 @@ export async function deleteServer(serverId: string) {
     const profile = await getCurrentProfile()
     if (!profile) throw new Error("Profile not found")
 
-    const server = await getServerById(serverId)
+    const server = await findServerById(serverId)
     if (!server) throw new Error("Server not found")
 
     const isServerOwner = server.profileId === profile.id

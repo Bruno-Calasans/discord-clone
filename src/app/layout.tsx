@@ -12,6 +12,7 @@ import { extractRouterConfig } from "uploadthing/server"
 import ThemeProvider from "@/providers/ThemeProvider"
 import ModalProvider from "@/providers/ModalProvider"
 import SocketProvider from "@/providers/SocketProvider"
+import QueryProvider from "@/providers/QueryProvider"
 
 const font = Open_Sans({ subsets: ["latin"] })
 
@@ -39,7 +40,7 @@ export default function RootLayout({
             <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
             <SocketProvider>
               <ModalProvider />
-              {children}
+              <QueryProvider>{children}</QueryProvider>
             </SocketProvider>
           </ThemeProvider>
         </body>

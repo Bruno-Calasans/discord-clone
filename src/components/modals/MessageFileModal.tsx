@@ -51,11 +51,13 @@ export default function MessageFileModal() {
       channelId: channel?.id,
       fileUrl,
     })
+    router.refresh()
     form.reset()
     close()
   }
 
-  const uploadServerImageHandler = (files: string[]) => {
+  const uploadChannelFileHandler = (files: string[]) => {
+    console.log(files)
     if (files.length === 0) return form.resetField("fileUrl")
     if (files.length === 1) {
       form.setValue("fileUrl", files[0])
@@ -92,7 +94,7 @@ export default function MessageFileModal() {
                   <FormControl>
                     <FileUpload
                       endpoint="messageFile"
-                      onChange={uploadServerImageHandler}
+                      onChange={uploadChannelFileHandler}
                     />
                   </FormControl>
                   <FormMessage />
