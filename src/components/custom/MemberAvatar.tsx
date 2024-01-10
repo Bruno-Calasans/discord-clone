@@ -23,10 +23,7 @@ import {
 import { changeMemberRole, kickMember } from "@/actions/memberActions"
 import { useState } from "react"
 import type { Profile } from "../../../prisma/output"
-
-const iconRoleMap = {
-  admin: <ShieldAlert className="h-4 w-4 text-emerald-600" />,
-} as Record<string, JSX.Element>
+import ICON_ROLE_MAP from "@/constants/iconRoleMap"
 
 type MemberAvatarProps = {
   member: MemberWithProfile
@@ -87,7 +84,7 @@ export default function MemberAvatar({
             >
               {member.name}
             </p>
-            {iconRoleMap[member.role]}
+            {ICON_ROLE_MAP[member.role]}
           </div>
           <p className="text-sm">{member.profile.email}</p>
         </div>

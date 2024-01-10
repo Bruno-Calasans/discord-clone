@@ -207,7 +207,7 @@ export async function deleteChannelMsg({
 
     const isMessageOwner = message.memberId === memberId
     if (!isMessageOwner) {
-      throw new Error("You cannot edit other member's message")
+      throw new Error("You cannot delete other member's message")
     }
 
     const member = await findMemberById(memberId)

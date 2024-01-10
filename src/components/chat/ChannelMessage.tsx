@@ -1,27 +1,28 @@
 "use client"
 import * as z from "zod"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import type { MessageWithMemberProfile } from "@/types/MessageWithMemberProfile"
-import { format, isToday, isYesterday, differenceInSeconds } from "date-fns"
+import { differenceInSeconds } from "date-fns"
 import type { MemberWithProfile } from "@/types/MemberProfile"
 import { Avatar, AvatarImage } from "@/components/ui/Avatar"
 import {
-  ShieldAlert,
   File,
   MoreHorizontal,
-  Edit,
   Trash,
   Reply,
   Edit2,
-  Pin,
+  Copy,
+  SmileIcon,
 } from "lucide-react"
 import ActionTooltip from "@/components/custom/ActionTooltip"
 import Image from "next/image"
-import { useState } from "react"
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
 } from "@/components/ui/DropdownMenu"
 import {
   Form,
@@ -34,7 +35,10 @@ import { cn } from "@/utils/cn"
 import Input from "../ui/Input"
 import { useForm } from "react-hook-form"
 import Button from "../ui/Button"
-import { deleteChannelMsg, editChannelMsg } from "@/actions/messageActions"
+import { editChannelMsg } from "@/actions/messageActions"
+import useModal from "@/hooks/useModal/useModal"
+import dateFormat from "@/utils/dateFormat"
+import ICON_ROLE_MAP from "@/constants/iconRoleMap"
 
 const messageFormSchema = z.object({
   content: z
@@ -44,41 +48,19 @@ const messageFormSchema = z.object({
 
 type MessageEditInputs = z.infer<typeof messageFormSchema>
 
-const dateFormat = (date: string | number | Date) => {
-  let day = "dd/MM/yyyy"
-  let hours = "H:mm"
-  const dateFormat = `${day} at ${hours}`
-
-  const today = isToday(date)
-  const yesterday = isYesterday(date)
-  let readableDate = ""
-
-  if (today) readableDate = "today"
-  if (yesterday) readableDate = "yesterday"
-
-  if (readableDate) {
-    return `${readableDate} at ${format(date, hours)}`
-  }
-
-  return format(date, dateFormat)
-}
-
 type ChannelMessageProps = {
   member: MemberWithProfile
   message: MessageWithMemberProfile
 }
-
-const iconRoleMap = {
-  admin: <ShieldAlert className="h-4 w-4 text-rose-600" />,
-} as Record<string, JSX.Element>
 
 export default function ChannelMessage({
   member,
   message,
 }: ChannelMessageProps) {
   const [editing, setEditing] = useState(false)
-  const [deleting, setDeleting] = useState(false)
   const [showMore, setShowMore] = useState(false)
+  const { open } = useModal()
+  const router = useRouter()
   const form = useForm<MessageEditInputs>({
     defaultValues: {
       content: message.content,
@@ -89,12 +71,18 @@ export default function ChannelMessage({
   const isOwner = member.id === message.member.id
   const isEdited =
     differenceInSeconds(message.createdAt, message.updatedAt) !== 0
+
   const canDeleteMsg = !message.deleted && (isOwner || isAdmin)
   const canEditMsg = !message.deleted && isOwner && !message.fileUrl
+
   const fileType = message.fileUrl?.split(".").pop()
   const isPdf = fileType === "pdf"
   const isImage = fileType !== "pdf"
   const isLoading = form.formState.isSubmitting
+
+  const addReactionHandler = () => {
+    // todo
+  }
 
   const replyHandler = () => {
     // todo
@@ -102,6 +90,7 @@ export default function ChannelMessage({
 
   const startEditHandler = () => {
     setEditing(true)
+    form.setFocus("content")
   }
 
   const cancelEditHandler = () => {
@@ -118,32 +107,54 @@ export default function ChannelMessage({
       })
     }
     setEditing(false)
+    router.refresh()
   }
 
-  const deleteMsgHandler = async () => {
-    setDeleting(true)
-    await deleteChannelMsg({
-      messageId: message.id,
-      memberId: member.id,
-      serverId: member.serverId,
-    })
-    setDeleting(false)
+  const deleteMsgHandler = () => {
+    open("DeleteChannelMessage", { message })
   }
+
+  const copyMessageHandler = () => {
+    if (message.deleted) return
+    let content = message.content || message.fileUrl
+    if (content) navigator.clipboard.writeText(content)
+  }
+
+  const dropdownHandler = (open: boolean) => {
+    setShowMore(open)
+  }
+
+  // Cancel editing keyboard events
+  useEffect(() => {
+    const cancelEdit = async ({ key }: KeyboardEvent) => {
+      if (key === "Escape") {
+        cancelEditHandler()
+      }
+    }
+    window.addEventListener("keydown", cancelEdit)
+
+    return () => {
+      window.removeEventListener("keydown", cancelEdit)
+    }
+  }, [])
 
   return (
     <div className="flex gap-2 w-full items-start hover:bg-zinc-200/30 hover:dark:bg-zinc-700/30 px-2 pt-2 pb-4 rounded-sm cursor-pointer relative group">
+      {/* Message sender's avatar */}
       <Avatar className="w-6 h-6 mt-1 cursor-pointer">
         <AvatarImage src={member.profile.imgUrl} />
       </Avatar>
+
+      {/* Message  informations */}
       <div className="group flex flex-col overflow-hidden w-full cursor-pointer">
         <div className="flex flex-col mb-[4px]">
           <div className="flex gap-1 items-center text-sm ">
-            <div className="flex items-center gap-[2px]">
+            <div className="flex items-center gap-[4px]">
               <p className="font-semibold hover:underline cursor-pointer transition">
                 {member.name}
               </p>
               <ActionTooltip label={member.role}>
-                {iconRoleMap[member.role]}
+                {ICON_ROLE_MAP[member.role]}
               </ActionTooltip>
             </div>
 
@@ -153,23 +164,29 @@ export default function ChannelMessage({
           </div>
         </div>
 
-        {/* No editing content */}
-        {message.content && !editing && (
+        {/* Deleted Message */}
+        {message.deleted && (
           <div className="flex flex-col gap-1">
             <p className="text-sm text-zinc-900 dark:text-zinc-300 text-ellipsis">
               {message.content}
             </p>
+          </div>
+        )}
 
-            {isEdited && (
-              <p className="text-xs text-zinc-500 italic">
-                Last edited: {dateFormat(message.updatedAt)}
-              </p>
-            )}
+        {/* No editing content */}
+        {!message.deleted && message.content && !editing && (
+          <div className="flex flex-col gap-1">
+            <p className="text-sm text-zinc-900 dark:text-zinc-300 text-ellipsis">
+              {message.content}{" "}
+              {isEdited && !message.deleted && (
+                <span className="text-zinc-500">(edited)</span>
+              )}
+            </p>
           </div>
         )}
 
         {/* Editing content */}
-        {message.content && editing && (
+        {!message.deleted && message.content && editing && (
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(saveEditHandler)}
@@ -182,6 +199,7 @@ export default function ChannelMessage({
                   <FormItem className="w-full">
                     <FormControl>
                       <Input
+                        autoFocus
                         className="bg-zinc-600/30 focus-visible:ring-0 focus-visible:ring-offset-0 border-none border-0"
                         {...field}
                       />
@@ -190,32 +208,38 @@ export default function ChannelMessage({
                   </FormItem>
                 )}
               />
-              <div className="flex gap-1 w-full justify-end">
-                <Button
-                  onClick={cancelEditHandler}
-                  size="sm"
-                  variant="primary"
-                  className="h-5"
-                  disabled={isLoading}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  size="sm"
-                  variant="primary"
-                  className="h-5"
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Saving..." : "Save"}
-                </Button>
+              <div className="flex gap-1 w-full justify-between">
+                <p className="text-sm text-zinc-400">
+                  Press <span className="text-indigo-500">Escape</span> to
+                  cancel
+                </p>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={cancelEditHandler}
+                    size="sm"
+                    variant="primary"
+                    className="h-5"
+                    disabled={isLoading}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    size="sm"
+                    variant="primary"
+                    className="h-5"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Saving..." : "Save"}
+                  </Button>
+                </div>
               </div>
             </form>
           </Form>
         )}
 
         {/* Image Content */}
-        {message.fileUrl && isImage && (
+        {!message.deleted && message.fileUrl && isImage && (
           <a
             href={message.fileUrl}
             target="_blank"
@@ -232,7 +256,7 @@ export default function ChannelMessage({
         )}
 
         {/* Pdf Content */}
-        {message.fileUrl && isPdf && (
+        {!message.deleted && message.fileUrl && isPdf && (
           <div className="flex bg-zinc-200 dark:bg-zinc-700/30 rounded-sm p-2">
             <div className="w-full">
               <div className="flex items-center w-full gap-1">
@@ -251,73 +275,115 @@ export default function ChannelMessage({
         )}
       </div>
 
-      {/* Reply Action */}
-      <button
-        onClick={replyHandler}
-        className={cn(
-          "text-white absolute right-[65px] top-[-10px] hover:dark:bg-zinc-700 bg-zinc-500 hover:bg-zinc-600 dark:bg-zinc-600 rounded-s invisible group-hover:visible transition p-1"
-        )}
-      >
-        <ActionTooltip label="Reply">
-          <Reply className="h-4 w-4" />
-        </ActionTooltip>
-      </button>
+      {/* Reply Quick Action */}
+      {!message.deleted && (
+        <button
+          onClick={replyHandler}
+          className={cn(
+            "text-white absolute right-[65px] top-[-10px] hover:dark:bg-zinc-700 bg-zinc-500 hover:bg-zinc-600 dark:bg-zinc-600 rounded-s invisible group-hover:visible transition p-1",
+            !canEditMsg && "right-[35px]"
+          )}
+        >
+          <ActionTooltip label="Reply">
+            <Reply className="h-4 w-4" />
+          </ActionTooltip>
+        </button>
+      )}
 
-      {/* Edit Action */}
-      <button
-        onClick={startEditHandler}
-        className={cn(
-          "text-white absolute right-[35px] top-[-10px] hover:dark:bg-zinc-700 bg-zinc-500 hover:bg-zinc-600 dark:bg-zinc-600 rounded-s invisible group-hover:visible transition p-1"
-        )}
-      >
-        <ActionTooltip label="Edit">
-          <Edit2 className="h-4 w-4" />
-        </ActionTooltip>
-      </button>
+      {/* Edit Quick Action */}
+      {!message.deleted && canEditMsg && (
+        <button
+          onClick={startEditHandler}
+          className={cn(
+            "text-white absolute right-[35px] top-[-10px] hover:dark:bg-zinc-700 bg-zinc-500 hover:bg-zinc-600 dark:bg-zinc-600 rounded-s invisible group-hover:visible transition p-1"
+          )}
+        >
+          <ActionTooltip label="Edit">
+            <Edit2 className="h-4 w-4" />
+          </ActionTooltip>
+        </button>
+      )}
 
       {/* More Actions */}
-      <div
-        onClick={() => setShowMore(true)}
-        className={cn(
-          "text-white absolute right-[5px] top-[-10px] hover:dark:bg-zinc-700 bg-zinc-500 hover:bg-zinc-600 dark:bg-zinc-600 rounded-s transition p-1",
-          showMore && "visible",
-          !showMore && "invisible group-hover:visible"
-        )}
-      >
-        <DropdownMenu>
-          <ActionTooltip label="More">
-            <DropdownMenuTrigger asChild>
-              <MoreHorizontal className="h-4 w-4" />
-            </DropdownMenuTrigger>
-          </ActionTooltip>
-          <DropdownMenuContent className="flex flex-col gap-1 p-2">
-            {/* <DropdownMenuItem>
-              <button
-                onClick={replyHandler}
-                className="flex items-center gap-1 text-sm"
-              >
-                <Reply className="h-4 w-4" /> <span>Reply</span>
-              </button>
-            </DropdownMenuItem> */}
-            {/* <DropdownMenuItem>
-              <button
-                onClick={startEditHandler}
-                className="flex items-center gap-1 text-sm"
-              >
-                <Edit className="h-4 w-4" /> <span>Edit</span>
-              </button>
-            </DropdownMenuItem> */}
-            <DropdownMenuItem>
-              <button
-                onClick={deleteMsgHandler}
-                className="flex items-center gap-1 text-sm text-rose-500"
-              >
-                <Trash className="h-4 w-4" /> <span>Delete</span>
-              </button>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+      {!message.deleted && (
+        <div
+          className={cn(
+            "text-white absolute right-[5px] top-[-10px] hover:dark:bg-zinc-700 bg-zinc-500 hover:bg-zinc-600 dark:bg-zinc-600 rounded-s transition p-1",
+            showMore && "visible",
+            !showMore && "invisible group-hover:visible"
+          )}
+        >
+          <DropdownMenu onOpenChange={dropdownHandler}>
+            <ActionTooltip label="More">
+              <DropdownMenuTrigger asChild>
+                <MoreHorizontal className="h-4 w-4" />
+              </DropdownMenuTrigger>
+            </ActionTooltip>
+            <DropdownMenuContent
+              align="start"
+              side="left"
+              alignOffset={-5}
+              sideOffset={8}
+              className="flex flex-col gap-1 p-2"
+            >
+              {/* Reply Action */}
+              <DropdownMenuItem>
+                <button
+                  onClick={replyHandler}
+                  className="flex items-center gap-1 text-sm"
+                >
+                  <Reply className="h-4 w-4" /> <span>Reply</span>
+                </button>
+              </DropdownMenuItem>
+
+              {/* Edit Action */}
+              {canEditMsg && (
+                <DropdownMenuItem>
+                  <button
+                    onClick={startEditHandler}
+                    className="flex items-center gap-1 text-sm"
+                  >
+                    <Edit2 className="h-4 w-4" /> <span>Edit</span>
+                  </button>
+                </DropdownMenuItem>
+              )}
+
+              {/* Addd Reaction Action */}
+              <DropdownMenuItem>
+                <button
+                  onClick={addReactionHandler}
+                  className="flex items-center gap-1 text-sm"
+                >
+                  <SmileIcon className="h-4 w-4" /> <span>Add reaction</span>
+                </button>
+              </DropdownMenuItem>
+
+              {/* Copy ACtion */}
+              <DropdownMenuItem>
+                <button
+                  onClick={copyMessageHandler}
+                  className="flex items-center gap-1 text-sm"
+                >
+                  <Copy className="h-4 w-4" /> <span>Copy</span>
+                </button>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+
+              {/* Delete Action */}
+              {canDeleteMsg && (
+                <DropdownMenuItem>
+                  <button
+                    onClick={deleteMsgHandler}
+                    className="flex items-center gap-1 text-sm text-rose-500"
+                  >
+                    <Trash className="h-4 w-4" /> <span>Delete</span>
+                  </button>
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      )}
     </div>
   )
 }
