@@ -152,7 +152,7 @@ export default function ChannelMessage({
         <AvatarImage src={messageMember.profile.imgUrl} />
       </Avatar>
 
-      {/* Content and  informations */}
+      {/* Content and informations */}
       <div className="group flex flex-col overflow-hidden w-full cursor-pointer">
         <div className="flex flex-col mb-[4px]">
           <div className="flex gap-1 items-center text-sm ">
