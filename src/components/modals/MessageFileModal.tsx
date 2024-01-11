@@ -21,7 +21,7 @@ import {
   FormMessage,
 } from "@/components/ui/Form"
 import useModal from "@/hooks/useModal/useModal"
-import { createChannelMessage } from "@/actions/messageActions"
+import { createChannelMessage } from "@/actions/channelMessageActions"
 
 const formSchema = z.object({
   fileUrl: z.string().url("Server image url is invalid"),

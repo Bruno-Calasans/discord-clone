@@ -3,13 +3,32 @@ import db from "@/config/db"
 import { findChannelById } from "./channelActions"
 import { findMemberById } from "./memberActions"
 import { findServerById, getServerMembers } from "./serverActions"
-import { MessageWithMemberProfile } from "@/types/MessageWithMemberProfile"
+import type { MessageWithMemberProfile } from "@/types/MessageWithMemberProfile"
 
 type ChannelMessageInputs = {
   content: string
   memberId: string
   channelId: string
   fileUrl?: string
+}
+
+type GetChannelMessagesParams = {
+  channelId: string
+  cursor: string
+  batch: number
+}
+
+type EditChannelMsgInput = {
+  messageId: string
+  content: string
+  memberId: string
+  serverId: string
+}
+
+type DeleteChannelMsgInput = {
+  messageId: string
+  memberId: string
+  serverId: string
 }
 
 export async function createChannelMessage({
@@ -43,17 +62,17 @@ export async function createChannelMessage({
         channelId,
         fileUrl,
       },
+      include: {
+        member: {
+          include: {
+            profile: true,
+          },
+        },
+      },
     })
   } catch (error) {
-    console.log(error)
     return null
   }
-}
-
-type GetChannelMessagesParams = {
-  channelId: string
-  cursor: string
-  batch: number
 }
 
 export async function getChannelMessages({
@@ -129,13 +148,6 @@ export async function findChannelMsgById(messageId: string) {
   }
 }
 
-type EditChannelMsgInput = {
-  messageId: string
-  content: string
-  memberId: string
-  serverId: string
-}
-
 export async function editChannelMsg({
   messageId,
   content,
@@ -178,16 +190,17 @@ export async function editChannelMsg({
         memberId,
       },
       data: { content },
+      include: {
+        member: {
+          include: {
+            profile: true,
+          },
+        },
+      },
     })
   } catch (error) {
     return null
   }
-}
-
-type DeleteChannelMsgInput = {
-  messageId: string
-  memberId: string
-  serverId: string
 }
 
 export async function deleteChannelMsg({
@@ -231,6 +244,13 @@ export async function deleteChannelMsg({
         memberId,
       },
       data: { deleted: true, content: "This message has been deleted." },
+      include: {
+        member: {
+          include: {
+            profile: true,
+          },
+        },
+      },
     })
   } catch (error) {
     return null

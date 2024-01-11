@@ -11,26 +11,31 @@ import {
 } from "@/components/ui/Dialog"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { deleteChannelMsg } from "@/actions/messageActions"
+import { deleteChannelMsg } from "@/actions/channelMessageActions"
 import MessagePreview from "../chat/MessagePreview"
+import useSocket from "@/hooks/useSocket/useSocket"
 
 export default function DeleteChannelMessageModal() {
   const { isOpen, type, data, close } = useModal()
   const router = useRouter()
+  const { socket } = useSocket()
   const [loading, setLoading] = useState(false)
   const isModalOpen = isOpen && type === "DeleteChannelMessage"
   const { message } = data
 
   const deleteMessageHandler = async () => {
     if (!message) return
-
     setLoading(true)
-    await deleteChannelMsg({
+    const deletedMsg = await deleteChannelMsg({
       messageId: message.id,
       memberId: message.member.id,
       serverId: message.member.serverId,
     })
-    router.refresh()
+
+    if (deletedMsg) {
+      router.refresh()
+      socket?.emit("message:update", { message: deletedMsg })
+    }
     setLoading(false)
     close()
   }

@@ -35,10 +35,11 @@ import { cn } from "@/utils/cn"
 import Input from "../ui/Input"
 import { useForm } from "react-hook-form"
 import Button from "../ui/Button"
-import { editChannelMsg } from "@/actions/messageActions"
+import { editChannelMsg } from "@/actions/channelMessageActions"
 import useModal from "@/hooks/useModal/useModal"
 import dateFormat from "@/utils/dateFormat"
 import ICON_ROLE_MAP from "@/constants/iconRoleMap"
+import useSocket from "@/hooks/useSocket/useSocket"
 
 const messageFormSchema = z.object({
   content: z
@@ -60,6 +61,7 @@ export default function ChannelMessage({
   const [editing, setEditing] = useState(false)
   const [showMore, setShowMore] = useState(false)
   const { open } = useModal()
+  const { socket } = useSocket()
   const router = useRouter()
   const form = useForm<MessageEditInputs>({
     defaultValues: {
@@ -67,8 +69,9 @@ export default function ChannelMessage({
     },
   })
 
+  const messageMember = message.member
   const isAdmin = member.role.toLowerCase() === "admin"
-  const isOwner = member.id === message.member.id
+  const isOwner = member.id === messageMember.id
   const isEdited =
     differenceInSeconds(message.createdAt, message.updatedAt) !== 0
 
@@ -99,15 +102,19 @@ export default function ChannelMessage({
 
   const saveEditHandler = async ({ content }: MessageEditInputs) => {
     if (content || message.content !== content) {
-      await editChannelMsg({
+      const editedMessage = await editChannelMsg({
         content,
         messageId: message.id,
         memberId: member.id,
         serverId: member.serverId,
       })
+
+      if (editedMessage) {
+        router.refresh()
+        socket?.emit("message:update", { message: editedMessage })
+      }
     }
     setEditing(false)
-    router.refresh()
   }
 
   const deleteMsgHandler = () => {
@@ -142,19 +149,20 @@ export default function ChannelMessage({
     <div className="flex gap-2 w-full items-start hover:bg-zinc-200/30 hover:dark:bg-zinc-700/30 px-2 pt-2 pb-4 rounded-sm cursor-pointer relative group">
       {/* Message sender's avatar */}
       <Avatar className="w-6 h-6 mt-1 cursor-pointer">
-        <AvatarImage src={member.profile.imgUrl} />
+        <AvatarImage src={messageMember.profile.imgUrl} />
       </Avatar>
 
-      {/* Message  informations */}
+      {/* Content and  informations */}
       <div className="group flex flex-col overflow-hidden w-full cursor-pointer">
         <div className="flex flex-col mb-[4px]">
           <div className="flex gap-1 items-center text-sm ">
             <div className="flex items-center gap-[4px]">
+              {/* Message informations */}
               <p className="font-semibold hover:underline cursor-pointer transition">
-                {member.name}
+                {messageMember.name}
               </p>
-              <ActionTooltip label={member.role}>
-                {ICON_ROLE_MAP[member.role]}
+              <ActionTooltip label={messageMember.role}>
+                {ICON_ROLE_MAP[messageMember.role]}
               </ActionTooltip>
             </div>
 
@@ -167,7 +175,7 @@ export default function ChannelMessage({
         {/* Deleted Message */}
         {message.deleted && (
           <div className="flex flex-col gap-1">
-            <p className="text-sm text-zinc-900 dark:text-zinc-300 text-ellipsis">
+            <p className="text-sm dark:text-zinc-500 text-ellipsis italic">
               {message.content}
             </p>
           </div>
@@ -191,6 +199,7 @@ export default function ChannelMessage({
             <form
               onSubmit={form.handleSubmit(saveEditHandler)}
               className="flex flex-col w-full gap-2"
+              autoFocus
             >
               <FormField
                 control={form.control}
@@ -199,7 +208,6 @@ export default function ChannelMessage({
                   <FormItem className="w-full">
                     <FormControl>
                       <Input
-                        autoFocus
                         className="bg-zinc-600/30 focus-visible:ring-0 focus-visible:ring-offset-0 border-none border-0"
                         {...field}
                       />
@@ -367,18 +375,20 @@ export default function ChannelMessage({
                   <Copy className="h-4 w-4" /> <span>Copy</span>
                 </button>
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
 
               {/* Delete Action */}
               {canDeleteMsg && (
-                <DropdownMenuItem>
-                  <button
-                    onClick={deleteMsgHandler}
-                    className="flex items-center gap-1 text-sm text-rose-500"
-                  >
-                    <Trash className="h-4 w-4" /> <span>Delete</span>
-                  </button>
-                </DropdownMenuItem>
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <button
+                      onClick={deleteMsgHandler}
+                      className="flex items-center gap-1 text-sm text-rose-500"
+                    >
+                      <Trash className="h-4 w-4" /> <span>Delete</span>
+                    </button>
+                  </DropdownMenuItem>
+                </>
               )}
             </DropdownMenuContent>
           </DropdownMenu>

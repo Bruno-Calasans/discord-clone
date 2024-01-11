@@ -1,6 +1,11 @@
 import { NextApiRequest } from "next"
 import { Server as SocketServer } from "socket.io"
 import type { NextApiResponseSocket } from "@/types/NextApiResponseSocket"
+import type { MessageWithMemberProfile } from "@/types/MessageWithMemberProfile"
+
+type SocketData = {
+  message?: MessageWithMemberProfile
+}
 
 // Checking if there's a socket connection already
 export default function socketHandler(
@@ -9,6 +14,7 @@ export default function socketHandler(
 ) {
   if (!res.socket.server.io) {
     const httpServer = res.socket.server as any
+
     const io = new SocketServer(httpServer, {
       path: "/api/socket/io",
       addTrailingSlash: false,
@@ -16,8 +22,13 @@ export default function socketHandler(
 
     io.on("connection", (socket) => {
       console.log(`Client connected: ${socket.id}`)
-      socket.on("send-channel-msg", (message) => {
-        console.log(`Channel msg: ${message?.content}`)
+
+      socket.on("message:create", ({ message }: SocketData) => {
+        io.emit("message:create", { message })
+      })
+
+      socket.on("message:update", ({ message }: SocketData) => {
+        io.emit("message:update", { message })
       })
     })
 

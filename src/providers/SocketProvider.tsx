@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from "react"
 import { io, Socket } from "socket.io-client"
-import SocketContext from "@/contexts/SocketContext"
+import SocketContext from "@/hooks/useSocket/SocketContext"
 
 type SocketProviderProps = {
   children: React.ReactNode
@@ -28,7 +28,7 @@ export default function SocketProvider({ children }: SocketProviderProps) {
     })
 
     socketInstance.on("connect_error", (error) => {
-      console.log(error.message)
+      console.log(error, error.message)
     })
 
     setSocket(socketInstance)

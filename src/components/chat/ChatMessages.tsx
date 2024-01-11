@@ -38,11 +38,12 @@ export default function ChatMessages({ channel, member }: ChatMessagesProps) {
     )
   }
 
+  // console.log(data)
   return (
-    <ScrollArea className="flex flex-col flex-1 px-2 py-3">
+    <ScrollArea className="flex flex-col px-2 pb-6">
       <ChatWelcome channel={channel} />
       {messages && messages.length > 0 && (
-        <div className="flex flex-col-reverse gap-3">
+        <div className="flex flex-col-reverse gap-2 border-none">
           {messages.map((message) => (
             <ChannelMessage
               key={message.id}

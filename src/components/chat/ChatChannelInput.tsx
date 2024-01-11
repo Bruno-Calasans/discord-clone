@@ -7,7 +7,7 @@ import Input from "@/components/ui/Input"
 import Button from "@/components/ui/Button"
 import { Plus } from "lucide-react"
 import { Channel } from "../../../prisma/output"
-import { createChannelMessage } from "@/actions/messageActions"
+import { createChannelMessage } from "@/actions/channelMessageActions"
 import { MemberWithProfile } from "@/types/MemberProfile"
 import useSocket from "@/hooks/useSocket/useSocket"
 import useModal from "@/hooks/useModal/useModal"
@@ -48,8 +48,7 @@ export default function ChatChannelInput({ channel, member }: ChatInputProps) {
       memberId: member.id,
     })
     if (!message) return
-
-    socket?.emit("send-channel-msg", message)
+    socket?.emit("message:create", { message })
     form.reset()
     router.refresh()
   }

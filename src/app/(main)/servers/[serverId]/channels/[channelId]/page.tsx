@@ -5,7 +5,7 @@ import ChatChannelInput from "@/components/chat/ChatChannelInput"
 import ChatMessages from "@/components/chat/ChatMessages"
 import { getCurrentProfile } from "@/actions/profileActions"
 import { getCompleteServer } from "@/actions/serverActions"
-import { getChannelMessages } from "@/actions/messageActions"
+import { getChannelMessages } from "@/actions/channelMessageActions"
 
 type ChannelPageProps = {
   params: {
@@ -33,9 +33,9 @@ export default async function ChannelPage({ params }: ChannelPageProps) {
   if (!member) return redirect("/servers")
 
   return (
-    <section className="flex flex-col w-full h-full dark:bg-zinc-800">
+    <section className="flex flex-col w-full dark:bg-zinc-800">
       <ChatHeader channel={channel} />
-      <div className="flex flex-col justify-end flex-1">
+      <div className="flex flex-1 flex-col justify-end overflow-y-auto">
         <ChatMessages channel={channel} member={member} />
         <ChatChannelInput channel={channel} member={member} />
       </div>

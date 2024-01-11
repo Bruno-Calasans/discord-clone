@@ -8,6 +8,5 @@ type QueryProviderProps = {
 
 export default function QueryProvider({ children }: QueryProviderProps) {
   const [client, setClient] = useState(() => new QueryClient())
-
   return <QueryClientProvider client={client}>{children}</QueryClientProvider>
 }
