@@ -10,6 +10,8 @@ import EditChannelModal from "@/components/modals/EditChannelModal"
 import DeleteChannelModal from "@/components/modals/DeleteChannelModal"
 import MessageFileModal from "@/components/modals/MessageFileModal"
 import DeleteChannelMessageModal from "@/components/modals/DeleteChannelMessageModal"
+import DeleteDirectMessageModal from "@/components/modals/DeleteDirectMessageModal"
+import DirectMessageFileModal from "@/components/modals/DirectMessageFileModal"
 
 export default function ModalProvider() {
   return (
@@ -25,7 +27,9 @@ export default function ModalProvider() {
         <EditChannelModal />
         <DeleteChannelModal />
         <MessageFileModal />
+        <DirectMessageFileModal />
         <DeleteChannelMessageModal />
+        <DeleteDirectMessageModal />
       </>
     </Mount>
   )

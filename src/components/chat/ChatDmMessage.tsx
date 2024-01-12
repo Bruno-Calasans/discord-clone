@@ -1,10 +1,8 @@
 "use client"
 import * as z from "zod"
-import { ElementRef, useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import type { MessageWithMemberProfile } from "@/types/MessageWithMemberProfile"
 import { differenceInSeconds } from "date-fns"
-import type { MemberWithProfile } from "@/types/MemberProfile"
 import { Avatar, AvatarImage } from "@/components/ui/Avatar"
 import {
   File,
@@ -35,11 +33,12 @@ import { cn } from "@/utils/cn"
 import Input from "../ui/Input"
 import { useForm } from "react-hook-form"
 import Button from "../ui/Button"
-import { editChannelMsg } from "@/actions/channelMessageActions"
 import useModal from "@/hooks/useModal/useModal"
 import dateFormat from "@/utils/dateFormat"
-import ICON_ROLE_MAP from "@/constants/iconRoleMap"
 import useSocket from "@/hooks/useSocket/useSocket"
+import { Profile } from "../../../prisma/output"
+import { DmWithProfileConversation } from "@/types/DmWithProfileConversation"
+import { editDirectMsg } from "@/actions/directMessageActions"
 
 const messageFormSchema = z.object({
   content: z
@@ -49,15 +48,12 @@ const messageFormSchema = z.object({
 
 type MessageEditInputs = z.infer<typeof messageFormSchema>
 
-type ChannelMessageProps = {
-  member: MemberWithProfile
-  message: MessageWithMemberProfile
+type DmMessageProps = {
+  currentProfile: Profile
+  message: DmWithProfileConversation
 }
 
-export default function ChannelMessage({
-  member,
-  message,
-}: ChannelMessageProps) {
+export default function DmMessage({ message, currentProfile }: DmMessageProps) {
   const [editing, setEditing] = useState(false)
   const [showMore, setShowMore] = useState(false)
   const { open } = useModal()
@@ -69,13 +65,12 @@ export default function ChannelMessage({
     },
   })
 
-  const messageMember = message.member
-  const isAdmin = member.role.toLowerCase() === "admin"
-  const isOwner = member.id === messageMember.id
+  const messageProfile = message.profile
+  const isOwner = currentProfile.id === messageProfile.id
   const isEdited =
     differenceInSeconds(message.createdAt, message.updatedAt) !== 0
 
-  const canDeleteMsg = !message.deleted && (isOwner || isAdmin)
+  const canDeleteMsg = !message.deleted && isOwner
   const canEditMsg = !message.deleted && isOwner && !message.fileUrl
 
   const fileType = message.fileUrl?.split(".").pop()
@@ -102,11 +97,10 @@ export default function ChannelMessage({
 
   const saveEditHandler = async ({ content }: MessageEditInputs) => {
     if (content || message.content !== content) {
-      const editedMessage = await editChannelMsg({
+      const editedMessage = await editDirectMsg({
         content,
         messageId: message.id,
-        memberId: member.id,
-        serverId: member.serverId,
+        profileId: currentProfile.id,
       })
 
       if (editedMessage) {
@@ -118,7 +112,7 @@ export default function ChannelMessage({
   }
 
   const deleteMsgHandler = () => {
-    open("DeleteChannelMessage", { message })
+    open("DeleteChannelMessage", { directMessage: message })
   }
 
   const copyMessageHandler = () => {
@@ -149,7 +143,7 @@ export default function ChannelMessage({
     <div className="flex gap-2 w-full items-start hover:bg-zinc-200/30 hover:dark:bg-zinc-700/30 px-2 pt-2 pb-4 rounded-sm cursor-pointer relative group">
       {/* Message sender's avatar */}
       <Avatar className="w-6 h-6 mt-1 cursor-pointer">
-        <AvatarImage src={messageMember.profile.imgUrl} />
+        <AvatarImage src={messageProfile.imgUrl} />
       </Avatar>
 
       {/* Content and informations */}
@@ -159,11 +153,11 @@ export default function ChannelMessage({
             <div className="flex items-center gap-[4px]">
               {/* Message informations */}
               <p className="font-semibold hover:underline cursor-pointer transition">
-                {messageMember.name}
+                {messageProfile.username}
               </p>
-              <ActionTooltip label={messageMember.role}>
-                {ICON_ROLE_MAP[messageMember.role]}
-              </ActionTooltip>
+              {/* <ActionTooltip label={messageProfile.role}>
+                {ICON_ROLE_MAP[messageProfile.role]}
+              </ActionTooltip> */}
             </div>
 
             <p className="text-zinc-700 dark:text-zinc-400 text-xs">

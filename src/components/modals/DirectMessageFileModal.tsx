@@ -21,7 +21,8 @@ import {
   FormMessage,
 } from "@/components/ui/Form"
 import useModal from "@/hooks/useModal/useModal"
-import { createChannelMessage } from "@/actions/channelMessageActions"
+import { createDirectMsg } from "@/actions/directMessageActions"
+import useSocket from "@/hooks/useSocket/useSocket"
 
 const formSchema = z.object({
   fileUrl: z.string().url("Server image url is invalid"),
@@ -29,8 +30,9 @@ const formSchema = z.object({
 
 type MessageFileInputs = z.infer<typeof formSchema>
 
-export default function MessageFileModal() {
+export default function DirectMessageFileModal() {
   const { close, isOpen, data, type } = useModal()
+  const { socket } = useSocket()
   const router = useRouter()
   const form = useForm<MessageFileInputs>({
     defaultValues: {
@@ -39,20 +41,21 @@ export default function MessageFileModal() {
     resolver: zodResolver(formSchema),
   })
 
-  const { channel, member } = data
-  const isModalOpen = isOpen && type === "MessageFile"
+  const { profile, conversation } = data
+  const isModalOpen = isOpen && type === "DirectMessageFile"
   const isLoading = form.formState.isSubmitting
 
   const submitHandler = async ({ fileUrl }: MessageFileInputs) => {
-    if (!channel || !member) return
-    await createChannelMessage({
+    if (!profile || !conversation) return
+    const createdMessage = await createDirectMsg({
       content: "",
-      memberId: member.id,
-      channelId: channel?.id,
+      profileId: profile?.id,
+      conversationId: conversation?.id,
       fileUrl,
     })
-    router.refresh()
+    socket?.emit("message:create", { message: createdMessage })
     form.reset()
+    router.refresh()
     close()
   }
 

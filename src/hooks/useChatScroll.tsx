@@ -48,7 +48,7 @@ export default function useChatScroll({
       if (!top) return false
 
       const bottomDistance = top.scrollHeight - top.scrollTop - top.clientHeight
-      return bottomDistance <= 200
+      return bottomDistance <= 400
     }
 
     if (shouldAutoScroll()) {

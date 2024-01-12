@@ -9,6 +9,8 @@ import type {
 import type { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
 import type { MemberWithProfile } from "@/types/MemberProfile"
 import { MessageWithMemberProfile } from "@/types/MessageWithMemberProfile"
+import { ConversationWithProfiles } from "@/types/ConversationWithProfiles"
+import { DmWithProfileConversation } from "@/types/DmWithProfileConversation"
 
 export type ModalType =
   | "CreateServer"
@@ -21,7 +23,9 @@ export type ModalType =
   | "EditChannel"
   | "DeleteChannel"
   | "MessageFile"
+  | "DirectMessageFile"
   | "DeleteChannelMessage"
+  | "DeleteDirectMessage"
 
 export type ModalData = {
   server?: ServerWithMembersAndProfile
@@ -31,6 +35,8 @@ export type ModalData = {
   channelType?: CHANNEL_TYPE
   channel?: Channel
   message?: MessageWithMemberProfile
+  directMessage?: DmWithProfileConversation
+  conversation?: ConversationWithProfiles
 }
 
 export type ModalStore = {

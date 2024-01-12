@@ -2,6 +2,8 @@ import { redirect } from "next/navigation"
 import { getConversationById } from "@/actions/conversationActions"
 import { getCurrentProfile } from "@/actions/profileActions"
 import DMChatHeader from "@/components/chat/DmChatHeader"
+import ChatDmInput from "@/components/chat/ChatDmInput"
+import ChatDmMessages from "@/components/chat/ChatDmMessages"
 
 type ConversationPageProps = {
   params: {
@@ -20,9 +22,26 @@ export default async function ConversationPage({
   const profile = await getCurrentProfile()
   if (!profile) return redirect("/")
 
+  const { senderProfileId, senderProfile, receiverProfile } = conversation
+
+  const otherProfile =
+    profile.id === senderProfileId ? receiverProfile : senderProfile
+
   return (
-    <div className="w-full bg-zinc-800">
-      <DMChatHeader profile={profile} conversation={conversation} />
-    </div>
+    <section className="flex flex-col w-full dark:bg-zinc-800">
+      <DMChatHeader profile={profile} />
+      <div className="flex flex-1 flex-col justify-end overflow-y-auto">
+        <ChatDmMessages
+          conversation={conversation}
+          currentProfile={profile}
+          otherProfile={otherProfile}
+        />
+        <ChatDmInput
+          conversation={conversation}
+          currentProfile={profile}
+          otherProfile={otherProfile}
+        />
+      </div>
+    </section>
   )
 }

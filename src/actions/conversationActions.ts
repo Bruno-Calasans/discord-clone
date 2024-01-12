@@ -2,6 +2,11 @@
 import db from "@/config/db"
 import { getProfileById } from "./profileActions"
 
+type GetConversationByProfileIdProps = {
+  conversationId: string
+  profileId: string
+}
+
 export async function getConversations(profileId: string) {
   try {
     const profile = await getProfileById(profileId)
@@ -48,11 +53,47 @@ export async function getConversation(
   }
 }
 
+export async function findConversationById(conversationId: string) {
+  try {
+    return await db.conversation.findFirst({
+      where: {
+        id: conversationId,
+      },
+      include: {
+        senderProfile: true,
+        receiverProfile: true,
+      },
+    })
+  } catch (error) {
+    return null
+  }
+}
+
 export async function getConversationById(id: string) {
   try {
     return await db.conversation.findFirst({
       where: {
-        id
+        id,
+      },
+      include: {
+        senderProfile: true,
+        receiverProfile: true,
+      },
+    })
+  } catch (error) {
+    return null
+  }
+}
+
+export async function getConversationByProfileId({
+  profileId,
+  conversationId,
+}: GetConversationByProfileIdProps) {
+  try {
+    return await db.conversation.findUnique({
+      where: {
+        id: conversationId,
+        OR: [{ senderProfileId: profileId }, { receiverProfileId: profileId }],
       },
       include: {
         senderProfile: true,
