@@ -1,5 +1,5 @@
 function ServersPage() {
-  return <div>Servers</div>
+  return <div>Servers</div>;
 }
 
-export default ServersPage
+export default ServersPage;

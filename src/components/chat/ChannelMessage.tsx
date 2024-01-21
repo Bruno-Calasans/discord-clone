@@ -1,11 +1,11 @@
-"use client"
-import * as z from "zod"
-import { ElementRef, useEffect, useRef, useState } from "react"
-import { useRouter } from "next/navigation"
-import type { MessageWithMemberProfile } from "@/types/MessageWithMemberProfile"
-import { differenceInSeconds } from "date-fns"
-import type { MemberWithProfile } from "@/types/MemberProfile"
-import { Avatar, AvatarImage } from "@/components/ui/Avatar"
+"use client";
+import * as z from "zod";
+import { ElementRef, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import type { MessageWithMemberProfile } from "@/types/MessageWithMemberProfile";
+import { differenceInSeconds } from "date-fns";
+import type { MemberWithProfile } from "@/types/MemberProfile";
+import { Avatar, AvatarImage } from "@/components/ui/Avatar";
 import {
   File,
   MoreHorizontal,
@@ -14,91 +14,91 @@ import {
   Edit2,
   Copy,
   SmileIcon,
-} from "lucide-react"
-import ActionTooltip from "@/components/custom/ActionTooltip"
-import Image from "next/image"
+} from "lucide-react";
+import ActionTooltip from "@/components/custom/ActionTooltip";
+import Image from "next/image";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-} from "@/components/ui/DropdownMenu"
+} from "@/components/ui/DropdownMenu";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/Form"
-import { cn } from "@/utils/cn"
-import Input from "../ui/Input"
-import { useForm } from "react-hook-form"
-import Button from "../ui/Button"
-import { editChannelMsg } from "@/actions/channelMessageActions"
-import useModal from "@/hooks/useModal/useModal"
-import dateFormat from "@/utils/dateFormat"
-import ICON_ROLE_MAP from "@/constants/iconRoleMap"
-import useSocket from "@/hooks/useSocket/useSocket"
+} from "@/components/ui/Form";
+import { cn } from "@/utils/cn";
+import Input from "../ui/Input";
+import { useForm } from "react-hook-form";
+import Button from "../ui/Button";
+import { editChannelMsg } from "@/actions/channelMessageActions";
+import useModal from "@/hooks/useModal/useModal";
+import dateFormat from "@/utils/dateFormat";
+import ICON_ROLE_MAP from "@/constants/iconRoleMap";
+import useSocket from "@/hooks/useSocket/useSocket";
 
 const messageFormSchema = z.object({
   content: z
     .string()
     .min(1, "Message content must have at least 1 character long"),
-})
+});
 
-type MessageEditInputs = z.infer<typeof messageFormSchema>
+type MessageEditInputs = z.infer<typeof messageFormSchema>;
 
 type ChannelMessageProps = {
-  member: MemberWithProfile
-  message: MessageWithMemberProfile
-}
+  member: MemberWithProfile;
+  message: MessageWithMemberProfile;
+};
 
 export default function ChannelMessage({
   member,
   message,
 }: ChannelMessageProps) {
-  const [editing, setEditing] = useState(false)
-  const [showMore, setShowMore] = useState(false)
-  const { open } = useModal()
-  const { socket } = useSocket()
-  const router = useRouter()
+  const [editing, setEditing] = useState(false);
+  const [showMore, setShowMore] = useState(false);
+  const { open } = useModal();
+  const { socket } = useSocket();
+  const router = useRouter();
   const form = useForm<MessageEditInputs>({
     defaultValues: {
       content: message.content,
     },
-  })
+  });
 
-  const messageMember = message.member
-  const isAdmin = member.role.toLowerCase() === "admin"
-  const isOwner = member.id === messageMember.id
+  const messageMember = message.member;
+  const isAdmin = member.role.toLowerCase() === "admin";
+  const isOwner = member.id === messageMember.id;
   const isEdited =
-    differenceInSeconds(message.createdAt, message.updatedAt) !== 0
+    differenceInSeconds(message.createdAt, message.updatedAt) !== 0;
 
-  const canDeleteMsg = !message.deleted && (isOwner || isAdmin)
-  const canEditMsg = !message.deleted && isOwner && !message.fileUrl
+  const canDeleteMsg = !message.deleted && (isOwner || isAdmin);
+  const canEditMsg = !message.deleted && isOwner && !message.fileUrl;
 
-  const fileType = message.fileUrl?.split(".").pop()
-  const isPdf = fileType === "pdf"
-  const isImage = fileType !== "pdf"
-  const isLoading = form.formState.isSubmitting
+  const fileType = message.fileUrl?.split(".").pop();
+  const isPdf = fileType === "pdf";
+  const isImage = fileType !== "pdf";
+  const isLoading = form.formState.isSubmitting;
 
   const addReactionHandler = () => {
     // todo
-  }
+  };
 
   const replyHandler = () => {
     // todo
-  }
+  };
 
   const startEditHandler = () => {
-    setEditing(true)
-    form.setFocus("content")
-  }
+    setEditing(true);
+    form.setFocus("content");
+  };
 
   const cancelEditHandler = () => {
-    setEditing(false)
-  }
+    setEditing(false);
+  };
 
   const saveEditHandler = async ({ content }: MessageEditInputs) => {
     if (content || message.content !== content) {
@@ -107,58 +107,58 @@ export default function ChannelMessage({
         messageId: message.id,
         memberId: member.id,
         serverId: member.serverId,
-      })
+      });
 
       if (editedMessage) {
-        router.refresh()
-        socket?.emit("message:update", { message: editedMessage })
+        router.refresh();
+        socket?.emit("message:update", { message: editedMessage });
       }
     }
-    setEditing(false)
-  }
+    setEditing(false);
+  };
 
   const deleteMsgHandler = () => {
-    open("DeleteChannelMessage", { message })
-  }
+    open("DeleteChannelMessage", { message });
+  };
 
   const copyMessageHandler = () => {
-    if (message.deleted) return
-    let content = message.content || message.fileUrl
-    if (content) navigator.clipboard.writeText(content)
-  }
+    if (message.deleted) return;
+    let content = message.content || message.fileUrl;
+    if (content) navigator.clipboard.writeText(content);
+  };
 
   const dropdownHandler = (open: boolean) => {
-    setShowMore(open)
-  }
+    setShowMore(open);
+  };
 
   // Cancel editing keyboard events
   useEffect(() => {
     const cancelEdit = async ({ key }: KeyboardEvent) => {
       if (key === "Escape") {
-        cancelEditHandler()
+        cancelEditHandler();
       }
-    }
-    window.addEventListener("keydown", cancelEdit)
+    };
+    window.addEventListener("keydown", cancelEdit);
 
     return () => {
-      window.removeEventListener("keydown", cancelEdit)
-    }
-  }, [])
+      window.removeEventListener("keydown", cancelEdit);
+    };
+  }, []);
 
   return (
-    <div className="flex gap-2 w-full items-start hover:bg-zinc-200/30 hover:dark:bg-zinc-700/30 px-2 pt-2 pb-4 rounded-sm cursor-pointer relative group">
+    <div className="group relative flex w-full cursor-pointer items-start gap-2 rounded-sm px-2 pb-4 pt-2 hover:bg-zinc-200/30 hover:dark:bg-zinc-700/30">
       {/* Message sender's avatar */}
-      <Avatar className="w-6 h-6 mt-1 cursor-pointer">
+      <Avatar className="mt-1 h-6 w-6 cursor-pointer">
         <AvatarImage src={messageMember.profile.imgUrl} />
       </Avatar>
 
       {/* Content and informations */}
-      <div className="group flex flex-col overflow-hidden w-full cursor-pointer">
-        <div className="flex flex-col mb-[4px]">
-          <div className="flex gap-1 items-center text-sm ">
+      <div className="group flex w-full cursor-pointer flex-col overflow-hidden">
+        <div className="mb-[4px] flex flex-col">
+          <div className="flex items-center gap-1 text-sm ">
             <div className="flex items-center gap-[4px]">
               {/* Message informations */}
-              <p className="font-semibold hover:underline cursor-pointer transition">
+              <p className="cursor-pointer font-semibold transition hover:underline">
                 {messageMember.name}
               </p>
               <ActionTooltip label={messageMember.role}>
@@ -166,7 +166,7 @@ export default function ChannelMessage({
               </ActionTooltip>
             </div>
 
-            <p className="text-zinc-700 dark:text-zinc-400 text-xs">
+            <p className="text-xs text-zinc-700 dark:text-zinc-400">
               {dateFormat(message.createdAt)}
             </p>
           </div>
@@ -175,7 +175,7 @@ export default function ChannelMessage({
         {/* Deleted Message */}
         {message.deleted && (
           <div className="flex flex-col gap-1">
-            <p className="text-sm dark:text-zinc-500 text-ellipsis italic">
+            <p className="text-ellipsis text-sm italic dark:text-zinc-500">
               {message.content}
             </p>
           </div>
@@ -184,7 +184,7 @@ export default function ChannelMessage({
         {/* No editing content */}
         {!message.deleted && message.content && !editing && (
           <div className="flex flex-col gap-1">
-            <p className="text-sm text-zinc-900 dark:text-zinc-300 text-ellipsis">
+            <p className="text-ellipsis text-sm text-zinc-900 dark:text-zinc-300">
               {message.content}{" "}
               {isEdited && !message.deleted && (
                 <span className="text-zinc-500">(edited)</span>
@@ -198,7 +198,7 @@ export default function ChannelMessage({
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(saveEditHandler)}
-              className="flex flex-col w-full gap-2"
+              className="flex w-full flex-col gap-2"
               autoFocus
             >
               <FormField
@@ -209,7 +209,7 @@ export default function ChannelMessage({
                     <FormControl>
                       <Input
                         autoFocus={editing}
-                        className="bg-zinc-600/30 focus-visible:ring-0 focus-visible:ring-offset-0 border-none border-0"
+                        className="border-0 border-none bg-zinc-600/30 focus-visible:ring-0 focus-visible:ring-offset-0"
                         {...field}
                       />
                     </FormControl>
@@ -217,7 +217,7 @@ export default function ChannelMessage({
                   </FormItem>
                 )}
               />
-              <div className="flex gap-1 w-full justify-between">
+              <div className="flex w-full justify-between gap-1">
                 <p className="text-sm text-zinc-400">
                   Press <span className="text-indigo-500">Escape</span> to
                   cancel
@@ -253,7 +253,7 @@ export default function ChannelMessage({
             href={message.fileUrl}
             target="_blank"
             rel="noopener noreferer"
-            className="relative bg-zinc-200 dark:bg-zinc-700/30 rounded-md flex items-center border h-52 w-52 aspect-square overflow-hidden"
+            className="relative flex aspect-square h-52 w-52 items-center overflow-hidden rounded-md border bg-zinc-200 dark:bg-zinc-700/30"
           >
             <Image
               src={message.fileUrl}
@@ -266,9 +266,9 @@ export default function ChannelMessage({
 
         {/* Pdf Content */}
         {!message.deleted && message.fileUrl && isPdf && (
-          <div className="flex bg-zinc-200 dark:bg-zinc-700/30 rounded-sm p-2">
+          <div className="flex rounded-sm bg-zinc-200 p-2 dark:bg-zinc-700/30">
             <div className="w-full">
-              <div className="flex items-center w-full gap-1">
+              <div className="flex w-full items-center gap-1">
                 <File className="w-18 h-18 text-indigo-500" />
                 <a
                   href={message.fileUrl}
@@ -289,8 +289,8 @@ export default function ChannelMessage({
         <button
           onClick={replyHandler}
           className={cn(
-            "text-white absolute right-[65px] top-[-10px] hover:dark:bg-zinc-700 bg-zinc-500 hover:bg-zinc-600 dark:bg-zinc-600 rounded-s invisible group-hover:visible transition p-1",
-            !canEditMsg && "right-[35px]"
+            "invisible absolute right-[65px] top-[-10px] rounded-s bg-zinc-500 p-1 text-white transition group-hover:visible hover:bg-zinc-600 dark:bg-zinc-600 hover:dark:bg-zinc-700",
+            !canEditMsg && "right-[35px]",
           )}
         >
           <ActionTooltip label="Reply">
@@ -304,7 +304,7 @@ export default function ChannelMessage({
         <button
           onClick={startEditHandler}
           className={cn(
-            "text-white absolute right-[35px] top-[-10px] hover:dark:bg-zinc-700 bg-zinc-500 hover:bg-zinc-600 dark:bg-zinc-600 rounded-s invisible group-hover:visible transition p-1"
+            "invisible absolute right-[35px] top-[-10px] rounded-s bg-zinc-500 p-1 text-white transition group-hover:visible hover:bg-zinc-600 dark:bg-zinc-600 hover:dark:bg-zinc-700",
           )}
         >
           <ActionTooltip label="Edit">
@@ -317,9 +317,9 @@ export default function ChannelMessage({
       {!message.deleted && (
         <div
           className={cn(
-            "text-white absolute right-[5px] top-[-10px] hover:dark:bg-zinc-700 bg-zinc-500 hover:bg-zinc-600 dark:bg-zinc-600 rounded-s transition p-1",
+            "absolute right-[5px] top-[-10px] rounded-s bg-zinc-500 p-1 text-white transition hover:bg-zinc-600 dark:bg-zinc-600 hover:dark:bg-zinc-700",
             showMore && "visible",
-            !showMore && "invisible group-hover:visible"
+            !showMore && "invisible group-hover:visible",
           )}
         >
           <DropdownMenu onOpenChange={dropdownHandler}>
@@ -396,5 +396,5 @@ export default function ChannelMessage({
         </div>
       )}
     </div>
-  )
+  );
 }

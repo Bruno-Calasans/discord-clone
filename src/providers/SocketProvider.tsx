@@ -1,14 +1,15 @@
 "use client"
 import { useEffect, useState } from "react"
-import { io, Socket } from "socket.io-client"
+import { io } from "socket.io-client"
 import SocketContext from "@/hooks/useSocket/SocketContext"
+import type { ClientSocket } from "@/types/Socket"
 
 type SocketProviderProps = {
   children: React.ReactNode
 }
 
 export default function SocketProvider({ children }: SocketProviderProps) {
-  const [socket, setSocket] = useState<Socket | null>(null)
+  const [socket, setSocket] = useState<ClientSocket | null>(null)
   const [connected, setConnected] = useState(false)
 
   const socketInitializer = async () => {
@@ -31,7 +32,7 @@ export default function SocketProvider({ children }: SocketProviderProps) {
       console.log(error, error.message)
     })
 
-    setSocket(socketInstance)
+    setSocket(socketInstance as unknown as ClientSocket)
   }
 
   useEffect(() => {

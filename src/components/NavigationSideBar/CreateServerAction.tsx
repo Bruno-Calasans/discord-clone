@@ -1,28 +1,28 @@
-"use client"
-import { Plus } from "lucide-react"
-import useModal from "@/hooks/useModal/useModal"
-import ActionTooltip from "@/components/custom/ActionTooltip"
+"use client";
+import { Plus } from "lucide-react";
+import useModal from "@/hooks/useModal/useModal";
+import ActionTooltip from "@/components/custom/ActionTooltip";
 
 export default function CreateServerAction() {
-  const { open } = useModal()
+  const { open } = useModal();
 
   const modalHandler = () => {
-    open("CreateServer")
-  }
+    open("CreateServer");
+  };
 
   return (
-    <div className="group  bg-slate-200 dark:bg-slate-600 hover:bg-emerald-500 hover:dark:bg-emerald-500 h-10 w-10 rounded-full transition">
+    <div className="group  h-10 w-10 rounded-full bg-slate-200 transition hover:bg-emerald-500 dark:bg-slate-600 hover:dark:bg-emerald-500">
       <ActionTooltip label="Add new server" align="center" side="right">
         <button
           onClick={modalHandler}
-          className="flex items-center justify-center content-center h-full w-full p-2"
+          className="flex h-full w-full content-center items-center justify-center p-2"
         >
           <Plus
             size={35}
-            className="text-emerald-500 group-hover:text-white transition"
+            className="text-emerald-500 transition group-hover:text-white"
           />
         </button>
       </ActionTooltip>
     </div>
-  )
+  );
 }

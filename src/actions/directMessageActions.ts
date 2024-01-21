@@ -1,38 +1,38 @@
-"use server"
-import db from "@/config/db"
+"use server";
+import db from "@/config/db";
 import {
   findConversationById,
   getConversationById,
   getConversationByProfileId,
-} from "./conversationActions"
-import { getProfileById } from "./profileActions"
-import { DirectMessage } from "../../prisma/output"
-import { DmWithProfileConversation } from "@/types/DmWithProfileConversation"
+} from "./conversationActions";
+import { getProfileById } from "./profileActions";
+import { DirectMessage } from "../../prisma/output";
+import { DmWithProfileConversation } from "@/types/DmWithProfileConversation";
 
 type CreateDmMessageInputs = {
-  content: string
-  profileId: string
-  conversationId: string
-  fileUrl?: string
-}
+  content: string;
+  profileId: string;
+  conversationId: string;
+  fileUrl?: string;
+};
 
 type GetDirectMsgsInputs = {
-  conversationId: string
-  cursor: string
-  batch: number
-}
+  conversationId: string;
+  cursor: string;
+  batch: number;
+};
 
 type EditDmInputs = {
-  messageId: string
-  profileId: string
-  content: string
-}
+  messageId: string;
+  profileId: string;
+  content: string;
+};
 
 type DeleteDirectMsgInputs = {
-  messageId: string
-  profileId: string
-  conversationId: string
-}
+  messageId: string;
+  profileId: string;
+  conversationId: string;
+};
 
 export async function createDirectMsg({
   content,
@@ -41,11 +41,11 @@ export async function createDirectMsg({
   fileUrl,
 }: CreateDmMessageInputs) {
   try {
-    const conversation = await findConversationById(conversationId)
-    if (!conversation) throw new Error("Conversation not Found")
+    const conversation = await findConversationById(conversationId);
+    if (!conversation) throw new Error("Conversation not Found");
 
-    const profile = await getProfileById(profileId)
-    if (!profile) throw new Error("Profile not Found")
+    const profile = await getProfileById(profileId);
+    if (!profile) throw new Error("Profile not Found");
 
     return await db.directMessage.create({
       data: {
@@ -63,9 +63,9 @@ export async function createDirectMsg({
           },
         },
       },
-    })
+    });
   } catch (error) {
-    return null
+    return null;
   }
 }
 
@@ -75,10 +75,10 @@ export async function getDirectMsgs({
   cursor,
 }: GetDirectMsgsInputs) {
   try {
-    const conversation = await getConversationById(conversationId)
-    if (!conversation) throw new Error("Conversation not Found")
+    const conversation = await getConversationById(conversationId);
+    if (!conversation) throw new Error("Conversation not Found");
 
-    let messages: DmWithProfileConversation[] = []
+    let messages: DmWithProfileConversation[] = [];
 
     if (cursor) {
       messages = await db.directMessage.findMany({
@@ -102,7 +102,7 @@ export async function getDirectMsgs({
         orderBy: {
           createdAt: "desc",
         },
-      })
+      });
     } else {
       messages = await db.directMessage.findMany({
         where: {
@@ -121,16 +121,16 @@ export async function getDirectMsgs({
         orderBy: {
           createdAt: "desc",
         },
-      })
+      });
     }
 
-    let nextCursor = null
+    let nextCursor = null;
     if (messages && messages.length === batch) {
-      nextCursor = messages[batch - 1].id
+      nextCursor = messages[batch - 1].id;
     }
-    return { messages, nextCursor }
+    return { messages, nextCursor };
   } catch (error) {
-    return null
+    return null;
   }
 }
 
@@ -140,9 +140,9 @@ export async function getDirectMsgById(messageId: string) {
       where: {
         id: messageId,
       },
-    })
+    });
   } catch (error) {
-    return null
+    return null;
   }
 }
 
@@ -152,23 +152,23 @@ export async function editDirectMsg({
   profileId,
 }: EditDmInputs) {
   try {
-    const message = await getDirectMsgById(messageId)
+    const message = await getDirectMsgById(messageId);
     if (!message) {
-      throw new Error("Channel message not found")
+      throw new Error("Channel message not found");
     }
 
     if (message.deleted) {
-      throw new Error("Message is deleted")
+      throw new Error("Message is deleted");
     }
 
-    const isMessageOwner = message.profileId === profileId
+    const isMessageOwner = message.profileId === profileId;
     if (!isMessageOwner) {
-      throw new Error("You cannot edit other member's message")
+      throw new Error("You cannot edit other member's message");
     }
 
-    const profile = await getProfileById(profileId)
+    const profile = await getProfileById(profileId);
     if (!profile) {
-      throw new Error("Profile not found")
+      throw new Error("Profile not found");
     }
 
     return await db.directMessage.update({
@@ -181,9 +181,9 @@ export async function editDirectMsg({
         profile: true,
         conversation: true,
       },
-    })
+    });
   } catch (error) {
-    return null
+    return null;
   }
 }
 
@@ -193,31 +193,31 @@ export async function deleteDirectMsg({
   profileId,
 }: DeleteDirectMsgInputs) {
   try {
-    const message = await getDirectMsgById(messageId)
+    const message = await getDirectMsgById(messageId);
     if (!message) {
-      throw new Error("Direct message not found")
+      throw new Error("Direct message not found");
     }
 
     if (message.deleted) {
-      throw new Error("Message is already deleted")
+      throw new Error("Message is already deleted");
     }
 
-    const isMessageOwner = message.profileId === profileId
+    const isMessageOwner = message.profileId === profileId;
     if (!isMessageOwner) {
-      throw new Error("You cannot delete other profile's message")
+      throw new Error("You cannot delete other profile's message");
     }
 
-    const profile = await getProfileById(profileId)
+    const profile = await getProfileById(profileId);
     if (!profile) {
-      throw new Error("Profile not found")
+      throw new Error("Profile not found");
     }
 
     const conversation = await getConversationByProfileId({
       conversationId,
       profileId,
-    })
+    });
     if (!conversation) {
-      throw new Error("Conversation not found")
+      throw new Error("Conversation not found");
     }
 
     return await db.directMessage.update({
@@ -236,8 +236,8 @@ export async function deleteDirectMsg({
         },
         profile: true,
       },
-    })
+    });
   } catch (error) {
-    return null
+    return null;
   }
 }

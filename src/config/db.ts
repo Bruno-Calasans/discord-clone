@@ -1,7 +1,7 @@
-import { PrismaClient } from "../../prisma/output"
+import { PrismaClient } from "../../prisma/output";
 
 const db = new PrismaClient({
   errorFormat: "pretty",
-})
+});
 
-export default db
+export default db;

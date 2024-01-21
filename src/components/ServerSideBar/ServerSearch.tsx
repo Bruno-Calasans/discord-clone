@@ -1,6 +1,6 @@
-"use client"
-import type { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
-import { Search, Hash, Mic, Video, ShieldAlert, Shield } from "lucide-react"
+"use client";
+import type { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile";
+import { Search, Hash, Mic, Video, ShieldAlert, Shield } from "lucide-react";
 import {
   Command,
   CommandDialog,
@@ -9,76 +9,76 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/Command"
-import { useEffect, useState } from "react"
-import { CHANNEL_TYPE } from "../../../prisma/output"
-import { useRouter } from "next/navigation"
+} from "@/components/ui/Command";
+import { useEffect, useState } from "react";
+import { CHANNEL_TYPE } from "../../../prisma/output";
+import { useRouter } from "next/navigation";
 
 const channelIconMap = {
-  [CHANNEL_TYPE.TEXT]: <Hash className="w-4 h-4" />,
-  [CHANNEL_TYPE.AUDIO]: <Mic className="w-4 h-4" />,
-  [CHANNEL_TYPE.VIDEO]: <Video className="w-4 h-4" />,
-} as const
+  [CHANNEL_TYPE.TEXT]: <Hash className="h-4 w-4" />,
+  [CHANNEL_TYPE.AUDIO]: <Mic className="h-4 w-4" />,
+  [CHANNEL_TYPE.VIDEO]: <Video className="h-4 w-4" />,
+} as const;
 
 const roleIconMap = {
-  admin: <ShieldAlert className="w-4 h-4 text-rose-500" />,
-  moderator: <ShieldAlert className="w-4 h-4 text-emerald-500" />,
+  admin: <ShieldAlert className="h-4 w-4 text-rose-500" />,
+  moderator: <ShieldAlert className="h-4 w-4 text-emerald-500" />,
   guest: null,
-} as Record<string, JSX.Element | null>
+} as Record<string, JSX.Element | null>;
 
 type ServerSearchProps = {
-  server: ServerWithMembersAndProfile
-}
+  server: ServerWithMembersAndProfile;
+};
 
 export default function ServerSearch({ server }: ServerSearchProps) {
-  const [open, setOpen] = useState(false)
-  const router = useRouter()
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
 
-  const members = server.members
+  const members = server.members;
   const textChannels = server.channels.filter(
-    (channel) => channel.type === "TEXT"
-  )
+    (channel) => channel.type === "TEXT",
+  );
   const audioChannels = server.channels.filter(
-    (channel) => channel.type === "AUDIO"
-  )
+    (channel) => channel.type === "AUDIO",
+  );
   const videochannels = server.channels.filter(
-    (channel) => channel.type === "VIDEO"
-  )
+    (channel) => channel.type === "VIDEO",
+  );
 
   const redirect = (id: string, type: "channel" | "member") => {
-    setOpen(false)
+    setOpen(false);
 
     if (type === "member") {
-      return router.push(`servers/${server.id}/conversations/${id}`)
+      return router.push(`servers/${server.id}/conversations/${id}`);
     }
 
     if (type === "channel") {
-      return router.push(`servers/${server.id}/channels/${id}`)
+      return router.push(`servers/${server.id}/channels/${id}`);
     }
-  }
+  };
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault()
-        setOpen((open) => !open)
+        e.preventDefault();
+        setOpen((open) => !open);
       }
-    }
-    document.addEventListener("keydown", down)
-    return () => document.removeEventListener("keydown", down)
-  }, [])
+    };
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
 
   return (
-    <div className="w-full font-semibold text-sm text-zinc-500 hover:text-zinc-700 hover:dark:text-white transition border-b-2 dark:border-neutral-800">
+    <div className="w-full border-b-2 text-sm font-semibold text-zinc-500 transition hover:text-zinc-700 dark:border-neutral-800 hover:dark:text-white">
       <button
         onClick={() => setOpen(true)}
-        className="w-full flex items-center justify-between p-2 hover:bg-zinc-700/10 hover:dark:bg-zinc-700/50 trasition"
+        className="trasition flex w-full items-center justify-between p-2 hover:bg-zinc-700/10 hover:dark:bg-zinc-700/50"
       >
-        <div className="flex justify-center items-center gap-1">
-          <Search className="w-4 h-4" />
+        <div className="flex items-center justify-center gap-1">
+          <Search className="h-4 w-4" />
           <p>Search</p>
         </div>
-        <kbd className="bg-muted/50 p-1 rounded-sm">CTRL + K</kbd>
+        <kbd className="rounded-sm bg-muted/50 p-1">CTRL + K</kbd>
       </button>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput placeholder="Search for a channel or member" />
@@ -91,7 +91,7 @@ export default function ServerSearch({ server }: ServerSearchProps) {
                 <CommandItem
                   onSelect={() => redirect(channel.id, "channel")}
                   key={channel.id}
-                  className="capitalize flex gap-1 cursor-pointer"
+                  className="flex cursor-pointer gap-1 capitalize"
                 >
                   {channelIconMap["TEXT"]}
                   {channel.name}
@@ -106,7 +106,7 @@ export default function ServerSearch({ server }: ServerSearchProps) {
                 <CommandItem
                   onSelect={() => redirect(channel.id, "channel")}
                   key={channel.id}
-                  className="capitalize flex gap-1 cursor-pointer"
+                  className="flex cursor-pointer gap-1 capitalize"
                 >
                   {channelIconMap["AUDIO"]}
                   {channel.name}
@@ -121,7 +121,7 @@ export default function ServerSearch({ server }: ServerSearchProps) {
                 <CommandItem
                   onSelect={() => redirect(channel.id, "channel")}
                   key={channel.id}
-                  className="capitalize flex gap-1 cursor-pointer"
+                  className="flex cursor-pointer gap-1 capitalize"
                 >
                   {channelIconMap["VIDEO"]}
                   {channel.name}
@@ -136,7 +136,7 @@ export default function ServerSearch({ server }: ServerSearchProps) {
                 <CommandItem
                   onSelect={() => redirect(member.id, "member")}
                   key={member.id}
-                  className="capitalize flex gap-1 cursor-pointer"
+                  className="flex cursor-pointer gap-1 capitalize"
                 >
                   {roleIconMap[member.role.toLowerCase()]}
                   {member.name}
@@ -147,5 +147,5 @@ export default function ServerSearch({ server }: ServerSearchProps) {
         </CommandList>
       </CommandDialog>
     </div>
-  )
+  );
 }

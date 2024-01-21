@@ -1,20 +1,20 @@
-"use client"
-import { Loader2, ServerCrash } from "lucide-react"
-import { useRef, ElementRef } from "react"
-import Button from "../ui/Button"
-import useChatScroll from "@/hooks/useChatScroll"
-import { ConversationWithProfiles } from "@/types/ConversationWithProfiles"
-import { Profile } from "../../../prisma/output"
-import DmChatWelcome from "./DmChatWelcome"
-import DmMessage from "./ChatDmMessage"
-import useDirectMsgQuery from "@/hooks/useDirectMsgQuery"
-import { DmWithProfileConversation } from "@/types/DmWithProfileConversation"
+"use client";
+import { Loader2, ServerCrash } from "lucide-react";
+import { useRef, ElementRef } from "react";
+import Button from "../ui/Button";
+import useChatScroll from "@/hooks/useChatScroll";
+import { ConversationWithProfiles } from "@/types/ConversationWithProfiles";
+import { Profile } from "../../../prisma/output";
+import DmChatWelcome from "./DmChatWelcome";
+import DmMessage from "./ChatDmMessage";
+import useDirectMsgQuery from "@/hooks/useDirectMsgQuery";
+import { DmWithProfileConversation } from "@/types/DmWithProfileConversation";
 
 type ChatDmMessagesProps = {
-  conversation: ConversationWithProfiles
-  currentProfile: Profile
-  otherProfile: Profile
-}
+  conversation: ConversationWithProfiles;
+  currentProfile: Profile;
+  otherProfile: Profile;
+};
 
 export default function ChatDmMessages({
   conversation,
@@ -31,9 +31,9 @@ export default function ChatDmMessages({
   } = useDirectMsgQuery({
     conversationId: conversation.id,
     batch: 10,
-  })
-  const chatTopRef = useRef<ElementRef<"div">>(null)
-  const chatBottomRef = useRef<ElementRef<"div">>(null)
+  });
+  const chatTopRef = useRef<ElementRef<"div">>(null);
+  const chatBottomRef = useRef<ElementRef<"div">>(null);
 
   useChatScroll({
     chatBottomRef,
@@ -41,46 +41,46 @@ export default function ChatDmMessages({
     shouldLoadMore: !isFetchingNextPage && hasNextPage,
     count: data?.pages[0]?.messages.length ?? 0,
     loadMore: fetchNextPage,
-  })
+  });
 
-  const messages: DmWithProfileConversation[] = []
+  const messages: DmWithProfileConversation[] = [];
   data?.pages.map((page) => {
-    page?.messages.forEach((msg) => messages.push(msg))
-  })
+    page?.messages.forEach((msg) => messages.push(msg));
+  });
 
   const loadMorePagesHandler = () => {
-    fetchNextPage()
-  }
+    fetchNextPage();
+  };
 
   if (isLoading) {
     return (
-      <div className="flex flex-col flex-1 gap-1 justify-center items-center">
-        <Loader2 className="h-6 w-6 text-zinc-500 animate-spin" />
+      <div className="flex flex-1 flex-col items-center justify-center gap-1">
+        <Loader2 className="h-6 w-6 animate-spin text-zinc-500" />
         <p className="text-zinc-500">Loading Messages...</p>
       </div>
-    )
+    );
   }
 
   if (isError) {
     return (
-      <div className="flex flex-col flex-1 gap-1 justify-center items-center">
+      <div className="flex flex-1 flex-col items-center justify-center gap-1">
         <ServerCrash className="h-6 w-6 text-zinc-500" />
         <p className="text-zinc-500">Something went wrong :(</p>
       </div>
-    )
+    );
   }
 
   return (
     <div
       ref={chatTopRef}
-      className="flex flex-col px-2 pb-6 scrollbar scrollbar-thumb-zinc-600 dark:scrollbar-thumb-zinc-400 scrollbar-track-zinc-400 dark:scrollbar-track-zinc-700 scrollbar-w-[4px] scrollbar-track-rounded-sm overflow-y-auto"
+      className="flex flex-col overflow-y-auto px-2 pb-6 scrollbar scrollbar-track-zinc-400 scrollbar-thumb-zinc-600 scrollbar-track-rounded-sm scrollbar-w-[4px] dark:scrollbar-track-zinc-700 dark:scrollbar-thumb-zinc-400"
     >
       {!hasNextPage && <DmChatWelcome profile={otherProfile} />}
       {hasNextPage && (
         <div className="flex w-full justify-center p-3 text-sm">
           {isFetchingNextPage ? (
             <div className="flex gap-1 text-zinc-500">
-              <Loader2 className="w-6 h-6 animate-spin" />
+              <Loader2 className="h-6 w-6 animate-spin" />
               <p>Loading messages...</p>
             </div>
           ) : (
@@ -108,5 +108,5 @@ export default function ChatDmMessages({
       )}
       <div ref={chatBottomRef}></div>
     </div>
-  )
+  );
 }

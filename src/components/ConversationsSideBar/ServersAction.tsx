@@ -1,26 +1,26 @@
-"use client"
-import { Boxes } from "lucide-react"
-import { useRouter } from "next/navigation"
+"use client";
+import { Boxes } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function ServersAction() {
-  const router = useRouter()
+  const router = useRouter();
 
   const clickHandler = () => {
-    router.push("/servers")
-  }
+    router.push("/servers");
+  };
 
   return (
     <div
       onClick={clickHandler}
-      className="group hover:bg-emerald-500 hover:dark:bg-emerald-500 rounded-sm transition"
+      className="group rounded-sm transition hover:bg-emerald-500 hover:dark:bg-emerald-500"
     >
-      <button className="flex items-center gap-2 p-2  h-full w-full">
+      <button className="flex h-full w-full items-center  gap-2 p-2">
         <Boxes
           size={25}
-          className="text-emerald-500 group-hover:text-white transition"
+          className="text-emerald-500 transition group-hover:text-white"
         />
         <p>Servers</p>
       </button>
     </div>
-  )
+  );
 }

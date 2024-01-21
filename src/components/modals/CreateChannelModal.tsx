@@ -1,23 +1,23 @@
-"use client"
-import * as z from "zod"
-import Input from "@/components/ui/Input"
-import Button from "@/components/ui/Button"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+"use client";
+import * as z from "zod";
+import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/Dialog"
+} from "@/components/ui/Dialog";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/Select"
+} from "@/components/ui/Select";
 import {
   Form,
   FormControl,
@@ -25,12 +25,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/Form"
-import useModal from "@/hooks/useModal/useModal"
-import { useRouter } from "next/navigation"
-import { CHANNEL_TYPE } from "../../../prisma/output"
-import { createChannel } from "@/actions/channelActions"
-import { useEffect } from "react"
+} from "@/components/ui/Form";
+import useModal from "@/hooks/useModal/useModal";
+import { useRouter } from "next/navigation";
+import { CHANNEL_TYPE } from "../../../prisma/output";
+import { createChannel } from "@/actions/channelActions";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   name: z
@@ -40,54 +40,54 @@ const formSchema = z.object({
       message: 'Channel name cannot be "general"',
     }),
   type: z.nativeEnum(CHANNEL_TYPE),
-})
+});
 
-type CreateChannelFormInputs = z.infer<typeof formSchema>
+type CreateChannelFormInputs = z.infer<typeof formSchema>;
 
 export default function CreateChannelModal() {
-  const { isOpen, type, data, close } = useModal()
-  const { server, profile, channelType } = data
+  const { isOpen, type, data, close } = useModal();
+  const { server, profile, channelType } = data;
 
-  const router = useRouter()
+  const router = useRouter();
   const form = useForm<CreateChannelFormInputs>({
     defaultValues: {
       name: "",
       type: CHANNEL_TYPE.TEXT,
     },
     resolver: zodResolver(formSchema),
-  })
+  });
 
-  const isLoading = form.formState.isSubmitting
-  const isModalOpen = isOpen && type === "CreateChannel"
+  const isLoading = form.formState.isSubmitting;
+  const isModalOpen = isOpen && type === "CreateChannel";
 
   const submitHandler = async (inputs: CreateChannelFormInputs) => {
-    if (!server || !profile) return
+    if (!server || !profile) return;
     await createChannel({
       ...inputs,
       serverId: server.id,
       profileId: profile.id,
-    })
-    form.reset()
-    router.refresh()
-    close()
-  }
+    });
+    form.reset();
+    router.refresh();
+    close();
+  };
 
   const closeModalHandler = () => {
-    form.reset()
-    close()
-  }
+    form.reset();
+    close();
+  };
 
   useEffect(() => {
     if (channelType) {
-      form.setValue("type", channelType)
+      form.setValue("type", channelType);
     }
-  }, [channelType])
+  }, [channelType]);
 
   return (
     <Dialog open={isModalOpen} onOpenChange={closeModalHandler}>
       <DialogContent className="bg-white text-stone-900">
         <DialogHeader>
-          <DialogTitle className="text-indigo-600 text-4xl font-bold text-center">
+          <DialogTitle className="text-center text-4xl font-bold text-indigo-600">
             Create you channel
           </DialogTitle>
         </DialogHeader>
@@ -101,7 +101,7 @@ export default function CreateChannelModal() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-bold text-sm uppercase">
+                  <FormLabel className="text-sm font-bold uppercase">
                     Channel Name
                   </FormLabel>
                   <FormControl>
@@ -123,7 +123,7 @@ export default function CreateChannelModal() {
               name="type"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-bold text-sm uppercase">
+                  <FormLabel className="text-sm font-bold uppercase">
                     Channel Type
                   </FormLabel>
                   <FormControl>
@@ -132,10 +132,10 @@ export default function CreateChannelModal() {
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="font-semibold w-full bg-zinc-100 capitalize">
+                      <SelectTrigger className="w-full bg-zinc-100 font-semibold capitalize">
                         <SelectValue className="bg-white" />
                       </SelectTrigger>
-                      <SelectContent className="bg-white text-zinc-900 font-semibold">
+                      <SelectContent className="bg-white font-semibold text-zinc-900">
                         {Object.values(CHANNEL_TYPE).map((type) => (
                           <SelectItem
                             key={type}
@@ -167,5 +167,5 @@ export default function CreateChannelModal() {
         </Form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

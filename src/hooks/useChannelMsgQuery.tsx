@@ -1,22 +1,22 @@
-"use client"
-import { useInfiniteQuery } from "@tanstack/react-query"
-import { getChannelMessages } from "@/actions/channelMessageActions"
-import useSocket from "./useSocket/useSocket"
-import useChatSocket from "./useChatSocket"
+"use client";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { getChannelMessages } from "@/actions/channelMessageActions";
+import useSocket from "./useSocket/useSocket";
+import useChatSocket from "./useChatSocket";
 
 type UseChannelMsgQueryProps = {
-  channelId: string
-  batch: number
-}
+  channelId: string;
+  batch: number;
+};
 
 export default function useChannelMsgQuery({
   channelId,
   batch,
 }: UseChannelMsgQueryProps) {
-  const { connected } = useSocket()
-  const queryKey = "getChannelMessages"
-  const createKey = "message:create"
-  const updateKey = "message:update"
+  const { connected } = useSocket();
+  const queryKey = "getChannelMessages";
+  const createKey = "message:create";
+  const updateKey = "message:update";
 
   const {
     data,
@@ -40,13 +40,13 @@ export default function useChannelMsgQuery({
       }),
     getNextPageParam: (lastPage) => lastPage?.nextCursor,
     refetchInterval: connected ? false : 1000,
-  })
+  });
 
   useChatSocket({
     queryKey,
     createKey,
     updateKey,
-  })
+  });
 
   return {
     data,
@@ -59,5 +59,5 @@ export default function useChannelMsgQuery({
     status,
     isLoading,
     isError,
-  }
+  };
 }

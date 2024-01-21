@@ -1,10 +1,10 @@
-import Link from "next/link"
-import ModeToggle from "@/components/ui/ModeToggle"
-import Button from "@/components/ui/Button"
+import Link from "next/link";
+import ModeToggle from "@/components/ui/ModeToggle";
+import Button from "@/components/ui/Button";
 
 export default function HomeHeader() {
   return (
-    <header className="flex justify-between p-5 bg-slate-800">
+    <header className="flex justify-between bg-slate-800 p-5">
       <div className="text-lg font-bold text-indigo-500">
         <Link href="/">DISCORD CLONE</Link>
       </div>
@@ -23,5 +23,5 @@ export default function HomeHeader() {
         <ModeToggle />
       </div>
     </header>
-  )
+  );
 }

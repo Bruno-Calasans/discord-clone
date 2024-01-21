@@ -1,5 +1,5 @@
 function ServerPage() {
-  return <div>Server Page</div>
+  return <div>Server Page</div>;
 }
 
-export default ServerPage
+export default ServerPage;

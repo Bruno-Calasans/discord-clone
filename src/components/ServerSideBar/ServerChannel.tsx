@@ -1,9 +1,9 @@
-import { Channel } from "../../../prisma/output"
+import { Channel } from "../../../prisma/output";
 
 type ServerChannelProps = {
-  channel: Channel
-}
+  channel: Channel;
+};
 
 export default function ServerChannel({ channel }: ServerChannelProps) {
-  return 
+  return;
 }

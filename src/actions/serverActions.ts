@@ -1,16 +1,16 @@
 /* eslint-disable import/no-anonymous-default-export */
-"use server"
-import db from "@/config/db"
-import type { Server, Channel } from "../../prisma/output"
-import type { Omit } from "../../prisma/output/runtime/library"
-import { getCurrentProfile, getProfileById } from "@/actions/profileActions"
-import { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
-import { v4 } from "uuid"
+"use server";
+import db from "@/config/db";
+import type { Server, Channel } from "../../prisma/output";
+import type { Omit } from "../../prisma/output/runtime/library";
+import { getCurrentProfile, getProfileById } from "@/actions/profileActions";
+import { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile";
+import { v4 } from "uuid";
 
-type ServerInput = Omit<Server, "id" | "createdAt" | "updatedAt">
+type ServerInput = Omit<Server, "id" | "createdAt" | "updatedAt">;
 
 export async function getServersByProfileId(
-  profileId: string
+  profileId: string,
 ): Promise<ServerWithMembersAndProfile[] | null> {
   try {
     return db.server.findMany({
@@ -33,18 +33,18 @@ export async function getServersByProfileId(
         },
         channels: true,
       },
-    })
+    });
   } catch (error) {
-    return null
+    return null;
   }
 }
 
 export async function createServer(
-  input: Omit<ServerInput, "inviteCode" | "profileId">
+  input: Omit<ServerInput, "inviteCode" | "profileId">,
 ) {
   try {
-    const profile = await getCurrentProfile()
-    if (!profile) throw new Error("Profile not found")
+    const profile = await getCurrentProfile();
+    if (!profile) throw new Error("Profile not found");
 
     return db.server.create({
       data: {
@@ -72,15 +72,15 @@ export async function createServer(
           ],
         },
       },
-    })
+    });
   } catch (error) {
-    return null
+    return null;
   }
 }
 
 export async function updateServer(
   serverId: string,
-  inputs: Partial<ServerInput>
+  inputs: Partial<ServerInput>,
 ) {
   try {
     return await db.server.update({
@@ -88,7 +88,7 @@ export async function updateServer(
         id: serverId,
       },
       data: inputs,
-    })
+    });
   } catch (error) {}
 }
 
@@ -98,22 +98,22 @@ export async function findServerById(serverId: string): Promise<Server | null> {
       where: {
         id: serverId,
       },
-    })
+    });
   } catch (error) {
-    return null
+    return null;
   }
 }
 
 export async function getServers(): Promise<Server[] | null> {
   try {
-    return db.server.findMany()
+    return db.server.findMany();
   } catch (error) {
-    return null
+    return null;
   }
 }
 
 export async function getServerChannels(
-  serverId: string
+  serverId: string,
 ): Promise<Channel[] | null> {
   try {
     return await db.channel.findMany({
@@ -123,9 +123,9 @@ export async function getServerChannels(
       orderBy: {
         name: "asc",
       },
-    })
+    });
   } catch (error) {
-    return null
+    return null;
   }
 }
 
@@ -141,9 +141,9 @@ export async function getServerMembers(serverId: string) {
       include: {
         profile: true,
       },
-    })
+    });
   } catch (error) {
-    return null
+    return null;
   }
 }
 
@@ -165,14 +165,14 @@ export async function getCompleteServer(serverId: string) {
         },
         channels: true,
       },
-    })) as unknown as ServerWithMembersAndProfile
+    })) as unknown as ServerWithMembersAndProfile;
   } catch (error) {
-    return null
+    return null;
   }
 }
 
 export async function regenerateServerInviteCode(
-  serverId: string
+  serverId: string,
 ): Promise<Server | null> {
   try {
     return await db.server.update({
@@ -182,16 +182,16 @@ export async function regenerateServerInviteCode(
       data: {
         inviteCode: v4(),
       },
-    })
+    });
   } catch (error) {
-    return null
+    return null;
   }
 }
 
 export async function joinServer(serverId: string, profileId: string) {
   try {
-    const profile = await getProfileById(profileId)
-    if (!profile) throw new Error("Profile not found")
+    const profile = await getProfileById(profileId);
+    if (!profile) throw new Error("Profile not found");
 
     return await db.server.update({
       where: {
@@ -206,9 +206,9 @@ export async function joinServer(serverId: string, profileId: string) {
           },
         },
       },
-    })
+    });
   } catch (error) {
-    return null
+    return null;
   }
 }
 
@@ -218,27 +218,27 @@ export async function getServerByInviteCode(inviteCode: string) {
       where: {
         inviteCode,
       },
-    })
+    });
   } catch (error) {
-    return null
+    return null;
   }
 }
 
 export async function leaveServer(serverId: string) {
   try {
-    const profile = await getCurrentProfile()
-    if (!profile) throw new Error("Profile not found")
+    const profile = await getCurrentProfile();
+    if (!profile) throw new Error("Profile not found");
 
-    const server = await getCompleteServer(serverId)
-    if (!server) throw new Error("Server not found")
+    const server = await getCompleteServer(serverId);
+    if (!server) throw new Error("Server not found");
 
-    const isServerOwner = server.profileId === profile.id
-    if (isServerOwner) throw new Error("You cannot leave your own server")
+    const isServerOwner = server.profileId === profile.id;
+    if (isServerOwner) throw new Error("You cannot leave your own server");
 
     const memberFound = server.members.find(
-      (member) => member.profileId === profile.id
-    )
-    if (!memberFound) throw new Error("Profile is not member")
+      (member) => member.profileId === profile.id,
+    );
+    if (!memberFound) throw new Error("Profile is not member");
 
     return await db.server.update({
       where: {
@@ -252,30 +252,30 @@ export async function leaveServer(serverId: string) {
           },
         },
       },
-    })
+    });
   } catch (error) {
-    return null
+    return null;
   }
 }
 
 export async function deleteServer(serverId: string) {
   try {
-    const profile = await getCurrentProfile()
-    if (!profile) throw new Error("Profile not found")
+    const profile = await getCurrentProfile();
+    if (!profile) throw new Error("Profile not found");
 
-    const server = await findServerById(serverId)
-    if (!server) throw new Error("Server not found")
+    const server = await findServerById(serverId);
+    if (!server) throw new Error("Server not found");
 
-    const isServerOwner = server.profileId === profile.id
-    if (!isServerOwner) throw new Error("You are not the server owner")
+    const isServerOwner = server.profileId === profile.id;
+    if (!isServerOwner) throw new Error("You are not the server owner");
 
     return await db.server.delete({
       where: {
         id: serverId,
         profileId: profile.id,
       },
-    })
+    });
   } catch (error) {
-    return null
+    return null;
   }
 }

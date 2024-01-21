@@ -1,11 +1,11 @@
-"use client"
-import "@uploadthing/react/styles.css"
-import * as z from "zod"
-import { createServer } from "@/actions/serverActions"
-import Input from "@/components/ui/Input"
-import Button from "@/components/ui/Button"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+"use client";
+import "@uploadthing/react/styles.css";
+import * as z from "zod";
+import { createServer } from "@/actions/serverActions";
+import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import {
   Dialog,
   DialogContent,
@@ -13,7 +13,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/Dialog"
+} from "@/components/ui/Dialog";
 import {
   Form,
   FormControl,
@@ -21,58 +21,58 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/Form"
-import FileUpload from "@/components/custom/FileUpload"
-import useModal from "@/hooks/useModal/useModal"
-import { useRouter } from "next/navigation"
+} from "@/components/ui/Form";
+import FileUpload from "@/components/custom/FileUpload";
+import useModal from "@/hooks/useModal/useModal";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(3, "Server name must have 3 or more characters long."),
   imgUrl: z.string().url("Server image url is invalid"),
-})
+});
 
-type CreateServerInputs = z.infer<typeof formSchema>
+type CreateServerInputs = z.infer<typeof formSchema>;
 
 export default function CreateServerModal() {
-  const { isOpen, type, close } = useModal()
-  const router = useRouter()
+  const { isOpen, type, close } = useModal();
+  const router = useRouter();
   const form = useForm<CreateServerInputs>({
     defaultValues: {
       name: "",
       imgUrl: "",
     },
     resolver: zodResolver(formSchema),
-  })
+  });
 
-  const isLoading = form.formState.isSubmitting
-  const isModalOpen = isOpen && type === "CreateServer"
+  const isLoading = form.formState.isSubmitting;
+  const isModalOpen = isOpen && type === "CreateServer";
 
   const submitHandler = async (inputs: CreateServerInputs) => {
-    const server = await createServer(inputs)
-    if (!server) return
-    form.reset()
-    router.refresh()
-    close()
-  }
+    const server = await createServer(inputs);
+    if (!server) return;
+    form.reset();
+    router.refresh();
+    close();
+  };
 
   const uploadServerImageHandler = (files: string[]) => {
-    if (files.length === 0) return form.resetField("imgUrl")
+    if (files.length === 0) return form.resetField("imgUrl");
     if (files.length === 1) {
-      form.setValue("imgUrl", files[0])
-      form.clearErrors("imgUrl")
+      form.setValue("imgUrl", files[0]);
+      form.clearErrors("imgUrl");
     }
-  }
+  };
 
   const closeModalHandler = () => {
-    form.reset()
-    close()
-  }
+    form.reset();
+    close();
+  };
 
   return (
     <Dialog open={isModalOpen} onOpenChange={closeModalHandler}>
       <DialogContent className="bg-white text-stone-900">
         <DialogHeader>
-          <DialogTitle className="text-indigo-600 text-4xl font-bold text-center">
+          <DialogTitle className="text-center text-4xl font-bold text-indigo-600">
             Customize your Server
           </DialogTitle>
           <DialogDescription className="py-4 text-stone-500">
@@ -105,7 +105,7 @@ export default function CreateServerModal() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-bold text-sm uppercase">
+                  <FormLabel className="text-sm font-bold uppercase">
                     Server Name
                   </FormLabel>
                   <FormControl>
@@ -134,5 +134,5 @@ export default function CreateServerModal() {
         </Form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -3,16 +3,16 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/Tooltip"
-import { cn } from "@/utils/cn"
+} from "@/components/ui/Tooltip";
+import { cn } from "@/utils/cn";
 
 type ActionTooltipProps = {
-  label: string
-  children: React.ReactNode
-  align?: "center" | "start" | "end"
-  side?: "right" | "left" | "top" | "bottom"
-  sideOffSet?: number
-}
+  label: string;
+  children: React.ReactNode;
+  align?: "center" | "start" | "end";
+  side?: "right" | "left" | "top" | "bottom";
+  sideOffSet?: number;
+};
 
 function ActionTooltip({
   children,
@@ -31,13 +31,13 @@ function ActionTooltip({
           sideOffset={sideOffSet}
           className="bg-black"
         >
-          <p className="text-white font-semibold capitalize dark:text-white">
+          <p className="font-semibold capitalize text-white dark:text-white">
             {label.toLowerCase()}
           </p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
-  )
+  );
 }
 
-export default ActionTooltip
+export default ActionTooltip;

@@ -1,21 +1,27 @@
 import { NextApiRequest } from "next"
 import { Server as SocketServer } from "socket.io"
 import type { NextApiResponseSocket } from "@/types/NextApiResponseSocket"
-import type { MessageWithMemberProfile } from "@/types/MessageWithMemberProfile"
-
-type SocketData = {
-  message?: MessageWithMemberProfile
-}
+import {
+  SocketData,
+  ClientToServerEvents,
+  InterServerEvents,
+  ServerToClientEvents,
+} from "@/types/Socket"
 
 // Checking if there's a socket connection already
 export default function socketHandler(
   req: NextApiRequest,
-  res: NextApiResponseSocket
+  res: NextApiResponseSocket,
 ) {
   if (!res.socket.server.io) {
     const httpServer = res.socket.server as any
 
-    const io = new SocketServer(httpServer, {
+    const io = new SocketServer<
+      ClientToServerEvents,
+      ServerToClientEvents,
+      InterServerEvents,
+      SocketData
+    >(httpServer, {
       path: "/api/socket/io",
       addTrailingSlash: false,
     })
@@ -23,12 +29,21 @@ export default function socketHandler(
     io.on("connection", (socket) => {
       console.log(`Client connected: ${socket.id}`)
 
-      socket.on("message:create", ({ message }: SocketData) => {
-        io.emit("message:create", { message })
+      socket.on("message:create", (data) => {
+        io.emit("message:create", data)
       })
 
-      socket.on("message:update", ({ message }: SocketData) => {
-        io.emit("message:update", { message })
+      socket.on("message:update", (data) => {
+        io.emit("message:update", data)
+      })
+
+      socket.on("screen-share:join", (data) => {
+        console.log(data)
+        io.emit("screen-share:join", data)
+      })
+
+      socket.on("screen-share:leave", (data) => {
+        io.emit("screen-share:leave", data)
       })
     })
 

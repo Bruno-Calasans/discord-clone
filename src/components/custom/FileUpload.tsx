@@ -1,19 +1,19 @@
-"use client"
-import { useEffect, useState } from "react"
-import { X, File } from "lucide-react"
-import { OurFileRouter } from "@/app/api/uploadthing/core"
-import { UploadDropzone } from "@/utils/uploadthing"
-import { UploadFileResponse } from "uploadthing/client"
-import Image from "next/image"
+"use client";
+import { useEffect, useState } from "react";
+import { X, File } from "lucide-react";
+import { OurFileRouter } from "@/app/api/uploadthing/core";
+import { UploadDropzone } from "@/utils/uploadthing";
+import { UploadFileResponse } from "uploadthing/client";
+import Image from "next/image";
 
-type UploadCompleteResponse = UploadFileResponse<null>[]
+type UploadCompleteResponse = UploadFileResponse<null>[];
 
 type FileUploadProps = {
-  endpoint: keyof OurFileRouter
-  defaultFiles?: string[]
-  onChange: (files: string[]) => void
-  onError?: (error: unknown) => void
-}
+  endpoint: keyof OurFileRouter;
+  defaultFiles?: string[];
+  onChange: (files: string[]) => void;
+  onError?: (error: unknown) => void;
+};
 
 export default function FileUpload({
   endpoint,
@@ -21,18 +21,18 @@ export default function FileUpload({
   onChange,
   onError,
 }: FileUploadProps) {
-  const [files, setFiles] = useState<UploadCompleteResponse>([])
+  const [files, setFiles] = useState<UploadCompleteResponse>([]);
 
   const uploadHandler = (response: UploadCompleteResponse) => {
-    const fileUrls = response.map((file) => file.url)
-    onChange(fileUrls)
-    setFiles(response)
-  }
+    const fileUrls = response.map((file) => file.url);
+    onChange(fileUrls);
+    setFiles(response);
+  };
 
   const clearFilesHandler = () => {
-    setFiles([])
-    onChange([])
-  }
+    setFiles([]);
+    onChange([]);
+  };
 
   useEffect(() => {
     if (defaultFiles.length > 0) {
@@ -42,18 +42,18 @@ export default function FileUpload({
         name: url,
         size: 0,
         serverData: null,
-      }))
-      setFiles(startFiles)
+      }));
+      setFiles(startFiles);
     }
-  }, [])
+  }, []);
 
   // single file upload
   if (files.length === 1) {
-    const fileType = files[0].name.split(".")[1]
+    const fileType = files[0].name.split(".")[1];
 
     if (fileType !== "pdf") {
       return (
-        <div className="w-full flex justify-center">
+        <div className="flex w-full justify-center">
           <div className="relative h-28 w-28">
             <Image
               fill
@@ -65,21 +65,21 @@ export default function FileUpload({
             <button
               title="Remove image"
               onClick={clearFilesHandler}
-              className="absolute  text-white bg-red-500 z-100000 right-0 top-0 rounded-full shadow-sm hover:bg-red-600"
+              className="z-100000  absolute right-0 top-0 rounded-full bg-red-500 text-white shadow-sm hover:bg-red-600"
             >
               <X />
             </button>
           </div>
         </div>
-      )
+      );
     }
 
     if (fileType === "pdf") {
       return (
-        <div className="w-full flex justify-center">
+        <div className="flex w-full justify-center">
           <div className="relative">
-            <div className="flex items-center w-full">
-              <File className="w-24 h-24 text-indigo-500" />
+            <div className="flex w-full items-center">
+              <File className="h-24 w-24 text-indigo-500" />
               <a
                 href={files[0].url}
                 target="_blank"
@@ -91,22 +91,22 @@ export default function FileUpload({
             <button
               title="Remove image"
               onClick={clearFilesHandler}
-              className="absolute  text-white bg-red-500 z-100000 right-[-10px] top-[-10px] rounded-full shadow-sm hover:bg-red-600"
+              className="z-100000  absolute right-[-10px] top-[-10px] rounded-full bg-red-500 text-white shadow-sm hover:bg-red-600"
             >
               <X />
             </button>
           </div>
         </div>
-      )
+      );
     }
   }
 
   return (
     <UploadDropzone
       endpoint={endpoint}
-      className="bg-zinc-300/30 rounded-sm"
+      className="rounded-sm bg-zinc-300/30"
       onClientUploadComplete={uploadHandler}
       onUploadError={onError}
     />
-  )
+  );
 }

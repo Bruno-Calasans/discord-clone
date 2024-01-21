@@ -1,9 +1,9 @@
 "use client"
 import { createContext } from "react"
-import { Socket } from "socket.io-client"
+import { ClientSocket } from "@/types/Socket"
 
 export type SocketContextData = {
-  socket: Socket | null
+  socket: ClientSocket | null
   connected: boolean
 }
 

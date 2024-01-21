@@ -1,38 +1,38 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-"use client"
-import useModal from "@/hooks/useModal/useModal"
-import MemberAvatar from "@/components/custom/MemberAvatar"
+"use client";
+import useModal from "@/hooks/useModal/useModal";
+import MemberAvatar from "@/components/custom/MemberAvatar";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogDescription,
   DialogTitle,
-} from "@/components/ui/Dialog"
-import { ScrollArea } from "@/components/ui/ScrollArea"
-import { getCompleteServer } from "@/actions/serverActions"
-import { useRouter } from "next/navigation"
+} from "@/components/ui/Dialog";
+import { ScrollArea } from "@/components/ui/ScrollArea";
+import { getCompleteServer } from "@/actions/serverActions";
+import { useRouter } from "next/navigation";
 
 export default function ManageMembersModal() {
-  const { isOpen, type, data, open, close } = useModal()
-  const router = useRouter()
+  const { isOpen, type, data, open, close } = useModal();
+  const router = useRouter();
 
-  const isModalOpen = isOpen && type === "ManageMembers"
-  const { server, profile } = data
+  const isModalOpen = isOpen && type === "ManageMembers";
+  const { server, profile } = data;
 
   const updateServer = async () => {
-    if (!server) return
-    const updatedServer = await getCompleteServer(server.id)
-    if (!updatedServer) return
-    router.refresh()
-    open("ManageMembers", { server: updatedServer, profile })
-  }
+    if (!server) return;
+    const updatedServer = await getCompleteServer(server.id);
+    if (!updatedServer) return;
+    router.refresh();
+    open("ManageMembers", { server: updatedServer, profile });
+  };
 
   return (
     <Dialog open={isModalOpen} onOpenChange={close}>
       <DialogContent className="bg-white text-stone-900">
-        <DialogHeader className="flex items-center center">
-          <DialogTitle className="text-indigo-600 text-4xl font-bold text-center">
+        <DialogHeader className="center flex items-center">
+          <DialogTitle className="text-center text-4xl font-bold text-indigo-600">
             Manage Members
           </DialogTitle>
           <DialogDescription className="text-md font-semibold">
@@ -53,5 +53,5 @@ export default function ManageMembersModal() {
         </ScrollArea>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

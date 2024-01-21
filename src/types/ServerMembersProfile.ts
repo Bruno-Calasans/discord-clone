@@ -1,10 +1,10 @@
-import type { Server, Member, Profile, Channel } from "../../prisma/output"
-import type { MemberWithProfile } from "./MemberProfile"
+import type { Server, Member, Profile, Channel } from "../../prisma/output";
+import type { MemberWithProfile } from "./MemberProfile";
 
 export type ServerWithMembersAndProfile = Server & {
-  members: MemberWithProfile[]
+  members: MemberWithProfile[];
 } & {
-  profile: Profile
+  profile: Profile;
 } & {
-  channels: Channel[]
-}
+  channels: Channel[];
+};
