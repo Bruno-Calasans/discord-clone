@@ -1,66 +1,66 @@
-"use client";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/Form";
-import Input from "@/components/ui/Input";
-import Button from "@/components/ui/Button";
-import { Plus } from "lucide-react";
-import { Channel } from "../../../prisma/output";
-import { createChannelMessage } from "@/actions/channelMessageActions";
-import { MemberWithProfile } from "@/types/MemberProfile";
-import useSocket from "@/hooks/useSocket/useSocket";
-import useModal from "@/hooks/useModal/useModal";
-import EmojiPicker, { Emoji } from "./EmojiPicker";
-import { useRouter } from "next/navigation";
+"use client"
+import * as z from "zod"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/Form"
+import Input from "@/components/ui/Input"
+import Button from "@/components/ui/Button"
+import { Plus } from "lucide-react"
+import { Channel } from "../../../prisma/output"
+import { createChannelMessage } from "@/actions/channelMessageActions"
+import { MemberWithProfile } from "@/types/MemberProfile"
+import useSocket from "@/hooks/useSocket/useSocket"
+import useModal from "@/hooks/useModal/useModal"
+import EmojiPicker, { Emoji } from "./EmojiPicker"
+import { useRouter } from "next/navigation"
 
 const chatInputSchema = z.object({
   content: z
     .string()
     .min(1, "Message content must have at least 1 character long"),
-});
+})
 
-type ChatInputFormInputs = z.infer<typeof chatInputSchema>;
+type ChatInputFormInputs = z.infer<typeof chatInputSchema>
 
 type ChatInputProps = {
-  channel: Channel;
-  member: MemberWithProfile;
-};
+  channel: Channel
+  member: MemberWithProfile
+}
 
 export default function ChatChannelInput({ channel, member }: ChatInputProps) {
-  const { open } = useModal();
-  const { socket } = useSocket();
-  const router = useRouter();
+  const { open } = useModal()
+  const { socket } = useSocket()
+  const router = useRouter()
 
   const form = useForm<ChatInputFormInputs>({
     defaultValues: {
       content: "",
     },
     resolver: zodResolver(chatInputSchema),
-  });
+  })
 
-  const loading = form.formState.isLoading;
+  const loading = form.formState.isLoading
 
   const submitHandler = async ({ content }: ChatInputFormInputs) => {
     const message = await createChannelMessage({
       content,
       channelId: channel.id,
       memberId: member.id,
-    });
-    if (!message) return;
-    socket?.emit("message:create", { message });
-    form.reset();
-    router.refresh();
-  };
+    })
+    if (!message) return
+    socket?.emit("message:create", { message })
+    form.reset()
+    router.refresh()
+  }
 
   const attachFileHandler = () => {
-    open("MessageFile", { channel, member });
-  };
+    open("MessageFile", { channel, member })
+  }
 
   const selecEmojiHandler = (emoji: Emoji) => {
-    const currentContent = form.getValues("content");
-    form.setValue("content", `${currentContent}${emoji.native}`);
-  };
+    const currentContent = form.getValues("content")
+    form.setValue("content", `${currentContent}${emoji.native}`)
+  }
 
   return (
     <Form {...form}>
@@ -94,5 +94,5 @@ export default function ChatChannelInput({ channel, member }: ChatInputProps) {
         />
       </form>
     </Form>
-  );
+  )
 }

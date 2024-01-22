@@ -1,6 +1,6 @@
-"use client";
-import type { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile";
-import type { Member, Profile } from "../../../prisma/output";
+"use client"
+import type { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
+import type { Member, Profile } from "../../../prisma/output"
 import {
   ChevronDown,
   ChevronUp,
@@ -10,54 +10,54 @@ import {
   PlusCircle,
   Trash,
   LogOut,
-} from "lucide-react";
+} from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-} from "@/components/ui/DropdownMenu";
-import { useState } from "react";
-import useModal from "@/hooks/useModal/useModal";
+} from "@/components/ui/DropdownMenu"
+import { useState } from "react"
+import useModal from "@/hooks/useModal/useModal"
 
 type ServerHeaderProps = {
-  server: ServerWithMembersAndProfile;
-  profile: Profile;
-  member: Member;
-};
+  server: ServerWithMembersAndProfile
+  profile: Profile
+  member: Member
+}
 
 function ServerSideBarHeader({ server, profile, member }: ServerHeaderProps) {
-  const { open } = useModal();
-  const [opened, setOpened] = useState(false);
+  const { open } = useModal()
+  const [opened, setOpened] = useState(false)
 
   const toggleOpen = () => {
-    setOpened((curr) => !curr);
-  };
+    setOpened((curr) => !curr)
+  }
 
   const openInviteModalHandler = () => {
-    open("Invite", { server });
-  };
+    open("Invite", { server })
+  }
 
   const openEditServerModalHandler = () => {
-    open("EditServer", { server });
-  };
+    open("EditServer", { server })
+  }
 
   const openManageMembersModalHandler = async () => {
-    open("ManageMembers", { server, profile });
-  };
+    open("ManageMembers", { server, profile })
+  }
 
   const openCreateChannelModalHandler = async () => {
-    open("CreateChannel", { server, profile });
-  };
+    open("CreateChannel", { server, profile })
+  }
 
   const openLeaveServerModalHandler = async () => {
-    open("LeaveServer", { server });
-  };
+    open("LeaveServer", { server })
+  }
 
   const openDeleteServerModalHandler = async () => {
-    open("DeleteServer", { server });
-  };
+    open("DeleteServer", { server })
+  }
 
   return (
     <DropdownMenu open={opened} onOpenChange={toggleOpen}>
@@ -125,7 +125,7 @@ function ServerSideBarHeader({ server, profile, member }: ServerHeaderProps) {
         )}
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }
 
-export default ServerSideBarHeader;
+export default ServerSideBarHeader

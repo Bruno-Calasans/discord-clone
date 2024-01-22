@@ -1,38 +1,38 @@
-"use client";
-import type { MemberWithProfile } from "@/types/MemberProfile";
-import type { Profile } from "../../../prisma/output";
-import { ScrollArea } from "../ui/ScrollArea";
-import MembersCategory from "./MembersCategory";
-import uniqueArray from "@/utils/uniqueValues";
+"use client"
+import type { MemberWithProfile } from "@/types/MemberProfile"
+import type { Profile } from "../../../prisma/output"
+import { ScrollArea } from "../ui/ScrollArea"
+import MembersCategory from "./MembersCategory"
+import uniqueArray from "@/utils/uniqueValues"
 
 type MembersScrollAreaProps = {
-  profile: Profile;
-  members: MemberWithProfile[];
-};
+  profile: Profile
+  members: MemberWithProfile[]
+}
 
 export default function MembersScrollArea({
   profile,
   members,
 }: MembersScrollAreaProps) {
   const groupMembersByRole = () => {
-    const roles = members.map((member) => member.role);
-    const groupRoles = uniqueArray(roles);
-    const membersGroupByRole: Record<string, MemberWithProfile[]> = {};
+    const roles = members.map((member) => member.role)
+    const groupRoles = uniqueArray(roles)
+    const membersGroupByRole: Record<string, MemberWithProfile[]> = {}
 
     for (const role of groupRoles) {
-      const roleMembers = members.filter((member) => member.role === role);
-      membersGroupByRole[role] = roleMembers;
+      const roleMembers = members.filter((member) => member.role === role)
+      membersGroupByRole[role] = roleMembers
     }
 
-    return membersGroupByRole;
-  };
+    return membersGroupByRole
+  }
 
-  const membersByRole = groupMembersByRole();
+  const membersByRole = groupMembersByRole()
 
   const profileMember = members.find(
     (member) => member.profileId === profile.id,
-  );
-  if (!profileMember) return null;
+  )
+  if (!profileMember) return null
 
   return (
     <div className="flex flex-col items-center justify-between">
@@ -51,5 +51,5 @@ export default function MembersScrollArea({
         ))}
       </ScrollArea>
     </div>
-  );
+  )
 }

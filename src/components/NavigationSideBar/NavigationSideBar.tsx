@@ -1,23 +1,23 @@
-"use client";
-import Separator from "@/components/ui/Separator";
-import CreateServerAction from "./CreateServerAction";
-import NavigationScrollBar from "./NavigationScrollBar";
-import DmAction from "./DmAction";
-import { useParams } from "next/navigation";
-import { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile";
-import { cn } from "@/utils/cn";
+"use client"
+import Separator from "@/components/ui/Separator"
+import CreateServerAction from "./CreateServerAction"
+import NavigationScrollBar from "./NavigationScrollBar"
+import DmAction from "./DmAction"
+import { useParams } from "next/navigation"
+import { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
+import { cn } from "@/utils/cn"
 
 type NavigationSideBarProps = {
-  servers: ServerWithMembersAndProfile[];
-  classname?: string;
-};
+  servers: ServerWithMembersAndProfile[]
+  classname?: string
+}
 
 export default function NavigationSideBar({
   servers,
   classname,
 }: NavigationSideBarProps) {
-  const params = useParams();
-  const selectedServer = params.serverId as string | undefined;
+  const params = useParams()
+  const selectedServer = params?.serverId as string | undefined
 
   return (
     <aside
@@ -31,5 +31,5 @@ export default function NavigationSideBar({
       <Separator className="w-[80%] bg-slate-600" />
       <NavigationScrollBar servers={servers} selectedServer={selectedServer} />
     </aside>
-  );
+  )
 }

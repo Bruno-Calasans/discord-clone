@@ -1,20 +1,20 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"
 
 type MountProps = {
-  children: React.ReactNode;
-};
+  children: React.ReactNode
+}
 
 export default function Mount({ children }: MountProps) {
-  const [isMounted, setMounted] = useState(false);
+  const [isMounted, setMounted] = useState(false)
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    setMounted(true)
+  }, [])
 
   if (!isMounted) {
-    return null;
+    return null
   }
-  return children ?? null;
+  return children ?? null
 }

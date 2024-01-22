@@ -1,32 +1,32 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-"use client";
-import useModal from "@/hooks/useModal/useModal";
-import MemberAvatar from "@/components/custom/MemberAvatar";
+"use client"
+import useModal from "@/hooks/useModal/useModal"
+import MemberAvatar from "@/components/custom/MemberAvatar"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogDescription,
   DialogTitle,
-} from "@/components/ui/Dialog";
-import { ScrollArea } from "@/components/ui/ScrollArea";
-import { getCompleteServer } from "@/actions/serverActions";
-import { useRouter } from "next/navigation";
+} from "@/components/ui/Dialog"
+import { ScrollArea } from "@/components/ui/ScrollArea"
+import { getCompleteServer } from "@/actions/serverActions"
+import { useRouter } from "next/navigation"
 
 export default function ManageMembersModal() {
-  const { isOpen, type, data, open, close } = useModal();
-  const router = useRouter();
+  const { isOpen, type, data, open, close } = useModal()
+  const router = useRouter()
 
-  const isModalOpen = isOpen && type === "ManageMembers";
-  const { server, profile } = data;
+  const isModalOpen = isOpen && type === "ManageMembers"
+  const { server, profile } = data
 
   const updateServer = async () => {
-    if (!server) return;
-    const updatedServer = await getCompleteServer(server.id);
-    if (!updatedServer) return;
-    router.refresh();
-    open("ManageMembers", { server: updatedServer, profile });
-  };
+    if (!server) return
+    const updatedServer = await getCompleteServer(server.id)
+    if (!updatedServer) return
+    router.refresh()
+    open("ManageMembers", { server: updatedServer, profile })
+  }
 
   return (
     <Dialog open={isModalOpen} onOpenChange={close}>
@@ -53,5 +53,5 @@ export default function ManageMembersModal() {
         </ScrollArea>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

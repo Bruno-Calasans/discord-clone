@@ -1,43 +1,43 @@
-"use client";
-import useModal from "@/hooks/useModal/useModal";
+"use client"
+import useModal from "@/hooks/useModal/useModal"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/Dialog";
-import Label from "@/components/ui/Label";
-import Input from "@/components/ui/Input";
-import Button from "@/components/ui/Button";
-import { Copy, RefreshCcw, Check } from "lucide-react";
-import { useState } from "react";
-import { regenerateServerInviteCode } from "@/actions/serverActions";
+} from "@/components/ui/Dialog"
+import Label from "@/components/ui/Label"
+import Input from "@/components/ui/Input"
+import Button from "@/components/ui/Button"
+import { Copy, RefreshCcw, Check } from "lucide-react"
+import { useState } from "react"
+import { regenerateServerInviteCode } from "@/actions/serverActions"
 
 export default function InviteModal() {
-  const { isOpen, type, data, open, close } = useModal();
-  const [copied, setCopied] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { isOpen, type, data, open, close } = useModal()
+  const [copied, setCopied] = useState(false)
+  const [loading, setLoading] = useState(false)
 
-  const isModalOpen = isOpen && type === "Invite";
-  const currentUrl = location.origin;
-  const { server } = data;
-  const inviteLink = `${currentUrl}/invite/${server?.inviteCode}`;
+  const isModalOpen = isOpen && type === "Invite"
+  const currentUrl = location.origin
+  const { server } = data
+  const inviteLink = `${currentUrl}/invite/${server?.inviteCode}`
 
   const copyLinkHandler = () => {
-    navigator.clipboard.writeText(inviteLink);
-    setCopied(true);
+    navigator.clipboard.writeText(inviteLink)
+    setCopied(true)
     setTimeout(() => {
-      setCopied(false);
-    }, 3000);
-  };
+      setCopied(false)
+    }, 3000)
+  }
 
   const regenerateLinkHandler = async () => {
-    if (!server) return;
-    setLoading(true);
-    const updatedServer = await regenerateServerInviteCode(server.id);
-    if (updatedServer) open("Invite", { server: updatedServer });
-    setLoading(false);
-  };
+    if (!server) return
+    setLoading(true)
+    const updatedServer = await regenerateServerInviteCode(server.id)
+    if (updatedServer) open("Invite", { server: updatedServer } as any)
+    setLoading(false)
+  }
 
   return (
     <Dialog open={isModalOpen} onOpenChange={close}>
@@ -97,5 +97,5 @@ export default function InviteModal() {
         )}
       </DialogContent>
     </Dialog>
-  );
+  )
 }

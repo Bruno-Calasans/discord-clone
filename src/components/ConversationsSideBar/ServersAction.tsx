@@ -1,13 +1,13 @@
-"use client";
-import { Boxes } from "lucide-react";
-import { useRouter } from "next/navigation";
+"use client"
+import { Boxes } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export default function ServersAction() {
-  const router = useRouter();
+  const router = useRouter()
 
   const clickHandler = () => {
-    router.push("/servers");
-  };
+    router.push("/servers")
+  }
 
   return (
     <div
@@ -22,5 +22,5 @@ export default function ServersAction() {
         <p>Servers</p>
       </button>
     </div>
-  );
+  )
 }

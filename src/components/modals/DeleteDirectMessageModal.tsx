@@ -1,6 +1,6 @@
-"use client";
-import useModal from "@/hooks/useModal/useModal";
-import Button from "@/components/ui/Button";
+"use client"
+import useModal from "@/hooks/useModal/useModal"
+import Button from "@/components/ui/Button"
 import {
   Dialog,
   DialogContent,
@@ -8,40 +8,40 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@/components/ui/Dialog";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import MessagePreview from "../chat/MessagePreview";
-import useSocket from "@/hooks/useSocket/useSocket";
-import { deleteDirectMsg } from "@/actions/directMessageActions";
-import DirectMessagePreview from "../chat/DirectMessagePreview";
+} from "@/components/ui/Dialog"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import MessagePreview from "../chat/MessagePreview"
+import useSocket from "@/hooks/useSocket/useSocket"
+import { deleteDirectMsg } from "@/actions/directMessageActions"
+import DirectMessagePreview from "../chat/DirectMessagePreview"
 
 export default function DeleteDirectMessageModal() {
-  const router = useRouter();
-  const { isOpen, type, data, close } = useModal();
-  const { socket } = useSocket();
-  const [loading, setLoading] = useState(false);
+  const router = useRouter()
+  const { isOpen, type, data, close } = useModal()
+  const { socket } = useSocket()
+  const [loading, setLoading] = useState(false)
 
-  const isModalOpen = isOpen && type === "DeleteDirectMessage";
-  const { profile, directMessage, conversation } = data;
-  const message = directMessage;
+  const isModalOpen = isOpen && type === "DeleteDirectMessage"
+  const { profile, directMessage, conversation } = data
+  const message = directMessage
 
   const deleteMessageHandler = async () => {
-    if (!message || !profile || !conversation) return;
-    setLoading(true);
+    if (!message || !profile || !conversation) return
+    setLoading(true)
     const deletedMsg = await deleteDirectMsg({
       messageId: message.id,
       conversationId: conversation.id,
       profileId: profile.id,
-    });
+    })
 
     if (deletedMsg) {
-      router.refresh();
-      socket?.emit("message:update", { message: deletedMsg });
+      router.refresh()
+      socket?.emit("message:update", { message: deletedMsg } as any)
     }
-    setLoading(false);
-    close();
-  };
+    setLoading(false)
+    close()
+  }
 
   return (
     <Dialog open={isModalOpen} onOpenChange={close}>
@@ -75,5 +75,5 @@ export default function DeleteDirectMessageModal() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

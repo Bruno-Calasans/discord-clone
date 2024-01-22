@@ -1,6 +1,6 @@
-"use client";
-import useModal from "@/hooks/useModal/useModal";
-import Button from "@/components/ui/Button";
+"use client"
+import useModal from "@/hooks/useModal/useModal"
+import Button from "@/components/ui/Button"
 import {
   Dialog,
   DialogContent,
@@ -8,26 +8,26 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@/components/ui/Dialog";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { deleteChannel } from "@/actions/channelActions";
+} from "@/components/ui/Dialog"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { deleteChannel } from "@/actions/channelActions"
 
 export default function DeleteChannelModal() {
-  const { isOpen, type, data, close } = useModal();
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const isModalOpen = isOpen && type === "DeleteChannel";
-  const { channel } = data;
+  const { isOpen, type, data, close } = useModal()
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
+  const isModalOpen = isOpen && type === "DeleteChannel"
+  const { channel } = data
 
   const deleteChannelHandler = async () => {
-    if (!channel) return;
-    setLoading(true);
-    await deleteChannel(channel.id);
-    router.refresh();
-    setLoading(false);
-    close();
-  };
+    if (!channel) return
+    setLoading(true)
+    await deleteChannel(channel.id)
+    router.refresh()
+    setLoading(false)
+    close()
+  }
 
   return (
     <Dialog open={isModalOpen} onOpenChange={close}>
@@ -64,5 +64,5 @@ export default function DeleteChannelModal() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

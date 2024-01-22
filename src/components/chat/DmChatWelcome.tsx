@@ -1,9 +1,9 @@
-import { Hash } from "lucide-react";
-import { Profile } from "../../../prisma/output";
+import { Hash } from "lucide-react"
+import { Profile } from "../../../prisma/output"
 
 type DmChatWelcomeProps = {
-  profile: Profile;
-};
+  profile: Profile
+}
 
 export default function DmChatWelcome({ profile }: DmChatWelcomeProps) {
   return (
@@ -21,5 +21,5 @@ export default function DmChatWelcome({ profile }: DmChatWelcomeProps) {
         This is the start of conversation with {profile.username}
       </div>
     </div>
-  );
+  )
 }

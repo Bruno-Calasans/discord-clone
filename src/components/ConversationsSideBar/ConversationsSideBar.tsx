@@ -1,25 +1,25 @@
-"use client";
-import { cn } from "@/utils/cn";
-import Separator from "@/components/ui/Separator";
-import ServersAction from "./ServersAction";
-import NavigationFooter from "@/components/NavigationSideBar/NavigationFooter";
-import ConversationScrollBar from "./ConversationsScrollBar";
-import type { ConversationWithProfiles } from "@/types/ConversationWithProfiles";
-import type { Profile } from "../../../prisma/output";
-import { useParams } from "next/navigation";
-import FriendsActions from "./FriendsActions";
+"use client"
+import { cn } from "@/utils/cn"
+import Separator from "@/components/ui/Separator"
+import ServersAction from "./ServersAction"
+import NavigationFooter from "@/components/NavigationSideBar/NavigationFooter"
+import ConversationScrollBar from "./ConversationsScrollBar"
+import type { ConversationWithProfiles } from "@/types/ConversationWithProfiles"
+import type { Profile } from "../../../prisma/output"
+import { useParams } from "next/navigation"
+import FriendsActions from "./FriendsActions"
 
 type ConversationsSideBarProps = {
-  conversations: ConversationWithProfiles[];
-  profile: Profile;
-};
+  conversations: ConversationWithProfiles[]
+  profile: Profile
+}
 
 export default function ConversationsSideBar({
   conversations,
   profile,
 }: ConversationsSideBarProps) {
-  const params = useParams();
-  const selectedConversation = params.conversationId as string | undefined;
+  const params = useParams()
+  const selectedConversation = params?.conversationId as string | undefined
 
   return (
     <aside
@@ -40,5 +40,5 @@ export default function ConversationsSideBar({
       />
       <NavigationFooter classname="flex-row justify-around w-full" />
     </aside>
-  );
+  )
 }

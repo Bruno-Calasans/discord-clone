@@ -1,6 +1,6 @@
-"use client";
-import type { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile";
-import { Search, Hash, Mic, Video, ShieldAlert, Shield } from "lucide-react";
+"use client"
+import type { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
+import { Search, Hash, Mic, Video, ShieldAlert, Shield } from "lucide-react"
 import {
   Command,
   CommandDialog,
@@ -9,64 +9,64 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/Command";
-import { useEffect, useState } from "react";
-import { CHANNEL_TYPE } from "../../../prisma/output";
-import { useRouter } from "next/navigation";
+} from "@/components/ui/Command"
+import { useEffect, useState } from "react"
+import { CHANNEL_TYPE } from "../../../prisma/output"
+import { useRouter } from "next/navigation"
 
 const channelIconMap = {
   [CHANNEL_TYPE.TEXT]: <Hash className="h-4 w-4" />,
   [CHANNEL_TYPE.AUDIO]: <Mic className="h-4 w-4" />,
   [CHANNEL_TYPE.VIDEO]: <Video className="h-4 w-4" />,
-} as const;
+} as const
 
 const roleIconMap = {
   admin: <ShieldAlert className="h-4 w-4 text-rose-500" />,
   moderator: <ShieldAlert className="h-4 w-4 text-emerald-500" />,
   guest: null,
-} as Record<string, JSX.Element | null>;
+} as Record<string, JSX.Element | null>
 
 type ServerSearchProps = {
-  server: ServerWithMembersAndProfile;
-};
+  server: ServerWithMembersAndProfile
+}
 
 export default function ServerSearch({ server }: ServerSearchProps) {
-  const [open, setOpen] = useState(false);
-  const router = useRouter();
+  const [open, setOpen] = useState(false)
+  const router = useRouter()
 
-  const members = server.members;
+  const members = server.members
   const textChannels = server.channels.filter(
     (channel) => channel.type === "TEXT",
-  );
+  )
   const audioChannels = server.channels.filter(
     (channel) => channel.type === "AUDIO",
-  );
+  )
   const videochannels = server.channels.filter(
     (channel) => channel.type === "VIDEO",
-  );
+  )
 
   const redirect = (id: string, type: "channel" | "member") => {
-    setOpen(false);
+    setOpen(false)
 
     if (type === "member") {
-      return router.push(`servers/${server.id}/conversations/${id}`);
+      return router.push(`servers/${server.id}/conversations/${id}`)
     }
 
     if (type === "channel") {
-      return router.push(`servers/${server.id}/channels/${id}`);
+      return router.push(`servers/${server.id}/channels/${id}`)
     }
-  };
+  }
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        setOpen((open) => !open);
+        e.preventDefault()
+        setOpen((open) => !open)
       }
-    };
-    document.addEventListener("keydown", down);
-    return () => document.removeEventListener("keydown", down);
-  }, []);
+    }
+    document.addEventListener("keydown", down)
+    return () => document.removeEventListener("keydown", down)
+  }, [])
 
   return (
     <div className="w-full border-b-2 text-sm font-semibold text-zinc-500 transition hover:text-zinc-700 dark:border-neutral-800 hover:dark:text-white">
@@ -147,5 +147,5 @@ export default function ServerSearch({ server }: ServerSearchProps) {
         </CommandList>
       </CommandDialog>
     </div>
-  );
+  )
 }

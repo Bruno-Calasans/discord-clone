@@ -1,9 +1,9 @@
-import { Profile } from "../../../prisma/output";
-import { Avatar, AvatarImage } from "@/components/ui/Avatar";
+import { Profile } from "../../../prisma/output"
+import { Avatar, AvatarImage } from "@/components/ui/Avatar"
 
 type ChatHeaderProps = {
-  profile: Profile;
-};
+  profile: Profile
+}
 
 export default function DMChatHeader({ profile }: ChatHeaderProps) {
   return (
@@ -13,5 +13,5 @@ export default function DMChatHeader({ profile }: ChatHeaderProps) {
       </Avatar>
       <p className="text-md font-semibold capitalize ">{profile.username}</p>
     </div>
-  );
+  )
 }

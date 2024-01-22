@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { cn } from "@/utils/cn"
 import { useParticipantContext } from "@livekit/components-react"
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar"
@@ -48,25 +49,24 @@ export default function ParticipantView({
   useEffect(() => {
     const startViewHandler: SocketFn = ({ viewer, transmitter }) => {
       if (
-        !transmitter ||
-        !viewer ||
-        transmitter.identity !== participant.identity ||
-        viewer.identity !== currentParticipant.identity
+        viewer &&
+        transmitter &&
+        viewer.identity === currentParticipant.identity &&
+        transmitter.identity === participant.identity
       ) {
-        return
+        setViewing(true)
       }
-      setViewing(true)
     }
 
     const stopViewHandler: SocketFn = ({ viewer, transmitter }) => {
       if (
-        !transmitter ||
-        !viewer ||
-        transmitter.identity !== participant.identity
+        viewer &&
+        transmitter &&
+        viewer.identity === currentParticipant.identity &&
+        transmitter.identity === participant.identity
       ) {
-        return
+        setViewing(false)
       }
-      setViewing(false)
     }
 
     socket?.on("screen-share:join", startViewHandler)

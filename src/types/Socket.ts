@@ -11,6 +11,8 @@ export const SOCKET_EVENTS = {
   "screen-share:viewing": "screen-share:viewing",
 } as const
 
+export type SocketEvents = keyof typeof SOCKET_EVENTS
+
 export type SocketData = {
   message?: MessageWithMemberProfile
   participant?: Participant

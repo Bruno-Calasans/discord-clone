@@ -1,10 +1,10 @@
-"use client";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import FileUpload from "@/components/custom/FileUpload";
-import Button from "@/components/ui/Button";
+"use client"
+import * as z from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { useRouter } from "next/navigation"
+import FileUpload from "@/components/custom/FileUpload"
+import Button from "@/components/ui/Button"
 import {
   Dialog,
   DialogContent,
@@ -12,62 +12,62 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/Dialog";
+} from "@/components/ui/Dialog"
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/Form";
-import useModal from "@/hooks/useModal/useModal";
-import { createChannelMessage } from "@/actions/channelMessageActions";
+} from "@/components/ui/Form"
+import useModal from "@/hooks/useModal/useModal"
+import { createChannelMessage } from "@/actions/channelMessageActions"
 
 const formSchema = z.object({
   fileUrl: z.string().url("Server image url is invalid"),
-});
+})
 
-type MessageFileInputs = z.infer<typeof formSchema>;
+type MessageFileInputs = z.infer<typeof formSchema>
 
 export default function MessageFileModal() {
-  const { close, isOpen, data, type } = useModal();
-  const router = useRouter();
+  const { close, isOpen, data, type } = useModal()
+  const router = useRouter()
   const form = useForm<MessageFileInputs>({
     defaultValues: {
       fileUrl: "",
     },
     resolver: zodResolver(formSchema),
-  });
+  })
 
-  const { channel, member } = data;
-  const isModalOpen = isOpen && type === "MessageFile";
-  const isLoading = form.formState.isSubmitting;
+  const { channel, member } = data
+  const isModalOpen = isOpen && type === "MessageFile"
+  const isLoading = form.formState.isSubmitting
 
   const submitHandler = async ({ fileUrl }: MessageFileInputs) => {
-    if (!channel || !member) return;
+    if (!channel || !member) return
     await createChannelMessage({
       content: "",
       memberId: member.id,
       channelId: channel?.id,
       fileUrl,
-    });
-    router.refresh();
-    form.reset();
-    close();
-  };
+    })
+    router.refresh()
+    form.reset()
+    close()
+  }
 
   const uploadChannelFileHandler = (files: string[]) => {
-    if (files.length === 0) return form.resetField("fileUrl");
+    if (files.length === 0) return form.resetField("fileUrl")
     if (files.length === 1) {
-      form.setValue("fileUrl", files[0]);
-      form.clearErrors("fileUrl");
+      form.setValue("fileUrl", files[0])
+      form.clearErrors("fileUrl")
     }
-  };
+  }
 
   const closeModalHandler = () => {
-    form.reset();
-    close();
-  };
+    form.reset()
+    close()
+  }
 
   return (
     <Dialog open={isModalOpen} onOpenChange={closeModalHandler}>
@@ -114,5 +114,5 @@ export default function MessageFileModal() {
         </Form>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

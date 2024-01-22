@@ -1,35 +1,35 @@
-"use server";
-import db from "@/config/db";
-import { getChannelById } from "./channelActions";
-import { getMemberById } from "./memberActions";
-import { findServerById, getServerMembers } from "./serverActions";
-import type { MessageWithMemberProfile } from "@/types/MessageWithMemberProfile";
+"use server"
+import db from "@/config/db"
+import { getChannelById } from "./channelActions"
+import { getMemberById } from "./memberActions"
+import { findServerById, getServerMembers } from "./serverActions"
+import type { MessageWithMemberProfile } from "@/types/MessageWithMemberProfile"
 
 type ChannelMessageInputs = {
-  content: string;
-  memberId: string;
-  channelId: string;
-  fileUrl?: string;
-};
+  content: string
+  memberId: string
+  channelId: string
+  fileUrl?: string
+}
 
 type GetChannelMessagesParams = {
-  channelId: string;
-  cursor: string;
-  batch: number;
-};
+  channelId: string
+  cursor: string
+  batch: number
+}
 
 type EditChannelMsgInput = {
-  messageId: string;
-  content: string;
-  memberId: string;
-  serverId: string;
-};
+  messageId: string
+  content: string
+  memberId: string
+  serverId: string
+}
 
 type DeleteChannelMsgInput = {
-  messageId: string;
-  memberId: string;
-  serverId: string;
-};
+  messageId: string
+  memberId: string
+  serverId: string
+}
 
 export async function createChannelMessage({
   content,
@@ -38,21 +38,21 @@ export async function createChannelMessage({
   fileUrl,
 }: ChannelMessageInputs) {
   try {
-    const channel = await getChannelById(channelId);
-    if (!channel) throw new Error("Channel not Found");
+    const channel = await getChannelById(channelId)
+    if (!channel) throw new Error("Channel not Found")
 
-    const member = await getMemberById(memberId);
-    if (!member) throw new Error("Member not Found");
+    const member = await getMemberById(memberId)
+    if (!member) throw new Error("Member not Found")
 
-    const members = await getServerMembers(channel.serverId);
-    if (!members) throw new Error("Server has not members");
+    const members = await getServerMembers(channel.serverId)
+    if (!members) throw new Error("Server has not members")
 
     const isServerMember = members.find(
       (serverMember) => serverMember.id === member.id,
-    );
+    )
 
     if (!isServerMember) {
-      throw new Error("This member is not a member of the channel's server");
+      throw new Error("This member is not a member of the channel's server")
     }
 
     return await db.message.create({
@@ -69,9 +69,9 @@ export async function createChannelMessage({
           },
         },
       },
-    });
+    })
   } catch (error) {
-    return null;
+    return null
   }
 }
 
@@ -81,10 +81,10 @@ export async function getChannelMessages({
   cursor,
 }: GetChannelMessagesParams) {
   try {
-    const channel = await getChannelById(channelId);
-    if (!channel) throw new Error("Channel not Found");
+    const channel = await getChannelById(channelId)
+    if (!channel) throw new Error("Channel not Found")
 
-    let messages: MessageWithMemberProfile[] = [];
+    let messages: MessageWithMemberProfile[] = []
 
     if (cursor) {
       messages = await db.message.findMany({
@@ -106,7 +106,7 @@ export async function getChannelMessages({
         orderBy: {
           createdAt: "desc",
         },
-      });
+      })
     } else {
       messages = await db.message.findMany({
         where: {
@@ -123,16 +123,16 @@ export async function getChannelMessages({
         orderBy: {
           createdAt: "desc",
         },
-      });
+      })
     }
 
-    let nextCursor = null;
+    let nextCursor = null
     if (messages && messages.length === batch) {
-      nextCursor = messages[batch - 1].id;
+      nextCursor = messages[batch - 1].id
     }
-    return { messages, nextCursor };
+    return { messages, nextCursor }
   } catch (error) {
-    return null;
+    return null
   }
 }
 
@@ -142,9 +142,9 @@ export async function findChannelMsgById(messageId: string) {
       where: {
         id: messageId,
       },
-    });
+    })
   } catch (error) {
-    return null;
+    return null
   }
 }
 
@@ -155,33 +155,33 @@ export async function editChannelMsg({
   serverId,
 }: EditChannelMsgInput) {
   try {
-    const message = await findChannelMsgById(messageId);
+    const message = await findChannelMsgById(messageId)
     if (!message) {
-      throw new Error("Channel message not found");
+      throw new Error("Channel message not found")
     }
 
     if (message.deleted) {
-      throw new Error("Message is deleted");
+      throw new Error("Message is deleted")
     }
 
-    const isMessageOwner = message.memberId === memberId;
+    const isMessageOwner = message.memberId === memberId
     if (!isMessageOwner) {
-      throw new Error("You cannot edit other member's message");
+      throw new Error("You cannot edit other member's message")
     }
 
-    const member = await getMemberById(memberId);
+    const member = await getMemberById(memberId)
     if (!member) {
-      throw new Error("Member not found");
+      throw new Error("Member not found")
     }
 
-    const server = await findServerById(serverId);
+    const server = await findServerById(serverId)
     if (!server) {
-      throw new Error("Server not found");
+      throw new Error("Server not found")
     }
 
-    const isServerMember = member.serverId === serverId;
+    const isServerMember = member.serverId === serverId
     if (!isServerMember) {
-      throw new Error("You are not a server member");
+      throw new Error("You are not a server member")
     }
 
     return await db.message.update({
@@ -197,9 +197,9 @@ export async function editChannelMsg({
           },
         },
       },
-    });
+    })
   } catch (error) {
-    return null;
+    return null
   }
 }
 
@@ -209,33 +209,33 @@ export async function deleteChannelMsg({
   serverId,
 }: DeleteChannelMsgInput) {
   try {
-    const message = await findChannelMsgById(messageId);
+    const message = await findChannelMsgById(messageId)
     if (!message) {
-      throw new Error("Channel message not found");
+      throw new Error("Channel message not found")
     }
 
     if (message.deleted) {
-      throw new Error("Message is already deleted");
+      throw new Error("Message is already deleted")
     }
 
-    const isMessageOwner = message.memberId === memberId;
+    const isMessageOwner = message.memberId === memberId
     if (!isMessageOwner) {
-      throw new Error("You cannot delete other member's message");
+      throw new Error("You cannot delete other member's message")
     }
 
-    const member = await getMemberById(memberId);
+    const member = await getMemberById(memberId)
     if (!member) {
-      throw new Error("Member not found");
+      throw new Error("Member not found")
     }
 
-    const server = await findServerById(serverId);
+    const server = await findServerById(serverId)
     if (!server) {
-      throw new Error("Server not found");
+      throw new Error("Server not found")
     }
 
-    const isServerMember = member.serverId === serverId;
+    const isServerMember = member.serverId === serverId
     if (!isServerMember) {
-      throw new Error("You are not a server member");
+      throw new Error("You are not a server member")
     }
 
     return await db.message.update({
@@ -251,8 +251,8 @@ export async function deleteChannelMsg({
           },
         },
       },
-    });
+    })
   } catch (error) {
-    return null;
+    return null
   }
 }

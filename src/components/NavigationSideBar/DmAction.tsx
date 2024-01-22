@@ -1,13 +1,13 @@
-import { useRouter } from "next/navigation";
-import ActionTooltip from "../custom/ActionTooltip";
-import { MessagesSquare } from "lucide-react";
+import { useRouter } from "next/navigation"
+import ActionTooltip from "../custom/ActionTooltip"
+import { MessagesSquare } from "lucide-react"
 
 export default function DmAction() {
-  const router = useRouter();
+  const router = useRouter()
 
   const clickHandler = () => {
-    router.push("/conversations");
-  };
+    router.push("/conversations")
+  }
 
   return (
     <div
@@ -23,5 +23,5 @@ export default function DmAction() {
         </button>
       </ActionTooltip>
     </div>
-  );
+  )
 }

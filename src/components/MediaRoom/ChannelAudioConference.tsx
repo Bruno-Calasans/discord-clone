@@ -35,6 +35,10 @@ export default function ChannelAudioConference({
   const trackRef = useTracks([Track.Source.ScreenShare])
   const { localParticipant } = useLocalParticipant()
   const membersNum = participants.length
+  const screenSharingMembers = trackRef.filter(
+    (track) => track.participant.isScreenShareEnabled,
+  )
+  const screeenSharingMembersNum = screenSharingMembers.length
 
   const createMemberMap = () => {
     const membersMap = {} as Record<string, MemberWithProfile>
@@ -78,10 +82,10 @@ export default function ChannelAudioConference({
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-2 p-2">
+    <div className="flex flex-1 flex-col gap-2 p-5">
       <div className="flex flex-1 flex-col gap-4">
         {/* Screen share container */}
-        <div className="flex  gap-2">
+        <div className="flex">
           <ParticipantContext.Provider value={localParticipant}>
             {trackRef.map((track) => (
               <TrackRefContext.Provider
@@ -98,7 +102,7 @@ export default function ChannelAudioConference({
         <div
           className={cn(
             "flex flex-1 gap-2",
-            membersNum === 2 && "grid grid-rows-2 gap-2",
+            membersNum === 2 || (membersNum === 3 && "grid grid-rows-2 gap-2"),
             membersNum === 3 && `grid grid-cols-2 grid-rows-2 gap-2`,
           )}
         >

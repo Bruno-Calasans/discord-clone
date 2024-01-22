@@ -1,7 +1,7 @@
-import type { DirectMessage, Profile } from "../../prisma/output";
-import type { ConversationWithProfiles } from "./ConversationWithProfiles";
+import type { DirectMessage, Profile } from "../../prisma/output"
+import type { ConversationWithProfiles } from "./ConversationWithProfiles"
 
 export type DmWithProfileConversation = DirectMessage & {
-  profile: Profile;
-  conversation: ConversationWithProfiles;
-};
+  profile: Profile
+  conversation: ConversationWithProfiles
+}

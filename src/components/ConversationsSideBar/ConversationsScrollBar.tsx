@@ -1,15 +1,15 @@
-"use client";
-import { ScrollArea } from "@/components/ui/ScrollArea";
-import { useRouter } from "next/navigation";
-import { Conversation, Profile } from "../../../prisma/output";
-import ConversationItem from "@/components/ConversationsSideBar/ConversationItem";
-import type { ConversationWithProfiles } from "@/types/ConversationWithProfiles";
+"use client"
+import { ScrollArea } from "@/components/ui/ScrollArea"
+import { useRouter } from "next/navigation"
+import { Conversation, Profile } from "../../../prisma/output"
+import ConversationItem from "@/components/ConversationsSideBar/ConversationItem"
+import type { ConversationWithProfiles } from "@/types/ConversationWithProfiles"
 
 type ConversationScrollBarProps = {
-  conversations: ConversationWithProfiles[];
-  selectedConversation?: string;
-  profile: Profile;
-};
+  conversations: ConversationWithProfiles[]
+  selectedConversation?: string
+  profile: Profile
+}
 
 export default function ConversationScrollBar({
   profile,
@@ -34,5 +34,5 @@ export default function ConversationScrollBar({
         </ScrollArea>
       )}
     </div>
-  );
+  )
 }

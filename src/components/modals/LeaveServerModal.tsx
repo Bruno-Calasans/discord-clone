@@ -1,6 +1,6 @@
-"use client";
-import useModal from "@/hooks/useModal/useModal";
-import Button from "@/components/ui/Button";
+"use client"
+import useModal from "@/hooks/useModal/useModal"
+import Button from "@/components/ui/Button"
 import {
   Dialog,
   DialogContent,
@@ -8,26 +8,26 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@/components/ui/Dialog";
-import { useState } from "react";
-import { leaveServer } from "@/actions/serverActions";
-import { useRouter } from "next/navigation";
+} from "@/components/ui/Dialog"
+import { useState } from "react"
+import { leaveServer } from "@/actions/serverActions"
+import { useRouter } from "next/navigation"
 
 export default function LeaveServerModal() {
-  const { isOpen, type, data, close } = useModal();
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const isModalOpen = isOpen && type === "LeaveServer";
-  const { server } = data;
+  const { isOpen, type, data, close } = useModal()
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
+  const isModalOpen = isOpen && type === "LeaveServer"
+  const { server } = data
 
   const leaveServerHandler = async () => {
-    if (!server) return;
-    setLoading(true);
-    await leaveServer(server.id);
-    router.refresh();
-    setLoading(false);
-    close();
-  };
+    if (!server) return
+    setLoading(true)
+    await leaveServer(server.id)
+    router.refresh()
+    setLoading(false)
+    close()
+  }
 
   return (
     <Dialog open={isModalOpen} onOpenChange={close}>
@@ -62,5 +62,5 @@ export default function LeaveServerModal() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

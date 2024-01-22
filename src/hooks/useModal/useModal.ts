@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-"use client";
-import { useStore } from "zustand";
-import modalStore from "./modalStore";
+"use client"
+import { useStore } from "zustand"
+import modalStore from "./modalStore"
 
 export default function useModal() {
-  return useStore(modalStore);
+  return useStore(modalStore)
 }

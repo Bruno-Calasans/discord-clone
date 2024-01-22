@@ -1,23 +1,24 @@
-"use client";
-import * as z from "zod";
-import Input from "@/components/ui/Input";
-import Button from "@/components/ui/Button";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+/* eslint-disable react-hooks/exhaustive-deps */
+"use client"
+import * as z from "zod"
+import Input from "@/components/ui/Input"
+import Button from "@/components/ui/Button"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/Dialog";
+} from "@/components/ui/Dialog"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/Select";
+} from "@/components/ui/Select"
 import {
   Form,
   FormControl,
@@ -25,12 +26,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/Form";
-import useModal from "@/hooks/useModal/useModal";
-import { useRouter } from "next/navigation";
-import { CHANNEL_TYPE } from "../../../prisma/output";
-import { createChannel } from "@/actions/channelActions";
-import { useEffect } from "react";
+} from "@/components/ui/Form"
+import useModal from "@/hooks/useModal/useModal"
+import { useRouter } from "next/navigation"
+import { CHANNEL_TYPE } from "../../../prisma/output"
+import { createChannel } from "@/actions/channelActions"
+import { useEffect } from "react"
 
 const formSchema = z.object({
   name: z
@@ -40,48 +41,48 @@ const formSchema = z.object({
       message: 'Channel name cannot be "general"',
     }),
   type: z.nativeEnum(CHANNEL_TYPE),
-});
+})
 
-type CreateChannelFormInputs = z.infer<typeof formSchema>;
+type CreateChannelFormInputs = z.infer<typeof formSchema>
 
 export default function CreateChannelModal() {
-  const { isOpen, type, data, close } = useModal();
-  const { server, profile, channelType } = data;
+  const { isOpen, type, data, close } = useModal()
+  const { server, profile, channelType } = data
 
-  const router = useRouter();
+  const router = useRouter()
   const form = useForm<CreateChannelFormInputs>({
     defaultValues: {
       name: "",
       type: CHANNEL_TYPE.TEXT,
     },
     resolver: zodResolver(formSchema),
-  });
+  })
 
-  const isLoading = form.formState.isSubmitting;
-  const isModalOpen = isOpen && type === "CreateChannel";
+  const isLoading = form.formState.isSubmitting
+  const isModalOpen = isOpen && type === "CreateChannel"
 
   const submitHandler = async (inputs: CreateChannelFormInputs) => {
-    if (!server || !profile) return;
+    if (!server || !profile) return
     await createChannel({
       ...inputs,
       serverId: server.id,
       profileId: profile.id,
-    });
-    form.reset();
-    router.refresh();
-    close();
-  };
+    })
+    form.reset()
+    router.refresh()
+    close()
+  }
 
   const closeModalHandler = () => {
-    form.reset();
-    close();
-  };
+    form.reset()
+    close()
+  }
 
   useEffect(() => {
     if (channelType) {
-      form.setValue("type", channelType);
+      form.setValue("type", channelType)
     }
-  }, [channelType]);
+  }, [channelType])
 
   return (
     <Dialog open={isModalOpen} onOpenChange={closeModalHandler}>
@@ -167,5 +168,5 @@ export default function CreateChannelModal() {
         </Form>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

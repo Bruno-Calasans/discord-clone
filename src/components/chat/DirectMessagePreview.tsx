@@ -1,21 +1,21 @@
-import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
-import Image from "next/image";
-import { File } from "lucide-react";
-import { differenceInSeconds } from "date-fns";
-import dateFormat from "@/utils/dateFormat";
-import type { DmWithProfileConversation } from "@/types/DmWithProfileConversation";
+import { Avatar, AvatarImage } from "@radix-ui/react-avatar"
+import Image from "next/image"
+import { File } from "lucide-react"
+import { differenceInSeconds } from "date-fns"
+import dateFormat from "@/utils/dateFormat"
+import type { DmWithProfileConversation } from "@/types/DmWithProfileConversation"
 
 type MessagePreviewProps = {
-  message: DmWithProfileConversation;
-};
+  message: DmWithProfileConversation
+}
 
 export default function DirectMessagePreview({ message }: MessagePreviewProps) {
-  const profile = message.profile;
+  const profile = message.profile
   const isEdited =
-    differenceInSeconds(message.createdAt, message.updatedAt) !== 0;
-  const fileType = message.fileUrl?.split(".").pop();
-  const isPdf = fileType === "pdf";
-  const isImage = fileType !== "pdf";
+    differenceInSeconds(message.createdAt, message.updatedAt) !== 0
+  const fileType = message.fileUrl?.split(".").pop()
+  const isPdf = fileType === "pdf"
+  const isImage = fileType !== "pdf"
 
   return (
     <div className="group relative flex w-full items-start gap-2 rounded-sm bg-zinc-200 px-2 pb-4 pt-2">
@@ -90,5 +90,5 @@ export default function DirectMessagePreview({ message }: MessagePreviewProps) {
         )}
       </div>
     </div>
-  );
+  )
 }

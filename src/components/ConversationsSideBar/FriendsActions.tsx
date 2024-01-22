@@ -1,14 +1,14 @@
-"use client";
-import ActionTooltip from "@/components/custom/ActionTooltip";
-import { UsersRound } from "lucide-react";
-import { useRouter } from "next/navigation";
+"use client"
+import ActionTooltip from "@/components/custom/ActionTooltip"
+import { UsersRound } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export default function FriendsActions() {
-  const router = useRouter();
+  const router = useRouter()
 
   const clickHandler = () => {
-    router.push("/conversations/friends");
-  };
+    router.push("/conversations/friends")
+  }
 
   return (
     <div
@@ -23,5 +23,5 @@ export default function FriendsActions() {
         <p>Friends</p>
       </button>
     </div>
-  );
+  )
 }

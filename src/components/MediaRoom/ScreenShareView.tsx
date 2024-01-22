@@ -89,12 +89,12 @@ export default function ScreenShareView({ track }: ScreenShareViewProps) {
   return (
     <div className="group relative flex flex-1">
       {/* transmitter's name */}
-      <div className="invisible absolute bottom-1 left-1 z-50 flex items-center justify-center gap-1 rounded-md bg-zinc-800 px-2 py-1 font-bold group-hover:visible">
+      <div className="invisible absolute bottom-1 left-1 z-50 flex items-center justify-center gap-1 rounded-md bg-zinc-800 px-2 py-1 text-xs font-bold group-hover:visible">
         <Monitor className=" h-4 w-4" />
         {isYourScreen ? (
           <span className=" text-emerald-500">Your screen</span>
         ) : (
-          <span>{identity}'s screen</span>
+          <span>{identity} screen</span>
         )}
       </div>
 

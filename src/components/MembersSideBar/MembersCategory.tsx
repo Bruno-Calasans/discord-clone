@@ -1,42 +1,42 @@
-"use client";
+"use client"
 
-import { cn } from "@/utils/cn";
-import type { Member } from "../../../prisma/output";
-import type { MemberWithProfile } from "@/types/MemberProfile";
+import { cn } from "@/utils/cn"
+import type { Member } from "../../../prisma/output"
+import type { MemberWithProfile } from "@/types/MemberProfile"
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
   ContextMenuSeparator,
-} from "@/components/ui/ContextMenu";
-import { Avatar, AvatarImage } from "@/components/ui/Avatar";
-import { findOrCreateConversation } from "@/actions/conversationActions";
-import { useRouter } from "next/navigation";
+} from "@/components/ui/ContextMenu"
+import { Avatar, AvatarImage } from "@/components/ui/Avatar"
+import { findOrCreateConversation } from "@/actions/conversationActions"
+import { useRouter } from "next/navigation"
 
 type MemberItemProps = {
-  label: React.ReactNode;
-  profileMember: MemberWithProfile;
-  members: MemberWithProfile[];
-};
+  label: React.ReactNode
+  profileMember: MemberWithProfile
+  members: MemberWithProfile[]
+}
 
 export default function MembersCategory({
   label,
   profileMember,
   members,
 }: MemberItemProps) {
-  const router = useRouter();
+  const router = useRouter()
 
-  const clickMemberHandler = (member: Member) => {};
+  const clickMemberHandler = (member: Member) => {}
 
   const createConversationHandler = async (member: Member) => {
     const conversation = await findOrCreateConversation(
       profileMember.profileId,
       member.profileId,
-    );
-    if (!conversation) return;
-    router.push(`/conversations/${conversation.id}`);
-  };
+    )
+    if (!conversation) return
+    router.push(`/conversations/${conversation.id}`)
+  }
 
   return (
     <div>
@@ -87,5 +87,5 @@ export default function MembersCategory({
         </div>
       </div>
     </div>
-  );
+  )
 }

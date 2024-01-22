@@ -1,24 +1,24 @@
-import type { MemberWithProfile } from "@/types/MemberProfile";
-import type { MessageWithMemberProfile } from "@/types/MessageWithMemberProfile";
-import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
-import Image from "next/image";
-import ActionTooltip from "../custom/ActionTooltip";
-import { File } from "lucide-react";
-import { differenceInSeconds } from "date-fns";
-import dateFormat from "@/utils/dateFormat";
-import ICON_ROLE_MAP from "@/constants/iconRoleMap";
+import type { MemberWithProfile } from "@/types/MemberProfile"
+import type { MessageWithMemberProfile } from "@/types/MessageWithMemberProfile"
+import { Avatar, AvatarImage } from "@radix-ui/react-avatar"
+import Image from "next/image"
+import ActionTooltip from "../custom/ActionTooltip"
+import { File } from "lucide-react"
+import { differenceInSeconds } from "date-fns"
+import dateFormat from "@/utils/dateFormat"
+import ICON_ROLE_MAP from "@/constants/iconRoleMap"
 
 type MessagePreviewProps = {
-  message: MessageWithMemberProfile;
-};
+  message: MessageWithMemberProfile
+}
 
 export default function MessagePreview({ message }: MessagePreviewProps) {
-  const member = message.member;
+  const member = message.member
   const isEdited =
-    differenceInSeconds(message.createdAt, message.updatedAt) !== 0;
-  const fileType = message.fileUrl?.split(".").pop();
-  const isPdf = fileType === "pdf";
-  const isImage = fileType !== "pdf";
+    differenceInSeconds(message.createdAt, message.updatedAt) !== 0
+  const fileType = message.fileUrl?.split(".").pop()
+  const isPdf = fileType === "pdf"
+  const isImage = fileType !== "pdf"
 
   return (
     <div className="group relative flex w-full items-start gap-2 rounded-sm bg-zinc-200 px-2 pb-4 pt-2">
@@ -93,5 +93,5 @@ export default function MessagePreview({ message }: MessagePreviewProps) {
         )}
       </div>
     </div>
-  );
+  )
 }

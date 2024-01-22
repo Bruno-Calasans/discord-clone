@@ -1,11 +1,11 @@
-import { Hash } from "lucide-react";
-import { Channel } from "../../../prisma/output";
-import MobileMenuToggle from "./MobileMenuToggle";
-import ConnectioIndicator from "./ConnectionIndicator";
+import { Hash } from "lucide-react"
+import { Channel } from "../../../prisma/output"
+import MobileMenuToggle from "./MobileMenuToggle"
+import ConnectioIndicator from "./ConnectionIndicator"
 
 type ChatHeaderProps = {
-  channel: Channel;
-};
+  channel: Channel
+}
 
 export default function ChannelChatHeader({ channel }: ChatHeaderProps) {
   return (
@@ -21,5 +21,5 @@ export default function ChannelChatHeader({ channel }: ChatHeaderProps) {
       </div>
       <ConnectioIndicator />
     </div>
-  );
+  )
 }

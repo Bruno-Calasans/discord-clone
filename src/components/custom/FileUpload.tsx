@@ -1,19 +1,20 @@
-"use client";
-import { useEffect, useState } from "react";
-import { X, File } from "lucide-react";
-import { OurFileRouter } from "@/app/api/uploadthing/core";
-import { UploadDropzone } from "@/utils/uploadthing";
-import { UploadFileResponse } from "uploadthing/client";
-import Image from "next/image";
+/* eslint-disable react-hooks/exhaustive-deps */
+"use client"
+import { useEffect, useState } from "react"
+import { X, File } from "lucide-react"
+import { OurFileRouter } from "@/app/api/uploadthing/core"
+import { UploadDropzone } from "@/utils/uploadthing"
+import { UploadFileResponse } from "uploadthing/client"
+import Image from "next/image"
 
-type UploadCompleteResponse = UploadFileResponse<null>[];
+type UploadCompleteResponse = UploadFileResponse<null>[]
 
 type FileUploadProps = {
-  endpoint: keyof OurFileRouter;
-  defaultFiles?: string[];
-  onChange: (files: string[]) => void;
-  onError?: (error: unknown) => void;
-};
+  endpoint: keyof OurFileRouter
+  defaultFiles?: string[]
+  onChange: (files: string[]) => void
+  onError?: (error: unknown) => void
+}
 
 export default function FileUpload({
   endpoint,
@@ -21,18 +22,18 @@ export default function FileUpload({
   onChange,
   onError,
 }: FileUploadProps) {
-  const [files, setFiles] = useState<UploadCompleteResponse>([]);
+  const [files, setFiles] = useState<UploadCompleteResponse>([])
 
   const uploadHandler = (response: UploadCompleteResponse) => {
-    const fileUrls = response.map((file) => file.url);
-    onChange(fileUrls);
-    setFiles(response);
-  };
+    const fileUrls = response.map((file) => file.url)
+    onChange(fileUrls)
+    setFiles(response)
+  }
 
   const clearFilesHandler = () => {
-    setFiles([]);
-    onChange([]);
-  };
+    setFiles([])
+    onChange([])
+  }
 
   useEffect(() => {
     if (defaultFiles.length > 0) {
@@ -42,14 +43,14 @@ export default function FileUpload({
         name: url,
         size: 0,
         serverData: null,
-      }));
-      setFiles(startFiles);
+      }))
+      setFiles(startFiles)
     }
-  }, []);
+  }, [])
 
   // single file upload
   if (files.length === 1) {
-    const fileType = files[0].name.split(".")[1];
+    const fileType = files[0].name.split(".")[1]
 
     if (fileType !== "pdf") {
       return (
@@ -71,7 +72,7 @@ export default function FileUpload({
             </button>
           </div>
         </div>
-      );
+      )
     }
 
     if (fileType === "pdf") {
@@ -97,7 +98,7 @@ export default function FileUpload({
             </button>
           </div>
         </div>
-      );
+      )
     }
   }
 
@@ -108,5 +109,5 @@ export default function FileUpload({
       onClientUploadComplete={uploadHandler}
       onUploadError={onError}
     />
-  );
+  )
 }

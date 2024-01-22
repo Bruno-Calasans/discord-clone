@@ -1,14 +1,14 @@
-"use client";
-import { Plus } from "lucide-react";
-import useModal from "@/hooks/useModal/useModal";
-import ActionTooltip from "@/components/custom/ActionTooltip";
+"use client"
+import { Plus } from "lucide-react"
+import useModal from "@/hooks/useModal/useModal"
+import ActionTooltip from "@/components/custom/ActionTooltip"
 
 export default function CreateServerAction() {
-  const { open } = useModal();
+  const { open } = useModal()
 
   const modalHandler = () => {
-    open("CreateServer");
-  };
+    open("CreateServer")
+  }
 
   return (
     <div className="group  h-10 w-10 rounded-full bg-slate-200 transition hover:bg-emerald-500 dark:bg-slate-600 hover:dark:bg-emerald-500">
@@ -24,5 +24,5 @@ export default function CreateServerAction() {
         </button>
       </ActionTooltip>
     </div>
-  );
+  )
 }

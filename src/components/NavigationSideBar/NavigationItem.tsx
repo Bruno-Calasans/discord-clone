@@ -1,19 +1,19 @@
-"use cliente";
-import type { Server } from "../../../prisma/output";
-import ActionTooltip from "@/components/custom/ActionTooltip";
-import Image from "next/image";
-import { cn } from "@/utils/cn";
+"use cliente"
+import type { Server } from "../../../prisma/output"
+import ActionTooltip from "@/components/custom/ActionTooltip"
+import Image from "next/image"
+import { cn } from "@/utils/cn"
 
 type NavigationItemProps = {
-  server: Server;
-  selected?: boolean;
-  onClick: (id: string) => void;
-};
+  server: Server
+  selected?: boolean
+  onClick: (id: string) => void
+}
 
 function NavigationItem({ server, selected, onClick }: NavigationItemProps) {
   const clickHandler = () => {
-    onClick(server.id);
-  };
+    onClick(server.id)
+  }
 
   return (
     <ActionTooltip label={server.name} align="center" side="right">
@@ -35,7 +35,7 @@ function NavigationItem({ server, selected, onClick }: NavigationItemProps) {
         </div>
       </button>
     </ActionTooltip>
-  );
+  )
 }
 
-export default NavigationItem;
+export default NavigationItem

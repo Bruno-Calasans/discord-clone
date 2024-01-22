@@ -1,19 +1,19 @@
-"use client";
-import type { MemberWithProfile } from "@/types/MemberProfile";
-import type { Channel } from "../../../prisma/output";
-import ChatWelcome from "./ChatWelcome";
-import useChannelMsgQuery from "@/hooks/useChannelMsgQuery";
-import { Loader2, ServerCrash } from "lucide-react";
-import ChannelMessage from "./ChannelMessage";
-import { useRef, ElementRef } from "react";
-import Button from "../ui/Button";
-import { MessageWithMemberProfile } from "@/types/MessageWithMemberProfile";
-import useChatScroll from "@/hooks/useChatScroll";
+"use client"
+import type { MemberWithProfile } from "@/types/MemberProfile"
+import type { Channel } from "../../../prisma/output"
+import ChatWelcome from "./ChatWelcome"
+import useChannelMsgQuery from "@/hooks/useChannelMsgQuery"
+import { Loader2, ServerCrash } from "lucide-react"
+import ChannelMessage from "./ChannelMessage"
+import { useRef, ElementRef } from "react"
+import Button from "../ui/Button"
+import { MessageWithMemberProfile } from "@/types/MessageWithMemberProfile"
+import useChatScroll from "@/hooks/useChatScroll"
 
 type ChatMessagesProps = {
-  channel: Channel;
-  member: MemberWithProfile;
-};
+  channel: Channel
+  member: MemberWithProfile
+}
 
 export default function ChatMessages({ channel, member }: ChatMessagesProps) {
   const {
@@ -26,15 +26,15 @@ export default function ChatMessages({ channel, member }: ChatMessagesProps) {
   } = useChannelMsgQuery({
     channelId: channel.id,
     batch: 10,
-  });
+  })
 
-  const messages: MessageWithMemberProfile[] = [];
+  const messages: MessageWithMemberProfile[] = []
   data?.pages.map((page) => {
-    page?.messages.forEach((msg) => messages.push(msg));
-  });
+    page?.messages.forEach((msg) => messages.push(msg))
+  })
 
-  const chatTopRef = useRef<ElementRef<"div">>(null);
-  const chatBottomRef = useRef<ElementRef<"div">>(null);
+  const chatTopRef = useRef<ElementRef<"div">>(null)
+  const chatBottomRef = useRef<ElementRef<"div">>(null)
 
   useChatScroll({
     chatBottomRef,
@@ -42,11 +42,11 @@ export default function ChatMessages({ channel, member }: ChatMessagesProps) {
     shouldLoadMore: !isFetchingNextPage && hasNextPage,
     count: data?.pages[0]?.messages.length ?? 0,
     loadMore: fetchNextPage,
-  });
+  })
 
   const loadMorePagesHandler = () => {
-    fetchNextPage();
-  };
+    fetchNextPage()
+  }
 
   if (isLoading) {
     return (
@@ -54,7 +54,7 @@ export default function ChatMessages({ channel, member }: ChatMessagesProps) {
         <Loader2 className="h-6 w-6 animate-spin text-zinc-500" />
         <p className="text-zinc-500">Loading Messages...</p>
       </div>
-    );
+    )
   }
 
   if (isError) {
@@ -63,7 +63,7 @@ export default function ChatMessages({ channel, member }: ChatMessagesProps) {
         <ServerCrash className="h-6 w-6 text-zinc-500" />
         <p className="text-zinc-500">Something went wrong :(</p>
       </div>
-    );
+    )
   }
 
   return (
@@ -105,5 +105,5 @@ export default function ChatMessages({ channel, member }: ChatMessagesProps) {
       )}
       <div ref={chatBottomRef}></div>
     </div>
-  );
+  )
 }

@@ -1,5 +1,5 @@
-import { AvatarImage, Avatar } from "@/components/ui/Avatar";
-import type { MemberWithProfile } from "@/types/MemberProfile";
+import { AvatarImage, Avatar } from "@/components/ui/Avatar"
+import type { MemberWithProfile } from "@/types/MemberProfile"
 import {
   MoreVertical,
   ShieldAlert,
@@ -7,8 +7,8 @@ import {
   Shield,
   Check,
   Loader,
-} from "lucide-react";
-import { cn } from "@/utils/cn";
+} from "lucide-react"
+import { cn } from "@/utils/cn"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,20 +19,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuItem,
   DropdownMenuLabel,
-} from "@/components/ui/DropdownMenu";
-import { changeMemberRole, kickMember } from "@/actions/memberActions";
-import { useState } from "react";
-import type { Profile } from "../../../prisma/output";
-import ICON_ROLE_MAP from "@/constants/iconRoleMap";
+} from "@/components/ui/DropdownMenu"
+import { changeMemberRole, kickMember } from "@/actions/memberActions"
+import { useState } from "react"
+import type { Profile } from "../../../prisma/output"
+import ICON_ROLE_MAP from "@/constants/iconRoleMap"
 
 type MemberAvatarProps = {
-  member: MemberWithProfile;
-  profile?: Profile;
-  onRoleChange?: (member: MemberWithProfile, role: string) => void;
-  onKick?: (member: MemberWithProfile) => void;
-  onBan?: (member: MemberWithProfile) => void;
-  onChange: () => void;
-};
+  member: MemberWithProfile
+  profile?: Profile
+  onRoleChange?: (member: MemberWithProfile, role: string) => void
+  onKick?: (member: MemberWithProfile) => void
+  onBan?: (member: MemberWithProfile) => void
+  onChange: () => void
+}
 
 export default function MemberAvatar({
   member,
@@ -41,31 +41,31 @@ export default function MemberAvatar({
   onKick,
   onChange,
 }: MemberAvatarProps) {
-  const [loading, setLoading] = useState(false);
-  const roles = ["admin", "guest"];
+  const [loading, setLoading] = useState(false)
+  const roles = ["admin", "guest"]
 
   const roleChangeHandler = async (role: string) => {
-    if (member.role === role) return;
-    setLoading(true);
-    await changeMemberRole(member.id, role);
-    setLoading(false);
-    if (onRoleChange) onRoleChange(member, role);
-    onChange();
-  };
+    if (member.role === role) return
+    setLoading(true)
+    await changeMemberRole(member.id, role)
+    setLoading(false)
+    if (onRoleChange) onRoleChange(member, role)
+    onChange()
+  }
 
   const kickMemberHandler = async () => {
-    setLoading(true);
-    await kickMember(member.id);
-    setLoading(false);
-    if (onKick) onKick(member);
-    onChange();
-  };
+    setLoading(true)
+    await kickMember(member.id)
+    setLoading(false)
+    if (onKick) onKick(member)
+    onChange()
+  }
 
   const banMemberHandler = async () => {
-    console.log(`Banning ${member.name}...`);
-  };
+    console.log(`Banning ${member.name}...`)
+  }
 
-  const isCurrentProfile = profile?.id == member.profileId;
+  const isCurrentProfile = profile?.id == member.profileId
 
   return (
     <div className="flex items-center justify-between">
@@ -145,5 +145,5 @@ export default function MemberAvatar({
         </DropdownMenu>
       )}
     </div>
-  );
+  )
 }

@@ -1,22 +1,22 @@
-"use client";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import useSocket from "./useSocket/useSocket";
-import useChatSocket from "./useChatSocket";
-import { getDirectMsgs } from "@/actions/directMessageActions";
+"use client"
+import { useInfiniteQuery } from "@tanstack/react-query"
+import useSocket from "./useSocket/useSocket"
+import useChatSocket from "./useChatSocket"
+import { getDirectMsgs } from "@/actions/directMessageActions"
 
 type UseDirectMsgQueryProps = {
-  conversationId: string;
-  batch: number;
-};
+  conversationId: string
+  batch: number
+}
 
 export default function useDirectMsgQuery({
   conversationId,
   batch,
 }: UseDirectMsgQueryProps) {
-  const { connected } = useSocket();
-  const queryKey = "getDirectMessages";
-  const createKey = "message:create";
-  const updateKey = "message:update";
+  const { connected } = useSocket()
+  const queryKey = "getDirectMessages"
+  const createKey = "message:create"
+  const updateKey = "message:update"
 
   const {
     data,
@@ -40,13 +40,13 @@ export default function useDirectMsgQuery({
       }),
     getNextPageParam: (lastPage) => lastPage?.nextCursor,
     refetchInterval: connected ? false : 1000,
-  });
+  })
 
   useChatSocket({
     queryKey,
     createKey,
     updateKey,
-  });
+  })
 
   return {
     data,
@@ -59,5 +59,5 @@ export default function useDirectMsgQuery({
     status,
     isLoading,
     isError,
-  };
+  }
 }

@@ -1,17 +1,17 @@
-"use server";
-import db from "@/config/db";
-import type { Channel } from "../../prisma/output";
-import { getCompleteServer } from "./serverActions";
-import { getCurrentProfile } from "./profileActions";
+"use server"
+import db from "@/config/db"
+import type { Channel } from "../../prisma/output"
+import { getCompleteServer } from "./serverActions"
+import { getCurrentProfile } from "./profileActions"
 
-type ChannelInput = Omit<Channel, "id" | "createdAt" | "updatedAt">;
+type ChannelInput = Omit<Channel, "id" | "createdAt" | "updatedAt">
 type UpdateChannelInput = {
-  channelId: string;
+  channelId: string
   inputs: Omit<
     Channel,
     "id" | "createdAt" | "updatedAt" | "serverId" | "profileId"
-  >;
-};
+  >
+}
 
 export async function getChannelById(id: string) {
   try {
@@ -19,12 +19,12 @@ export async function getChannelById(id: string) {
       where: {
         id,
       },
-    });
-    if (!channel) throw new Error("Channel not found");
+    })
+    if (!channel) throw new Error("Channel not found")
 
-    return channel;
+    return channel
   } catch (error) {
-    return null;
+    return null
   }
 }
 
@@ -34,13 +34,13 @@ export async function createChannel({
   ...input
 }: ChannelInput) {
   try {
-    const server = await getCompleteServer(serverId);
-    if (!server) throw new Error("Server not found");
+    const server = await getCompleteServer(serverId)
+    if (!server) throw new Error("Server not found")
 
     const foundProfile = server.members.find(
       (member) => (member.profileId = profileId),
-    );
-    if (!foundProfile) throw new Error("Profile not found");
+    )
+    if (!foundProfile) throw new Error("Profile not found")
 
     return await db.channel.create({
       data: {
@@ -48,16 +48,16 @@ export async function createChannel({
         profileId,
         ...input,
       },
-    });
+    })
   } catch (error) {
-    return null;
+    return null
   }
 }
 
 export async function updateChannel({ channelId, inputs }: UpdateChannelInput) {
   try {
-    const channel = await getChannelById(channelId);
-    if (!channel) throw new Error("Channel not found");
+    const channel = await getChannelById(channelId)
+    if (!channel) throw new Error("Channel not found")
 
     return await db.channel.update({
       where: {
@@ -66,29 +66,29 @@ export async function updateChannel({ channelId, inputs }: UpdateChannelInput) {
       data: {
         ...inputs,
       },
-    });
+    })
   } catch (error) {
-    return null;
+    return null
   }
 }
 
 export async function deleteChannel(channelId: string) {
   try {
-    const profile = await getCurrentProfile();
-    if (!profile) throw new Error("Profile not found");
+    const profile = await getCurrentProfile()
+    if (!profile) throw new Error("Profile not found")
 
-    const channel = await getChannelById(channelId);
-    if (!channel) throw new Error("Channel not found");
+    const channel = await getChannelById(channelId)
+    if (!channel) throw new Error("Channel not found")
 
-    const isChannelOwner = channel.profileId === profile.id;
-    if (!isChannelOwner) throw new Error("You cannot delete this channel");
+    const isChannelOwner = channel.profileId === profile.id
+    if (!isChannelOwner) throw new Error("You cannot delete this channel")
 
     return await db.channel.delete({
       where: {
         id: channelId,
       },
-    });
+    })
   } catch (error) {
-    return null;
+    return null
   }
 }

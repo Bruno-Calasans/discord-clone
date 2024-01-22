@@ -1,6 +1,6 @@
-import Link from "next/link";
-import ModeToggle from "@/components/ui/ModeToggle";
-import Button from "@/components/ui/Button";
+import Link from "next/link"
+import ModeToggle from "@/components/ui/ModeToggle"
+import Button from "@/components/ui/Button"
 
 export default function HomeHeader() {
   return (
@@ -23,5 +23,5 @@ export default function HomeHeader() {
         <ModeToggle />
       </div>
     </header>
-  );
+  )
 }

@@ -1,6 +1,6 @@
-"use client";
-import useModal from "@/hooks/useModal/useModal";
-import Button from "@/components/ui/Button";
+"use client"
+import useModal from "@/hooks/useModal/useModal"
+import Button from "@/components/ui/Button"
 import {
   Dialog,
   DialogContent,
@@ -8,37 +8,37 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@/components/ui/Dialog";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { deleteChannelMsg } from "@/actions/channelMessageActions";
-import MessagePreview from "../chat/MessagePreview";
-import useSocket from "@/hooks/useSocket/useSocket";
+} from "@/components/ui/Dialog"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { deleteChannelMsg } from "@/actions/channelMessageActions"
+import MessagePreview from "../chat/MessagePreview"
+import useSocket from "@/hooks/useSocket/useSocket"
 
 export default function DeleteChannelMessageModal() {
-  const { isOpen, type, data, close } = useModal();
-  const router = useRouter();
-  const { socket } = useSocket();
-  const [loading, setLoading] = useState(false);
-  const isModalOpen = isOpen && type === "DeleteChannelMessage";
-  const { message } = data;
+  const { isOpen, type, data, close } = useModal()
+  const router = useRouter()
+  const { socket } = useSocket()
+  const [loading, setLoading] = useState(false)
+  const isModalOpen = isOpen && type === "DeleteChannelMessage"
+  const { message } = data
 
   const deleteMessageHandler = async () => {
-    if (!message) return;
-    setLoading(true);
+    if (!message) return
+    setLoading(true)
     const deletedMsg = await deleteChannelMsg({
       messageId: message.id,
       memberId: message.member.id,
       serverId: message.member.serverId,
-    });
+    })
 
     if (deletedMsg) {
-      router.refresh();
-      socket?.emit("message:update", { message: deletedMsg });
+      router.refresh()
+      socket?.emit("message:update", { message: deletedMsg })
     }
-    setLoading(false);
-    close();
-  };
+    setLoading(false)
+    close()
+  }
 
   return (
     <Dialog open={isModalOpen} onOpenChange={close}>
@@ -72,5 +72,5 @@ export default function DeleteChannelMessageModal() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

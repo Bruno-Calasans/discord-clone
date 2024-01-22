@@ -67,7 +67,7 @@ export default function ChannelMediaRoom({
       connect={true}
       serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL}
       data-lk-theme="default"
-      className="flex"
+      className="flex flex-1"
     >
       {isAudio && (
         <ChannelAudioConference

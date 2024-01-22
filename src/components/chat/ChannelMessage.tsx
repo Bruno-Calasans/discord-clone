@@ -1,11 +1,11 @@
-"use client";
-import * as z from "zod";
-import { ElementRef, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import type { MessageWithMemberProfile } from "@/types/MessageWithMemberProfile";
-import { differenceInSeconds } from "date-fns";
-import type { MemberWithProfile } from "@/types/MemberProfile";
-import { Avatar, AvatarImage } from "@/components/ui/Avatar";
+"use client"
+import * as z from "zod"
+import { ElementRef, useEffect, useRef, useState } from "react"
+import { useRouter } from "next/navigation"
+import type { MessageWithMemberProfile } from "@/types/MessageWithMemberProfile"
+import { differenceInSeconds } from "date-fns"
+import type { MemberWithProfile } from "@/types/MemberProfile"
+import { Avatar, AvatarImage } from "@/components/ui/Avatar"
 import {
   File,
   MoreHorizontal,
@@ -14,91 +14,91 @@ import {
   Edit2,
   Copy,
   SmileIcon,
-} from "lucide-react";
-import ActionTooltip from "@/components/custom/ActionTooltip";
-import Image from "next/image";
+} from "lucide-react"
+import ActionTooltip from "@/components/custom/ActionTooltip"
+import Image from "next/image"
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-} from "@/components/ui/DropdownMenu";
+} from "@/components/ui/DropdownMenu"
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/Form";
-import { cn } from "@/utils/cn";
-import Input from "../ui/Input";
-import { useForm } from "react-hook-form";
-import Button from "../ui/Button";
-import { editChannelMsg } from "@/actions/channelMessageActions";
-import useModal from "@/hooks/useModal/useModal";
-import dateFormat from "@/utils/dateFormat";
-import ICON_ROLE_MAP from "@/constants/iconRoleMap";
-import useSocket from "@/hooks/useSocket/useSocket";
+} from "@/components/ui/Form"
+import { cn } from "@/utils/cn"
+import Input from "../ui/Input"
+import { useForm } from "react-hook-form"
+import Button from "../ui/Button"
+import { editChannelMsg } from "@/actions/channelMessageActions"
+import useModal from "@/hooks/useModal/useModal"
+import dateFormat from "@/utils/dateFormat"
+import ICON_ROLE_MAP from "@/constants/iconRoleMap"
+import useSocket from "@/hooks/useSocket/useSocket"
 
 const messageFormSchema = z.object({
   content: z
     .string()
     .min(1, "Message content must have at least 1 character long"),
-});
+})
 
-type MessageEditInputs = z.infer<typeof messageFormSchema>;
+type MessageEditInputs = z.infer<typeof messageFormSchema>
 
 type ChannelMessageProps = {
-  member: MemberWithProfile;
-  message: MessageWithMemberProfile;
-};
+  member: MemberWithProfile
+  message: MessageWithMemberProfile
+}
 
 export default function ChannelMessage({
   member,
   message,
 }: ChannelMessageProps) {
-  const [editing, setEditing] = useState(false);
-  const [showMore, setShowMore] = useState(false);
-  const { open } = useModal();
-  const { socket } = useSocket();
-  const router = useRouter();
+  const [editing, setEditing] = useState(false)
+  const [showMore, setShowMore] = useState(false)
+  const { open } = useModal()
+  const { socket } = useSocket()
+  const router = useRouter()
   const form = useForm<MessageEditInputs>({
     defaultValues: {
       content: message.content,
     },
-  });
+  })
 
-  const messageMember = message.member;
-  const isAdmin = member.role.toLowerCase() === "admin";
-  const isOwner = member.id === messageMember.id;
+  const messageMember = message.member
+  const isAdmin = member.role.toLowerCase() === "admin"
+  const isOwner = member.id === messageMember.id
   const isEdited =
-    differenceInSeconds(message.createdAt, message.updatedAt) !== 0;
+    differenceInSeconds(message.createdAt, message.updatedAt) !== 0
 
-  const canDeleteMsg = !message.deleted && (isOwner || isAdmin);
-  const canEditMsg = !message.deleted && isOwner && !message.fileUrl;
+  const canDeleteMsg = !message.deleted && (isOwner || isAdmin)
+  const canEditMsg = !message.deleted && isOwner && !message.fileUrl
 
-  const fileType = message.fileUrl?.split(".").pop();
-  const isPdf = fileType === "pdf";
-  const isImage = fileType !== "pdf";
-  const isLoading = form.formState.isSubmitting;
+  const fileType = message.fileUrl?.split(".").pop()
+  const isPdf = fileType === "pdf"
+  const isImage = fileType !== "pdf"
+  const isLoading = form.formState.isSubmitting
 
   const addReactionHandler = () => {
     // todo
-  };
+  }
 
   const replyHandler = () => {
     // todo
-  };
+  }
 
   const startEditHandler = () => {
-    setEditing(true);
-    form.setFocus("content");
-  };
+    setEditing(true)
+    form.setFocus("content")
+  }
 
   const cancelEditHandler = () => {
-    setEditing(false);
-  };
+    setEditing(false)
+  }
 
   const saveEditHandler = async ({ content }: MessageEditInputs) => {
     if (content || message.content !== content) {
@@ -107,43 +107,43 @@ export default function ChannelMessage({
         messageId: message.id,
         memberId: member.id,
         serverId: member.serverId,
-      });
+      })
 
       if (editedMessage) {
-        router.refresh();
-        socket?.emit("message:update", { message: editedMessage });
+        router.refresh()
+        socket?.emit("message:update", { message: editedMessage })
       }
     }
-    setEditing(false);
-  };
+    setEditing(false)
+  }
 
   const deleteMsgHandler = () => {
-    open("DeleteChannelMessage", { message });
-  };
+    open("DeleteChannelMessage", { message })
+  }
 
   const copyMessageHandler = () => {
-    if (message.deleted) return;
-    let content = message.content || message.fileUrl;
-    if (content) navigator.clipboard.writeText(content);
-  };
+    if (message.deleted) return
+    let content = message.content || message.fileUrl
+    if (content) navigator.clipboard.writeText(content)
+  }
 
   const dropdownHandler = (open: boolean) => {
-    setShowMore(open);
-  };
+    setShowMore(open)
+  }
 
   // Cancel editing keyboard events
   useEffect(() => {
     const cancelEdit = async ({ key }: KeyboardEvent) => {
       if (key === "Escape") {
-        cancelEditHandler();
+        cancelEditHandler()
       }
-    };
-    window.addEventListener("keydown", cancelEdit);
+    }
+    window.addEventListener("keydown", cancelEdit)
 
     return () => {
-      window.removeEventListener("keydown", cancelEdit);
-    };
-  }, []);
+      window.removeEventListener("keydown", cancelEdit)
+    }
+  }, [])
 
   return (
     <div className="group relative flex w-full cursor-pointer items-start gap-2 rounded-sm px-2 pb-4 pt-2 hover:bg-zinc-200/30 hover:dark:bg-zinc-700/30">
@@ -396,5 +396,5 @@ export default function ChannelMessage({
         </div>
       )}
     </div>
-  );
+  )
 }

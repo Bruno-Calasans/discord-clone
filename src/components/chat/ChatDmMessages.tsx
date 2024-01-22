@@ -1,20 +1,20 @@
-"use client";
-import { Loader2, ServerCrash } from "lucide-react";
-import { useRef, ElementRef } from "react";
-import Button from "../ui/Button";
-import useChatScroll from "@/hooks/useChatScroll";
-import { ConversationWithProfiles } from "@/types/ConversationWithProfiles";
-import { Profile } from "../../../prisma/output";
-import DmChatWelcome from "./DmChatWelcome";
-import DmMessage from "./ChatDmMessage";
-import useDirectMsgQuery from "@/hooks/useDirectMsgQuery";
-import { DmWithProfileConversation } from "@/types/DmWithProfileConversation";
+"use client"
+import { Loader2, ServerCrash } from "lucide-react"
+import { useRef, ElementRef } from "react"
+import Button from "../ui/Button"
+import useChatScroll from "@/hooks/useChatScroll"
+import { ConversationWithProfiles } from "@/types/ConversationWithProfiles"
+import { Profile } from "../../../prisma/output"
+import DmChatWelcome from "./DmChatWelcome"
+import DmMessage from "./ChatDmMessage"
+import useDirectMsgQuery from "@/hooks/useDirectMsgQuery"
+import { DmWithProfileConversation } from "@/types/DmWithProfileConversation"
 
 type ChatDmMessagesProps = {
-  conversation: ConversationWithProfiles;
-  currentProfile: Profile;
-  otherProfile: Profile;
-};
+  conversation: ConversationWithProfiles
+  currentProfile: Profile
+  otherProfile: Profile
+}
 
 export default function ChatDmMessages({
   conversation,
@@ -31,9 +31,9 @@ export default function ChatDmMessages({
   } = useDirectMsgQuery({
     conversationId: conversation.id,
     batch: 10,
-  });
-  const chatTopRef = useRef<ElementRef<"div">>(null);
-  const chatBottomRef = useRef<ElementRef<"div">>(null);
+  })
+  const chatTopRef = useRef<ElementRef<"div">>(null)
+  const chatBottomRef = useRef<ElementRef<"div">>(null)
 
   useChatScroll({
     chatBottomRef,
@@ -41,16 +41,16 @@ export default function ChatDmMessages({
     shouldLoadMore: !isFetchingNextPage && hasNextPage,
     count: data?.pages[0]?.messages.length ?? 0,
     loadMore: fetchNextPage,
-  });
+  })
 
-  const messages: DmWithProfileConversation[] = [];
+  const messages: DmWithProfileConversation[] = []
   data?.pages.map((page) => {
-    page?.messages.forEach((msg) => messages.push(msg));
-  });
+    page?.messages.forEach((msg) => messages.push(msg))
+  })
 
   const loadMorePagesHandler = () => {
-    fetchNextPage();
-  };
+    fetchNextPage()
+  }
 
   if (isLoading) {
     return (
@@ -58,7 +58,7 @@ export default function ChatDmMessages({
         <Loader2 className="h-6 w-6 animate-spin text-zinc-500" />
         <p className="text-zinc-500">Loading Messages...</p>
       </div>
-    );
+    )
   }
 
   if (isError) {
@@ -67,7 +67,7 @@ export default function ChatDmMessages({
         <ServerCrash className="h-6 w-6 text-zinc-500" />
         <p className="text-zinc-500">Something went wrong :(</p>
       </div>
-    );
+    )
   }
 
   return (
@@ -108,5 +108,5 @@ export default function ChatDmMessages({
       )}
       <div ref={chatBottomRef}></div>
     </div>
-  );
+  )
 }

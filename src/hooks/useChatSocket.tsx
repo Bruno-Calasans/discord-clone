@@ -1,112 +1,112 @@
-"use client";
-import { useEffect } from "react";
-import useSocket from "./useSocket/useSocket";
-import { useQueryClient } from "@tanstack/react-query";
-import type { MessageWithMemberProfile } from "@/types/MessageWithMemberProfile";
+"use client"
+import { useEffect } from "react"
+import useSocket from "./useSocket/useSocket"
+import { useQueryClient } from "@tanstack/react-query"
+import type { MessageWithMemberProfile } from "@/types/MessageWithMemberProfile"
+import { SocketEvents, SocketFn } from "@/types/Socket"
 
 type UseChatSocketProps = {
-  queryKey: string;
-  updateKey: string;
-  createKey: string;
-};
+  queryKey: string
+  updateKey: SocketEvents
+  createKey: SocketEvents
+}
 
 type SocketData = {
-  message?: MessageWithMemberProfile;
-};
+  message?: MessageWithMemberProfile
+}
 
 type QueryData = {
   pages?: {
-    messages: MessageWithMemberProfile[];
-    nextCursor: string | null;
-  }[];
-  pageParams?: string[];
-};
+    messages: MessageWithMemberProfile[]
+    nextCursor: string | null
+  }[]
+  pageParams?: string[]
+}
 
 export default function useChatSocket({
   queryKey,
   createKey,
   updateKey,
 }: UseChatSocketProps) {
-  const queryClient = useQueryClient();
-  const { connected, socket } = useSocket();
+  const queryClient = useQueryClient()
+  const { connected, socket } = useSocket()
 
   useEffect(() => {
-    if (!socket) return;
+    if (!socket) return
 
-    // create message
-    socket.on(createKey, ({ message }: SocketData) => {
-      if (!message) return;
+    const createQueryDataHandler: SocketFn = ({ message }) => {
+      if (!message) return
 
-      const data = queryClient.setQueryData(
-        [queryKey],
-        (oldData?: QueryData) => {
-          if (!oldData || !oldData.pages || oldData.pages.length === 0) {
-            return {
-              pages: [
-                {
-                  messages: [message],
-                  nextCursor: null,
-                },
-              ],
-              pageParams: [""],
-            } as QueryData;
-          }
-
-          const newPages = [...oldData.pages];
-
-          newPages[0] = {
-            ...newPages[0],
-            messages: [message, ...newPages[0].messages],
-          };
-
+      queryClient.setQueryData([queryKey], (oldData?: QueryData) => {
+        if (!oldData || !oldData.pages || oldData.pages.length === 0) {
           return {
-            ...oldData,
-            pages: newPages,
-          };
-        },
-      );
+            pages: [
+              {
+                messages: [message],
+                nextCursor: null,
+              },
+            ],
+            pageParams: [""],
+          } as QueryData
+        }
 
-      console.log("Query client data", data);
-    });
+        const newPages = [...oldData.pages]
 
-    // update message
-    socket.on(updateKey, ({ message }: SocketData) => {
-      if (!message) return;
+        newPages[0] = {
+          ...newPages[0],
+          messages: [message, ...newPages[0].messages],
+        }
+
+        return {
+          ...oldData,
+          pages: newPages,
+        }
+      })
+    }
+
+    const updateQueryDataHandler: SocketFn = ({ message }) => {
+      if (!message) return
 
       queryClient.setQueryData([queryKey], (oldData: QueryData) => {
-        if (!oldData.pages || oldData.pages?.length === 0) return oldData;
+        if (!oldData.pages || oldData.pages?.length === 0) return oldData
 
         // fiding and replacing the page's old messages
         const updatedPages = oldData.pages.map((page) => {
           // finding the page's old message and replacing it with the event's message
           const updatedMsgs = page.messages.map((msg) => {
             // found message
-            if (message.id === msg.id) return message;
+            if (message.id === msg.id) return message
             // old msg
-            return msg;
-          });
+            return msg
+          })
 
           // updated date page
           return {
             ...page,
             messages: updatedMsgs,
-          };
-        });
+          }
+        })
 
         //updating the pages
         return {
           ...oldData,
           pages: updatedPages,
-        };
-      });
-    });
+        }
+      })
+    }
+
+    // create message
+    socket.on(createKey, createQueryDataHandler)
+
+    // update message
+    socket.on(updateKey, updateQueryDataHandler)
 
     // removing socket events
     return () => {
-      socket.off(createKey);
-      socket.off(updateKey);
-    };
-  }, [createKey, queryClient, queryKey, socket, updateKey]);
+      socket.removeListener(createKey, createQueryDataHandler)
+      socket.removeListener(updateKey, updateQueryDataHandler)
+    }
+  }, [createKey, queryClient, queryKey, socket, updateKey])
 
-  return { queryClient, socket, connected };
+  return { queryClient, socket, connected }
 }

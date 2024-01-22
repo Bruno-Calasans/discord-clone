@@ -1,9 +1,9 @@
-import type { Channel } from "../../../prisma/output";
-import { Hash } from "lucide-react";
+import type { Channel } from "../../../prisma/output"
+import { Hash } from "lucide-react"
 
 type ChatWelcomeProps = {
-  channel: Channel;
-};
+  channel: Channel
+}
 
 export default function ChatWelcome({ channel }: ChatWelcomeProps) {
   return (
@@ -19,5 +19,5 @@ export default function ChatWelcome({ channel }: ChatWelcomeProps) {
         This is the start of channel #{channel.name}
       </div>
     </div>
-  );
+  )
 }
