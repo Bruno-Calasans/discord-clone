@@ -47,6 +47,7 @@ export default function ServerSection({ server, member }: ServerSectionProps) {
   }
 
   const clickChannelHandler = (channel: Channel) => {
+    // socket.emit("channel:join", {member, channel})
     router.push(`/servers/${server.id}/channels/${channel.id}`)
   }
 

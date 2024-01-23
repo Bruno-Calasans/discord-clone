@@ -78,11 +78,13 @@ export default function ServerCategory({
                 "bg-zinc-600 text-white dark:bg-zinc-700 dark:text-zinc-200",
             )}
           >
+            {/* Channel */}
             <div className="flex items-center">
               {channelIconMap[channel.type]}
               <p className="line-clamp-1">{channel.name}</p>
             </div>
 
+            {/* Channel Options */}
             {member.role.toLowerCase() === "admin" && (
               <DropdownMenu>
                 <DropdownMenuTrigger

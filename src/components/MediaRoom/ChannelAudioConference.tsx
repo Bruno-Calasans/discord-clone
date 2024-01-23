@@ -83,6 +83,7 @@ export default function ChannelAudioConference({
 
   return (
     <div className="flex flex-1 flex-col gap-2 p-5">
+
       <div className="flex flex-1 flex-col gap-4">
         {/* Screen share container */}
         <div className="flex">

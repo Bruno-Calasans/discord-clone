@@ -35,12 +35,14 @@ export default async function ChannelPage({ params }: ChannelPageProps) {
   return (
     <section className="flex w-full flex-col dark:bg-zinc-800">
       <ChatHeader channel={channel} />
+
       {channel.type === "TEXT" && (
         <div className="flex flex-1 flex-col justify-end overflow-y-auto">
           <ChatMessages channel={channel} member={member} />
           <ChatChannelInput channel={channel} member={member} />
         </div>
       )}
+
       {channel.type === "AUDIO" && (
         <ChannelMediaRoom
           server={server}
