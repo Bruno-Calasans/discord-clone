@@ -60,5 +60,5 @@ export default function useChatScroll({
     }
   }, [chatBottomRef, chatTopRef, loadMore, shouldLoadMore, count])
 
-  return <div>useChatScroll</div>
+  return null
 }

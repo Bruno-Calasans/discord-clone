@@ -38,12 +38,19 @@ export default function socketHandler(
       })
 
       socket.on("screen-share:join", (data) => {
-        console.log(data)
         io.emit("screen-share:join", data)
       })
 
       socket.on("screen-share:leave", (data) => {
         io.emit("screen-share:leave", data)
+      })
+
+      socket.on("channel:join", (data) => {
+        io.emit("channel:join", data)
+      })
+
+      socket.on("channel:leave", (data) => {
+        io.emit("channel:leave", data)
       })
     })
 

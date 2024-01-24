@@ -1,18 +1,31 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 import { useParams } from "next/navigation"
-import { CHANNEL_TYPE, type Channel, type Member } from "../../../prisma/output"
+import { CHANNEL_TYPE, type Channel } from "../../../prisma/output"
 import ActionTooltip from "../custom/ActionTooltip"
-import { Edit, Hash, Mic, MoreVertical, Plus, Trash, Video } from "lucide-react"
+import {
+  Edit,
+  Hash,
+  Mic,
+  MoreVertical,
+  Plus,
+  Trash,
+  Video,
+  Volume,
+  Volume2,
+} from "lucide-react"
 import { cn } from "@/utils/cn"
 import { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu"
+import useChannel from "@/hooks/useChannel"
+import { useEffect } from "react"
+import { MemberWithProfile } from "@/types/MemberProfile"
+import { Avatar, AvatarImage } from "@radix-ui/react-avatar"
 
 const channelIconMap = {
   [CHANNEL_TYPE.TEXT]: <Hash className="mr-2 h-4 w-4" />,
@@ -22,7 +35,7 @@ const channelIconMap = {
 
 type ServerCategoryProps = {
   label: React.ReactNode
-  member: Member
+  member: MemberWithProfile
   channels: Channel[]
   server: ServerWithMembersAndProfile
   onClickChannel: (channel: Channel) => void
@@ -40,6 +53,8 @@ export default function ServerCategory({
   onDeleteChannel,
   onClickChannel,
 }: ServerCategoryProps) {
+  const { socket, data, getChannel, getChannelMembers, getMemberInChannel } =
+    useChannel()
   const params = useParams()
   let selectedChannel = params?.channelId as string
 
@@ -48,6 +63,24 @@ export default function ServerCategory({
     onEditChannel(channel)
     onDeleteChannel(channel)
   }
+
+  const clickChannelHandler = (channel: Channel) => {
+    const previousChannel = channels.find((c) => c.id === selectedChannel)
+    socket?.emit("channel:leave", { channel: previousChannel, member })
+    onClickChannel(channel)
+  }
+
+  useEffect(() => {
+    if (!selectedChannel || !socket) return
+
+    const channel = channels.find((channel) => channel.id === selectedChannel)
+    if (!channel) return
+
+    const isInChannel = getMemberInChannel(member.id, channel.id)
+    if (isInChannel) return
+
+    socket.emit("channel:join", { channel, member })
+  }, [socket, member.id, selectedChannel])
 
   return (
     <div>
@@ -69,54 +102,81 @@ export default function ServerCategory({
       {/* channels */}
       <div className="item ml-1 mt-2 flex flex-col gap-1 overflow-hidden text-sm  font-semibold">
         {channels.map((channel) => (
-          <div
-            onClick={() => onClickChannel(channel)}
-            key={channel.id}
-            className={cn(
-              "group flex cursor-pointer items-center justify-between rounded-sm p-[6px] text-zinc-600  transition hover:bg-zinc-700 hover:text-zinc-100 dark:text-zinc-400 hover:dark:text-zinc-200",
-              selectedChannel === channel.id &&
-                "bg-zinc-600 text-white dark:bg-zinc-700 dark:text-zinc-200",
-            )}
-          >
-            {/* Channel */}
-            <div className="flex items-center">
-              {channelIconMap[channel.type]}
-              <p className="line-clamp-1">{channel.name}</p>
+          <div key={channel.id}>
+            <div
+              onClick={() => clickChannelHandler(channel)}
+              className={cn(
+                "group flex cursor-pointer items-center justify-between rounded-sm p-[6px] text-zinc-600  transition hover:bg-zinc-700 hover:text-zinc-100 dark:text-zinc-400 hover:dark:text-zinc-200",
+                selectedChannel === channel.id &&
+                  "bg-zinc-600 text-white dark:bg-zinc-700 dark:text-zinc-200",
+              )}
+            >
+              {/* Channel */}
+              <div className="flex items-center">
+                {channelIconMap[channel.type]}
+                <p className="line-clamp-1">{channel.name}</p>
+              </div>
+
+              {/* Channel Options */}
+              {member.role.toLowerCase() === "admin" && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger
+                    className={cn(
+                      selectedChannel !== channel.id &&
+                        "invisible group-hover:visible",
+                    )}
+                  >
+                    <MoreVertical className="h-4 w-4" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    side="right"
+                    align="start"
+                    alignOffset={-4}
+                    sideOffset={-2}
+                  >
+                    <DropdownMenuItem
+                      onClick={(e) => actionHandler(e, channel)}
+                    >
+                      <div className="flex">
+                        <Edit className="mr-1 h-4 w-4" />
+                        Edit
+                      </div>
+                    </DropdownMenuItem>
+                    {/* <DropdownMenuSeparator /> */}
+                    <DropdownMenuItem
+                      onClick={(e) => actionHandler(e, channel)}
+                    >
+                      <div className="flex text-rose-500">
+                        <Trash className="mr-1 h-4 w-4 " />
+                        Delete
+                      </div>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
             </div>
 
-            {/* Channel Options */}
-            {member.role.toLowerCase() === "admin" && (
-              <DropdownMenu>
-                <DropdownMenuTrigger
-                  className={cn(
-                    selectedChannel !== channel.id &&
-                      "invisible group-hover:visible",
-                  )}
-                >
-                  <MoreVertical className="h-4 w-4" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  side="right"
-                  align="start"
-                  alignOffset={-4}
-                  sideOffset={-2}
-                >
-                  <DropdownMenuItem onClick={(e) => actionHandler(e, channel)}>
-                    <div className="flex">
-                      <Edit className="mr-1 h-4 w-4" />
-                      Edit
-                    </div>
-                  </DropdownMenuItem>
-                  {/* <DropdownMenuSeparator /> */}
-                  <DropdownMenuItem onClick={(e) => actionHandler(e, channel)}>
-                    <div className="flex text-rose-500">
-                      <Trash className="mr-1 h-4 w-4 " />
-                      Delete
-                    </div>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
+            {/* members on midia channel */}
+            {/* {[CHANNEL_TYPE.AUDIO, CHANNEL_TYPE.VIDEO].includes(
+              getChannel(channel.id)?.type,
+            ) && (
+              <div className="ml-3 mt-2 flex flex-col gap-2">
+                {getChannelMembers(channel.id)?.map((member) => (
+                  <div
+                    key={member.id}
+                    className="flex items-center gap-1 overflow-hidden"
+                  >
+                    <Avatar className="rounded-full">
+                      <AvatarImage
+                        className="h-6 w-6 rounded-full"
+                        src={member.profile.imgUrl}
+                      />
+                    </Avatar>
+                    <span className="text-ellipsis">{member.name}</span>
+                  </div>
+                ))}
+              </div>
+            )} */}
           </div>
         ))}
       </div>

@@ -4,11 +4,12 @@ import ServerSection from "./ServerSection"
 import type { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
 import type { Member, Profile } from "../../../prisma/output"
 import { cn } from "./../../utils/cn"
+import { MemberWithProfile } from "@/types/MemberProfile"
 
 type ServerSideBarProps = {
   server: ServerWithMembersAndProfile
   profile: Profile
-  member: Member
+  member: MemberWithProfile
   classname?: string
 }
 

@@ -1,13 +1,14 @@
 "use client"
 import { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
 import ServerCategory from "./ServerCategory"
-import { Channel, Member } from "../../../prisma/output"
+import { Channel } from "../../../prisma/output"
 import useModal from "@/hooks/useModal/useModal"
 import { useRouter } from "next/navigation"
+import { MemberWithProfile } from "@/types/MemberProfile"
 
 type ServerSectionProps = {
   server: ServerWithMembersAndProfile
-  member: Member
+  member: MemberWithProfile
 }
 
 export default function ServerSection({ server, member }: ServerSectionProps) {
@@ -47,7 +48,6 @@ export default function ServerSection({ server, member }: ServerSectionProps) {
   }
 
   const clickChannelHandler = (channel: Channel) => {
-    // socket.emit("channel:join", {member, channel})
     router.push(`/servers/${server.id}/channels/${channel.id}`)
   }
 

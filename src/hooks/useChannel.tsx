@@ -1,12 +1,15 @@
+"use client"
 import { useEffect, useState } from "react"
 import useSocket from "./useSocket/useSocket"
 import { Channel } from "../../prisma/output"
 import { MemberWithProfile } from "@/types/MemberProfile"
 import { SocketFn } from "@/types/Socket"
 
+type MembersPerChannel = Record<string, MemberWithProfile[]>
+
 type UseChannelData = {
   channels: Channel[]
-  membersPerChannel: Record<string, MemberWithProfile[]>
+  membersPerChannel: MembersPerChannel
 }
 
 export default function useChannel() {
@@ -17,10 +20,11 @@ export default function useChannel() {
   })
 
   const getChannel = (channelId: string) => {
-    const foundChannel = data.channels.find(
-      (channel) => channel.id === channelId,
-    )
-    if (!foundChannel || !(channelId in data.membersPerChannel)) return
+    const { channels, membersPerChannel } = data
+
+    const foundChannel = channels.find((channel) => channel.id === channelId)
+    if (!foundChannel || !(channelId in membersPerChannel)) return
+
     return foundChannel
   }
 
@@ -49,27 +53,65 @@ export default function useChannel() {
   }
 
   const joinChannel = (member: MemberWithProfile, channel: Channel) => {
-    setData(({ channels, membersPerChannel }) => ({
-      channels: [...channels, channel],
-      membersPerChannel: {
-        ...membersPerChannel,
-        [channel.id]: [...membersPerChannel[channel.id], member],
-      },
-    }))
+    setData(({ channels, membersPerChannel }) => {
+
+      const foundChannel = channels.find((c) => c.id === channel.id)
+      const updatedChannels = foundChannel ? channels : [...channels, channel]
+
+      const updatedMembers = membersPerChannel[channel.id]
+        ? [...membersPerChannel[channel.id], member]
+        : [member]
+
+      return {
+        channels: updatedChannels,
+        membersPerChannel: {
+          ...membersPerChannel,
+          [channel.id]: updatedMembers,
+        },
+      }
+    })
   }
 
   const leaveChannel = (member: MemberWithProfile, channel: Channel) => {
     setData((currData) => {
-      const members = getChannelMembers(channel.id)
+      const { channels, membersPerChannel } = currData
 
+      const foundChannel = channels.find((c) => c.id === channel.id)
+      if (!foundChannel) return currData
+
+      const members = membersPerChannel[foundChannel.id]
       if (!members || members.length === 0) return currData
+
+      // removing the leaving member
       const newMembers = members.filter((m) => m.id !== member.id)
 
-      return {
-        ...currData,
-        membersPerChannel: {
-          ...currData.membersPerChannel,
+      let updatedChannels = channels
+      let updatedMembersPerChannel: MembersPerChannel = {}
+
+      // removing empty channel and membersPerChannel
+      if (newMembers.length === 0) {
+        // removing the empty channel
+        updatedChannels = channels.filter((c) => c.id !== channel.id)
+
+        // removing the emtpy membersPerChannel obj
+        for (let channelId in membersPerChannel) {
+          const currentMembers = membersPerChannel[channelId]
+          if (channelId !== channel.id) {
+            updatedMembersPerChannel[channelId] = currentMembers
+          }
+        }
+        //updating members
+      } else {
+        updatedMembersPerChannel = {
+          ...membersPerChannel,
           [channel.id]: [...newMembers],
+        }
+      }
+
+      return {
+        channels: [...updatedChannels],
+        membersPerChannel: {
+          ...updatedMembersPerChannel,
         },
       }
     })
@@ -95,9 +137,10 @@ export default function useChannel() {
       socket.removeListener("channel:join", joinChannelHandler)
       socket.removeListener("channel:leave", leavelChannelHandler)
     }
-  }, [])
+  }, [socket])
 
   return {
+    socket,
     data,
     joinChannel,
     leaveChannel,

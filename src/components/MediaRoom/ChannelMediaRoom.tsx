@@ -13,6 +13,7 @@ import {
 import { MemberWithProfile } from "@/types/MemberProfile"
 import { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
 import ChannelAudioConference from "./ChannelAudioConference"
+import ChannelVideoConference from "./ChannelVideoConference"
 
 type MediaRoomProps = {
   server: ServerWithMembersAndProfile
@@ -76,7 +77,13 @@ export default function ChannelMediaRoom({
           channel={channel}
         />
       )}
-      {isVideo && <VideoConference />}
+      {isVideo && (
+        <ChannelVideoConference
+          currentMember={member}
+          server={server}
+          channel={channel}
+        />
+      )}
       <RoomAudioRenderer />
     </LiveKitRoom>
   )

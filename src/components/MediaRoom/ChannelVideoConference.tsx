@@ -7,6 +7,7 @@ import {
   useConnectionState,
   useLocalParticipant,
   useParticipants,
+  useRemoteParticipants,
   useRoomContext,
   useTracks,
 } from "@livekit/components-react"
@@ -18,20 +19,21 @@ import ParticipantView from "./ParticipantView"
 import { Track } from "livekit-client"
 import ScreenShareView from "./ScreenShareView"
 
-type ChannelAudioConferenceProps = {
+type ChannelVideoConferenceProps = {
   currentMember: MemberWithProfile
   server: ServerWithMembersAndProfile
   channel: Channel
 }
 
-export default function ChannelAudioConference({
+export default function ChannelVideoConference({
   currentMember,
   server,
   channel,
-}: ChannelAudioConferenceProps) {
+}: ChannelVideoConferenceProps) {
   const room = useRoomContext()
   const connection = useConnectionState(room)
   const participants = useParticipants()
+  const remotes = useRemoteParticipants()
   const trackRef = useTracks([Track.Source.ScreenShare])
   const { localParticipant } = useLocalParticipant()
   const membersNum = participants.length
@@ -55,7 +57,7 @@ export default function ChannelAudioConference({
   if (connection === "disconnected") {
     return (
       <JoinRoom
-        label="Join audio channel"
+        label="Join video channel"
         server={server}
         channel={channel}
         currentMember={currentMember}
@@ -99,29 +101,38 @@ export default function ChannelAudioConference({
         </div>
 
         {/* Participants container */}
-        <div
-          className={cn(
-            "flex flex-1 flex-col gap-2",
-            membersNum === 2 || (membersNum === 3 && "grid grid-rows-2 gap-2"),
-            membersNum === 3 && `grid grid-cols-2 grid-rows-2 gap-2`,
-          )}
-        >
-          <ParticipantContext.Provider value={localParticipant}>
-            {participants.map((participant) => (
+        <ParticipantContext.Provider value={localParticipant}>
+          <div className="grid flex-1 grid-cols-4 grid-rows-4 gap-3">
+            <div className="col-span-3 row-span-full flex flex-1 ">
               <ParticipantView
-                key={participant.sid}
-                participant={participant}
-                member={membersMap[participant.identity]}
+                participant={localParticipant}
+                member={membersMap[localParticipant.identity]}
               />
-            ))}
-          </ParticipantContext.Provider>
-        </div>
+            </div>
+            <div
+              className={cn(
+                "flex flex-1 flex-col gap-2",
+                membersNum === 2 ||
+                  (membersNum === 3 && "grid grid-rows-2 gap-2"),
+                membersNum === 3 && `grid grid-cols-2 grid-rows-2 gap-2`,
+              )}
+            >
+              {remotes.map((participant) => (
+                <ParticipantView
+                  key={participant.sid}
+                  participant={participant}
+                  member={membersMap[participant.identity]}
+                />
+              ))}
+            </div>
+          </div>
+        </ParticipantContext.Provider>
       </div>
 
       <ControlBar
         variation="minimal"
         controls={{
-          camera: false,
+          camera: true,
           screenShare: true,
         }}
       />
