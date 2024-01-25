@@ -3,17 +3,7 @@
 import { useParams } from "next/navigation"
 import { CHANNEL_TYPE, type Channel } from "../../../prisma/output"
 import ActionTooltip from "../custom/ActionTooltip"
-import {
-  Edit,
-  Hash,
-  Mic,
-  MoreVertical,
-  Plus,
-  Trash,
-  Video,
-  Volume,
-  Volume2,
-} from "lucide-react"
+import { Edit, MoreVertical, Plus, Trash, Volume2 } from "lucide-react"
 import { cn } from "@/utils/cn"
 import { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
 import {
@@ -26,12 +16,7 @@ import useChannel from "@/hooks/useChannel"
 import { useEffect } from "react"
 import { MemberWithProfile } from "@/types/MemberProfile"
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar"
-
-const channelIconMap = {
-  [CHANNEL_TYPE.TEXT]: <Hash className="mr-2 h-4 w-4" />,
-  [CHANNEL_TYPE.AUDIO]: <Mic className="mr-2 h-4 w-4" />,
-  [CHANNEL_TYPE.VIDEO]: <Video className="mr-2 h-4 w-4" />,
-} as const
+import CHANNEL_ICON_MAP from "@/constants/channelIconMap"
 
 type ServerCategoryProps = {
   label: React.ReactNode
@@ -112,8 +97,8 @@ export default function ServerCategory({
               )}
             >
               {/* Channel */}
-              <div className="flex items-center">
-                {channelIconMap[channel.type]}
+              <div className="flex items-center gap-1">
+                {CHANNEL_ICON_MAP[channel.type]}
                 <p className="line-clamp-1">{channel.name}</p>
               </div>
 

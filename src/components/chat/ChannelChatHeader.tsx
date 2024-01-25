@@ -2,6 +2,7 @@ import { Hash } from "lucide-react"
 import { Channel } from "../../../prisma/output"
 import MobileMenuToggle from "./MobileMenuToggle"
 import ConnectioIndicator from "./ConnectionIndicator"
+import CHANNEL_ICON_MAP from "@/constants/channelIconMap"
 
 type ChatHeaderProps = {
   channel: Channel
@@ -14,7 +15,7 @@ export default function ChannelChatHeader({ channel }: ChatHeaderProps) {
         <MobileMenuToggle serverId={channel.serverId} />
         <div className="flex items-center gap-2">
           <p className="flex items-center gap-1">
-            <Hash className="h-4 w-4 text-zinc-500 dark:text-zinc-400" />
+            {CHANNEL_ICON_MAP[channel.type]}
             {channel.name}
           </p>
         </div>

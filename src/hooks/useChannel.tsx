@@ -54,7 +54,6 @@ export default function useChannel() {
 
   const joinChannel = (member: MemberWithProfile, channel: Channel) => {
     setData(({ channels, membersPerChannel }) => {
-
       const foundChannel = channels.find((c) => c.id === channel.id)
       const updatedChannels = foundChannel ? channels : [...channels, channel]
 
