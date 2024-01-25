@@ -32,7 +32,7 @@ export default function ConversationItem({
   return (
     <div
       className={cn(
-        "group flex cursor-pointer items-center gap-2 rounded-sm p-[4px] font-semibold text-zinc-600  transition hover:bg-zinc-700  hover:text-zinc-200 dark:text-zinc-400 hover:dark:bg-zinc-700 hover:dark:text-zinc-200",
+        "group flex cursor-pointer items-center gap-2 rounded-sm p-[4px] font-semibold text-zinc-600 transition hover:bg-zinc-700 hover:text-zinc-200 dark:text-zinc-400 hover:dark:bg-zinc-700 hover:dark:text-zinc-200",
         selected &&
           "pointer-events-none bg-zinc-700 text-zinc-200 dark:bg-zinc-700 dark:text-zinc-200",
       )}
@@ -41,7 +41,7 @@ export default function ConversationItem({
       <Avatar className="h-8 w-8">
         <AvatarImage src={conversationProfile.imgUrl} />
       </Avatar>
-      <p className="line-clamp-1">{conversationProfile.username}</p>
+      <p className="truncate">{conversationProfile.username}</p>
     </div>
   )
 }

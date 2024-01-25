@@ -69,7 +69,7 @@ export default function ChatMessages({ channel, member }: ChatMessagesProps) {
   return (
     <div
       ref={chatTopRef}
-      className="flex flex-col overflow-y-auto px-2 pb-6 scrollbar scrollbar-track-zinc-400 scrollbar-thumb-zinc-600 scrollbar-track-rounded-sm scrollbar-w-[4px] dark:scrollbar-track-zinc-700 dark:scrollbar-thumb-zinc-400"
+      className="flex flex-col overflow-y-auto px-2 pb-6 scrollbar-thin scrollbar-track-zinc-400 scrollbar-thumb-zinc-600 scrollbar-track-rounded-sm scrollbar-w-[4px] dark:scrollbar-track-zinc-700 dark:scrollbar-thumb-zinc-400"
     >
       {!hasNextPage && <ChatWelcome channel={channel} />}
       {hasNextPage && (
