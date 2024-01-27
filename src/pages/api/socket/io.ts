@@ -6,6 +6,7 @@ import {
   ClientToServerEvents,
   InterServerEvents,
   ServerToClientEvents,
+  SOCKET_EVENTS,
 } from "@/types/Socket"
 
 // Checking if there's a socket connection already
@@ -51,6 +52,26 @@ export default function socketHandler(
 
       socket.on("channel:leave", (data) => {
         io.emit("channel:leave", data)
+      })
+
+      socket.on("call:start", (data) => {
+        io.emit("call:start", data)
+      })
+
+      socket.on("call:stop", (data) => {
+        io.emit("call:stop", data)
+      })
+
+      socket.on("call:join", (data) => {
+        io.emit("call:join", data)
+      })
+
+      socket.on("call:going", (data) => {
+        io.emit("call:going", data)
+      })
+
+      socket.on("call:leave", (data) => {
+        io.emit("call:leave", data)
       })
     })
 

@@ -2,7 +2,8 @@ import type { Participant } from "livekit-client"
 import type { MessageWithMemberProfile } from "./MessageWithMemberProfile"
 import { Socket } from "socket.io"
 import { MemberWithProfile } from "./MemberProfile"
-import { Channel } from "../../prisma/output"
+import { Channel, Conversation, Profile } from "../../prisma/output"
+import { ConversationWithProfiles } from "./ConversationWithProfiles"
 
 export const SOCKET_EVENTS = {
   "message:create": "message:create",
@@ -13,6 +14,11 @@ export const SOCKET_EVENTS = {
   "screen-share:viewing": "screen-share:viewing",
   "channel:join": "channel:join",
   "channel:leave": "channel:leave",
+  "call:start": "call:start",
+  "call:going": "call:going",
+  "call:stop": "call:stop",
+  "call:join": "call:join",
+  "call:leave": "call:leave",
 } as const
 
 export type SocketEvents = keyof typeof SOCKET_EVENTS
@@ -25,6 +31,10 @@ export type SocketData = {
   currentViews?: Participant[]
   member?: MemberWithProfile
   channel?: Channel
+  conversation?: ConversationWithProfiles
+  caller?: Profile
+  called?: Profile
+  startCallId?: NodeJS.Timeout
 }
 
 export type SocketFn = (data: SocketData) => void

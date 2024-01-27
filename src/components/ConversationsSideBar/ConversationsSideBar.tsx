@@ -15,14 +15,13 @@ type ConversationsSideBarProps = {
   profile: Profile
 }
 
-
 export default function ConversationsSideBar({
   conversations,
   profile,
 }: ConversationsSideBarProps) {
   const params = useParams()
   const selectedConversation = params?.conversationId as string | undefined
- 
+
   return (
     <aside
       className={cn(

@@ -29,7 +29,11 @@ export default async function ConversationPage({
 
   return (
     <section className="flex w-full flex-col dark:bg-zinc-800">
-      <DMChatHeader profile={otherProfile} />
+      <DMChatHeader
+        conversation={conversation}
+        currentProfile={profile}
+        otherProfile={otherProfile}
+      />
       <div className="flex flex-1 flex-col justify-end overflow-y-auto">
         <ChatDmMessages
           conversation={conversation}
