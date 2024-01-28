@@ -15,8 +15,8 @@ export default function GoingCall({
   currentProfile,
   otherProfile,
 }: GoingCallProps) {
-  const { stopCall, joinCall, getGoingCall } = useCall()
-  const hasGoingCall = getGoingCall({ conversation, currentProfile })
+  const { goingCalls, stopCall, joinCall, getGoingCall } = useCall()
+  const hasGoingCall = getGoingCall(conversation.id)
   const isCalling = hasGoingCall?.caller.id === currentProfile.id
   const isBeingCalled = hasGoingCall?.called.id === currentProfile.id
 

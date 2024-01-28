@@ -53,17 +53,10 @@ export default function useCall() {
     })
   }
 
-  const removeGoingCall = ({
-    conversation,
-    caller,
-    called,
-  }: CallActionInput) => {
+  const removeGoingCall = (conversationId: string) => {
     setGoingCalls((currCalls) => {
       const updatedCalls = currCalls.filter(
-        (call) =>
-          call.conversation.id === conversation.id &&
-          call.called.id !== called.id &&
-          call.caller.id !== caller.id,
+        (call) => call.conversation.id !== conversationId,
       )
       return updatedCalls
     })
@@ -80,34 +73,21 @@ export default function useCall() {
     })
   }
 
-  const removeCall = ({ conversation, caller, called }: CallActionInput) => {
+  const removeCall = (conversationId: string) => {
     setCalls((currCalls) => {
       const updatedCalls = currCalls.filter(
-        (call) =>
-          call.conversation.id === conversation.id &&
-          call.called.id !== called.id &&
-          call.caller.id !== caller.id,
+        (call) => call.conversation.id !== conversationId,
       )
       return updatedCalls
     })
   }
 
-  const getGoingCall = ({ conversation, currentProfile }: GetCallInput) => {
-    return goingCalls.find(
-      (call) =>
-        (call.conversation.id === conversation.id &&
-          call.called.id === currentProfile.id) ||
-        call.caller.id === currentProfile.id,
-    )
+  const getGoingCall = (conversationId: string) => {
+    return goingCalls.find((call) => call.conversation.id === conversationId)
   }
 
-  const getCall = ({ conversation, currentProfile }: GetCallInput) => {
-    return calls.find(
-      (call) =>
-        (call.conversation.id === conversation.id &&
-          call.called.id === currentProfile.id) ||
-        call.caller.id === currentProfile.id,
-    )
+  const getCall = (conversationId: string) => {
+    return calls.find((call) => call.conversation.id === conversationId)
   }
 
   useEffect(() => {
@@ -127,7 +107,7 @@ export default function useCall() {
       socket.on("call:stop", ({ conversation: stopConversation }) => {
         if (stopConversation && stopConversation.id === conversation.id) {
           clearInterval(id)
-          removeGoingCall({ conversation, called, caller })
+          removeGoingCall(conversation.id)
         }
       })
     }
@@ -141,13 +121,14 @@ export default function useCall() {
     const joinCallHandler: SocketFn = ({ conversation, called, caller }) => {
       if (!called || !caller || !conversation) return
       addCall({ conversation, called, caller })
-      removeGoingCall({ conversation, called, caller })
+      removeGoingCall(conversation.id)
       socket.emit("call:stop", { conversation })
     }
 
     const leavelCallHandler: SocketFn = ({ conversation, called, caller }) => {
+      console.log("leaving call...")
       if (!called || !caller || !conversation) return
-      removeCall({ conversation, called, caller })
+      removeCall(conversation.id)
     }
 
     socket.on("call:start", startCallHandler)

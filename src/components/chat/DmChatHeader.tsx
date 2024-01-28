@@ -8,6 +8,7 @@ import { cn } from "@/utils/cn"
 import GoingCall from "./GoingCall"
 import useDetectDevices from "@/hooks/useDetectDevices"
 import useCall from "@/hooks/useCall"
+import Call from "./Call"
 
 type ChatHeaderProps = {
   conversation: ConversationWithProfiles
@@ -20,24 +21,38 @@ export default function DMChatHeader({
   currentProfile,
   otherProfile,
 }: ChatHeaderProps) {
-  const { startCall, getGoingCall, getCall } = useCall()
+  const { calls, goingCalls, startCall, getGoingCall, getCall } = useCall()
   const { devices } = useDetectDevices()
-  const hasGoingCall = getGoingCall({ conversation, currentProfile })
-  const hasCall = getCall({ conversation, currentProfile })
+
+  const hasGoingCall = getGoingCall(conversation.id)
+  const hasCall = getCall(conversation.id)
+  const mic = devices.microphone
+  const camera = devices.camera
+  const hideAudioCallBtn = !!(hasGoingCall || hasCall)
+  const hideVideoCallBtn = !!(hasGoingCall || hasCall)
 
   const startVideoCallHandler = () => {
     console.log("Starting video call...")
   }
 
   const startAudioCallHandler = () => {
-    console.log("Starting audio call...")
     startCall({ conversation, caller: currentProfile, called: otherProfile })
   }
+
+  console.log("has going call", goingCalls)
+  console.log("has call", calls)
 
   return (
     <div className="relative flex h-12 w-full items-center justify-between gap-2 border-b-2 px-4 transition dark:border-neutral-800 dark:bg-zinc-900">
       {/* Going call  */}
       <GoingCall
+        conversation={conversation}
+        currentProfile={currentProfile}
+        otherProfile={otherProfile}
+      />
+
+      {/* Call */}
+      <Call
         conversation={conversation}
         currentProfile={currentProfile}
         otherProfile={otherProfile}
@@ -53,15 +68,23 @@ export default function DMChatHeader({
         </p>
       </div>
 
-      {/* Header buttons */}
       {/* video call button */}
       <div className="flex flex-row-reverse gap-3">
         <ActionTooltip
-          label={devices.camera ? "Start video call" : "No camera avaliable"}
+          label={camera ? "Start video call" : "No camera avaliable"}
         >
-          <button disabled={!devices.camera} onClick={startVideoCallHandler}>
-            {devices.camera ? (
-              <Video className="h-6 w-6 transition hover:text-emerald-500" />
+          <button
+            disabled={!camera || hideVideoCallBtn}
+            onClick={startVideoCallHandler}
+          >
+            {camera ? (
+              <Video
+                className={cn(
+                  "h-6 w-6 transition",
+                  !hideVideoCallBtn && "hover:text-emerald-500",
+                  hideVideoCallBtn && "text-zinc-500",
+                )}
+              />
             ) : (
               <VideoOff className="h-6 w-6 text-zinc-500" />
             )}
@@ -69,20 +92,18 @@ export default function DMChatHeader({
         </ActionTooltip>
 
         {/* audio call button */}
-        <ActionTooltip
-          label={devices.microphone ? "Start audio call" : "No mic avaliable"}
-        >
+        <ActionTooltip label={mic ? "Start audio call" : "No mic avaliable"}>
           <button
-            disabled={!devices.microphone || !!hasGoingCall}
+            disabled={!mic || hideAudioCallBtn}
             onClick={startAudioCallHandler}
             className="transition hover:text-emerald-500"
           >
-            {devices.microphone ? (
+            {mic ? (
               <PhoneCall
                 className={cn(
                   "h-6 w-6 transition",
-                  !hasGoingCall && "hover:text-emerald-500",
-                  hasGoingCall && "text-zinc-500",
+                  !hideAudioCallBtn && "hover:text-emerald-500",
+                  hideAudioCallBtn && "text-zinc-500",
                 )}
               />
             ) : (
