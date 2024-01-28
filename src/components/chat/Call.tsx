@@ -1,7 +1,7 @@
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar"
 import { Profile } from "../../../prisma/output"
 import { ConversationWithProfiles } from "@/types/ConversationWithProfiles"
-import { PhoneCall, X, Mic, MicOff } from "lucide-react"
+import { Camera, CameraOff, X, Mic, MicOff } from "lucide-react"
 import useCall from "@/hooks/useCall"
 import { useState } from "react"
 
@@ -34,18 +34,18 @@ export default function Call({
 
   return (
     <div className="absolute right-0 top-[46px] z-20 flex h-48 w-full flex-col items-center justify-center gap-5 bg-zinc-900">
+      
+      {/* Participants */}
       <div className="flex items-center justify-center gap-5">
-        {/* Calling */}
         <Avatar className="h-20 w-20 rounded-full">
           <AvatarImage className="rounded-full" src={currentProfile.imgUrl} />
         </Avatar>
-        {/* Called */}
         <Avatar className="h-20 w-20 animate-pulse rounded-full opacity-50">
           <AvatarImage className="rounded-full" src={otherProfile.imgUrl} />
         </Avatar>
       </div>
 
-      {/* calling buttons */}
+      {/* buttons */}
       <div className="flex gap-2">
         <button
           onClick={toggleMute}
@@ -57,6 +57,15 @@ export default function Call({
             <Mic className="h-8 w-8 text-white transition" />
           )}
         </button>
+
+        <button className="rounded-full bg-zinc-600 p-3 opacity-50 transition hover:opacity-100">
+          {isMuted ? (
+            <Camera className="h-8 w-8 text-white transition" />
+          ) : (
+            <CameraOff className="h-8 w-8 text-white transition" />
+          )}
+        </button>
+
         <button
           onClick={leaveCallHandler}
           className="rounded-full bg-rose-500 p-3 opacity-50 transition hover:opacity-100"

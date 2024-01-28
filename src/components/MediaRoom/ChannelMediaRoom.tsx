@@ -1,9 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 import "@livekit/components-styles"
-import { useEffect, useState } from "react"
 import { Channel } from "../../../prisma/output"
-import { generateChannelToken } from "@/actions/livekitActions"
 import { Loader2 } from "lucide-react"
 import {
   LiveKitRoom,
@@ -14,6 +12,7 @@ import { MemberWithProfile } from "@/types/MemberProfile"
 import { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
 import ChannelAudioConference from "./ChannelAudioConference"
 import ChannelVideoConference from "./ChannelVideoConference"
+import useMidiaToken from "@/hooks/useMidiaToken"
 
 type MediaRoomProps = {
   server: ServerWithMembersAndProfile
@@ -30,26 +29,14 @@ export default function ChannelMediaRoom({
   withVideo,
   withAudio,
 }: MediaRoomProps) {
-  const [token, setToken] = useState<string | null>(null)
+  const { token } = useMidiaToken({
+    type: "channel",
+    channelId: channel.id,
+    memberId: member.id,
+    serverId: server.id,
+  })
   const isAudio = withAudio && !withVideo
   const isVideo = (withAudio && withVideo) || (!withAudio && withVideo)
-
-  const loadToken = async () => {
-    const generatedToken = await generateChannelToken({
-      serverId: server.id,
-      memberId: member.id,
-      channelId: channel.id,
-    })
-
-    if (!generatedToken) return
-    setToken(generatedToken)
-  }
-
-  useEffect(() => {
-    if (!token) {
-      loadToken()
-    }
-  }, [server.id, member.id, channel.id])
 
   if (!token) {
     return (
