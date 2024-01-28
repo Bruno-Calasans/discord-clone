@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Profile } from "../../prisma/output"
+import { Conversation, Profile } from "../../prisma/output"
 import useSocket from "./useSocket/useSocket"
 import { SocketFn } from "@/types/Socket"
 import { ConversationWithProfiles } from "@/types/ConversationWithProfiles"
@@ -14,6 +14,11 @@ type CallActionInput = {
   conversation: ConversationWithProfiles
   caller: Profile
   called: Profile
+}
+
+type GetCallInput = {
+  conversation: Conversation
+  currentProfile: Profile
 }
 
 export default function useCall() {
@@ -87,6 +92,24 @@ export default function useCall() {
     })
   }
 
+  const getGoingCall = ({ conversation, currentProfile }: GetCallInput) => {
+    return goingCalls.find(
+      (call) =>
+        (call.conversation.id === conversation.id &&
+          call.called.id === currentProfile.id) ||
+        call.caller.id === currentProfile.id,
+    )
+  }
+
+  const getCall = ({ conversation, currentProfile }: GetCallInput) => {
+    return calls.find(
+      (call) =>
+        (call.conversation.id === conversation.id &&
+          call.called.id === currentProfile.id) ||
+        call.caller.id === currentProfile.id,
+    )
+  }
+
   useEffect(() => {
     if (!socket) return
 
@@ -140,5 +163,15 @@ export default function useCall() {
     }
   }, [socket])
 
-  return { socket, calls, goingCalls, startCall, stopCall, joinCall, leaveCall }
+  return {
+    socket,
+    calls,
+    goingCalls,
+    startCall,
+    stopCall,
+    joinCall,
+    leaveCall,
+    getGoingCall,
+    getCall,
+  }
 }
