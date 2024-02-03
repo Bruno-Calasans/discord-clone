@@ -1,93 +1,48 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import useSocket from "@/hooks/useSocket/useSocket"
 import {
   TrackReference,
   VideoTrack,
   useParticipantContext,
+  useTrackRefContext,
 } from "@livekit/components-react"
-import type { Participant } from "livekit-client"
-import { Eye, Maximize2, Monitor, X } from "lucide-react"
-import { useEffect, useState } from "react"
+import { Eye, Maximize2, Minimize2, Monitor, X } from "lucide-react"
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/HoverCard"
-import { SocketFn } from "@/types/Socket"
+import useTransmission from "@/hooks/useTransmission/useTransmission"
+import { useState } from "react"
+import { cn } from "@/utils/cn"
 
-type ScreenShareViewProps = {
-  track: TrackReference
-}
-
-export default function ScreenShareView({ track }: ScreenShareViewProps) {
-  const { socket } = useSocket()
+export default function ScreenShareView() {
+  const [resize, setResize] = useState(false)
+  const { transmissions, getViewer, getStreamerViewers, leaveTransmission } =
+    useTransmission()
   const currentParticipant = useParticipantContext()
-  const [viewers, setViewers] = useState<Participant[]>([])
+  const trackRef = useTrackRefContext() as TrackReference
+  const participant = trackRef.participant
 
-  const participant = track.participant
   const { identity, isLocal, isScreenShareEnabled } = participant
-  const isViewer = currentParticipant
-    ? viewers.map((w) => w.identity).includes(currentParticipant.identity)
-    : false
+  const viewers = getStreamerViewers(participant)
+  const isViewer = getViewer(currentParticipant)
   const canIRender = (isScreenShareEnabled && isLocal) || isViewer
   const isYourScreen = participant.identity === currentParticipant.identity
 
-  const stopWatchHandler = () => {
-    socket?.emit("screen-share:leave", {
-      viewer: currentParticipant,
-      transmitter: participant,
-    })
+  const resizeHandler = () => {
+    setResize((curr) => !curr)
   }
 
-  const addviewer = (participant: Participant) => {
-    setViewers((curr) => [...curr, participant])
+  const leaveTransmissionHandler = () => {
+    leaveTransmission(participant, currentParticipant)
   }
 
-  const removeViewer = (participant: Participant) => {
-    setViewers((currViewers) => {
-      return currViewers.filter((w) => w.identity !== participant.identity)
-    })
-  }
+  console.log(transmissions)
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  useEffect(() => {
-    if (!socket) return
-
-    const addViewerHandler: SocketFn = ({ viewer, transmitter }) => {
-      if (!viewer || !transmitter) return
-      const IsSameTransmitter = participant.identity === transmitter.identity
-      // const isViewingYourself =
-      //   viewer.identity === transmitter.identity ||
-      //   viewer.identity === participant.identity
-
-      if (!IsSameTransmitter) {
-        return
-      }
-      console.log("member", currentParticipant.identity)
-      console.log("view", viewer.identity)
-      console.log("transmitter", transmitter.identity)
-      addviewer(viewer)
-    }
-
-    const removeViewerHandler: SocketFn = ({ viewer, transmitter }) => {
-      if (!viewer || !transmitter) return
-      removeViewer(viewer)
-    }
-
-    socket.on("screen-share:join", addViewerHandler)
-    socket.on("screen-share:leave", removeViewerHandler)
-
-    return () => {
-      socket.removeListener("screen-share:join", addViewerHandler)
-      socket.removeListener("screen-share:leave", removeViewerHandler)
-    }
-  }, [socket?.id])
-
-  console.log(viewers)
   if (!canIRender) return null
 
   return (
-    <div className="group relative flex flex-1">
+    <div className={cn("group relative flex h-52 w-full", resize && "h-full")}>
       {/* transmitter's name */}
       <div className="invisible absolute bottom-1 left-1 z-50 flex items-center justify-center gap-1 rounded-md bg-zinc-800 px-2 py-1 text-xs font-bold group-hover:visible">
         <Monitor className=" h-4 w-4" />
@@ -103,16 +58,14 @@ export default function ScreenShareView({ track }: ScreenShareViewProps) {
         <HoverCardTrigger asChild>
           <div className="absolute bottom-1 right-1 z-50 flex items-center justify-center gap-1 rounded-md bg-zinc-800 px-2 py-1">
             <Eye className=" h-4 w-4" />
-            <span>{viewers.length}</span>
+            <span>{viewers?.length ?? 0}</span>
           </div>
         </HoverCardTrigger>
         <HoverCardContent className="z-50 w-fit">
           <div className="text-xm flex flex-col">
-            <p>{viewers.length} viewer(s)</p>
+            <p>{viewers?.length ?? 0} viewer(s)</p>
             <div className="text-zinc-400">
-              {viewers.map((w) => (
-                <div key={w.sid}>{w.identity}</div>
-              ))}
+              {viewers?.map((w) => <div key={w.sid}>{w.identity}</div>)}
             </div>
           </div>
         </HoverCardContent>
@@ -121,8 +74,8 @@ export default function ScreenShareView({ track }: ScreenShareViewProps) {
       {/* Leave Transmission */}
       {!isLocal && (
         <button
-          onClick={stopWatchHandler}
-          className="invisible absolute left-1 top-1 z-50 flex cursor-pointer items-center justify-center gap-1 rounded-sm bg-zinc-800 px-2 py-1 text-lg font-bold group-hover:visible"
+          onClick={leaveTransmissionHandler}
+          className="invisible absolute left-1 top-1 z-50 flex cursor-pointer items-center justify-center gap-1 rounded-sm bg-rose-500 px-2 py-1 text-lg font-bold group-hover:visible"
         >
           <X className="h-4 w-4" />
         </button>
@@ -130,13 +83,17 @@ export default function ScreenShareView({ track }: ScreenShareViewProps) {
 
       {/* Resize Button */}
       <button
-        onClick={stopWatchHandler}
+        onClick={resizeHandler}
         className="invisible absolute right-1 top-1 z-50 flex cursor-pointer items-center justify-center gap-1 rounded-sm bg-zinc-800 p-1 text-lg group-hover:visible"
       >
-        <Maximize2 className="h-4 w-4" />
+        {resize ? (
+          <Minimize2 className="h-4 w-4" />
+        ) : (
+          <Maximize2 className="h-4 w-4" />
+        )}
       </button>
 
-      <VideoTrack className="" trackRef={track} />
+      <VideoTrack trackRef={trackRef} />
     </div>
   )
 }

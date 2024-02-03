@@ -15,8 +15,10 @@ import { Loader2 } from "lucide-react"
 import { cn } from "@/utils/cn"
 import JoinRoom from "./JoinRoom"
 import ParticipantView from "./ParticipantView"
-import { Track } from "livekit-client"
+import { Participant, Track, TrackPublication } from "livekit-client"
 import ScreenShareView from "./ScreenShareView"
+import { useEffect } from "react"
+import useTransmission from "@/hooks/useTransmission/useTransmission"
 
 type ChannelAudioConferenceProps = {
   currentMember: MemberWithProfile
@@ -30,15 +32,12 @@ export default function ChannelAudioConference({
   channel,
 }: ChannelAudioConferenceProps) {
   const room = useRoomContext()
+  const { startTransmission } = useTransmission()
   const connection = useConnectionState(room)
   const participants = useParticipants()
-  const trackRef = useTracks([Track.Source.ScreenShare])
+  const screenTracksRef = useTracks([Track.Source.ScreenShare])
   const { localParticipant } = useLocalParticipant()
   const membersNum = participants.length
-  const screenSharingMembers = trackRef.filter(
-    (track) => track.participant.isScreenShareEnabled,
-  )
-  const screeenSharingMembersNum = screenSharingMembers.length
 
   const createMemberMap = () => {
     const membersMap = {} as Record<string, MemberWithProfile>
@@ -51,6 +50,29 @@ export default function ChannelAudioConference({
     return membersMap
   }
   const membersMap = createMemberMap()
+
+  useEffect(() => {
+    const startScreenSharingHandler = (
+      track: TrackPublication,
+      participant: Participant,
+    ) => {
+      if (track.source === Track.Source.ScreenShare) {
+        startTransmission(participant)
+      }
+    }
+
+    // room.on("disconnected", disconnectCallHandler)
+    // room.on("participantDisconnected", disconnectCallHandler)
+    room.on("trackPublished", startScreenSharingHandler)
+    room.on("localTrackPublished", startScreenSharingHandler)
+
+    return () => {
+      // room.removeListener("disconnected", disconnectCallHandler)
+      // room.removeListener("participantDisconnected", disconnectCallHandler)
+      room.removeListener("trackPublished", startScreenSharingHandler)
+      room.removeListener("localTrackPublished", startScreenSharingHandler)
+    }
+  }, [channel.id])
 
   if (connection === "disconnected") {
     return (
@@ -87,12 +109,12 @@ export default function ChannelAudioConference({
         {/* Screen share container */}
         <div className="flex">
           <ParticipantContext.Provider value={localParticipant}>
-            {trackRef.map((track) => (
+            {screenTracksRef.map((track) => (
               <TrackRefContext.Provider
                 key={track.participant.sid}
                 value={track}
               >
-                <ScreenShareView track={track} />
+                <ScreenShareView />
               </TrackRefContext.Provider>
             ))}
           </ParticipantContext.Provider>

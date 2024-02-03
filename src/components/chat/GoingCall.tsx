@@ -2,7 +2,7 @@ import { Avatar, AvatarImage } from "@radix-ui/react-avatar"
 import { Profile } from "../../../prisma/output"
 import { ConversationWithProfiles } from "@/types/ConversationWithProfiles"
 import { PhoneCall, X } from "lucide-react"
-import useCall from "@/hooks/useCall"
+import useCall from "@/hooks/useCall/useCall"
 
 type GoingCallProps = {
   conversation: ConversationWithProfiles
@@ -28,10 +28,8 @@ export default function GoingCall({
     stopCall({ conversation, caller: otherProfile, called: currentProfile })
   }
 
-  if (!hasGoingCall) return null
-
   return (
-    <div className="absolute right-0 top-[46px] z-20 flex h-48 w-full flex-col items-center justify-center gap-3 bg-zinc-900">
+    <div className="flex h-48 w-full flex-col items-center justify-center gap-3 bg-zinc-900">
       <div className="flex items-center justify-center gap-5">
         {/* Calling */}
         <Avatar className="h-16 w-16 rounded-full">

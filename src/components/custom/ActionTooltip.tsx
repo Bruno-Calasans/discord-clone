@@ -5,6 +5,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/Tooltip"
 import { cn } from "@/utils/cn"
+import { TooltipArrow } from "@radix-ui/react-tooltip"
 
 type ActionTooltipProps = {
   label: string
@@ -31,6 +32,7 @@ function ActionTooltip({
           sideOffset={sideOffSet}
           className="bg-black"
         >
+          <TooltipArrow width={11} height={5} />
           <p className="font-semibold capitalize text-white dark:text-white">
             {label.toLowerCase()}
           </p>

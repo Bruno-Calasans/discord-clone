@@ -1,19 +1,26 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/rules-of-hooks */
+"use client"
 import {
   ControlBar,
   ParticipantContext,
   TrackRefContext,
   useConnectionState,
   useLocalParticipant,
-  useRemoteParticipant,
+  useParticipants,
   useRoomContext,
   useTracks,
 } from "@livekit/components-react"
 import { Profile } from "../../../prisma/output"
 import { Loader2 } from "lucide-react"
-import { Track } from "livekit-client"
+import { Participant, Track, TrackPublication } from "livekit-client"
 import ScreenShareView from "./ScreenShareView"
 import DmParticipantView from "./DmParticipantView"
 import { ConversationWithProfiles } from "@/types/ConversationWithProfiles"
+import useDetectDevices from "@/hooks/useDetectDevices"
+import { useEffect } from "react"
+import useCall from "@/hooks/useCall/useCall"
+import useTransmission from "@/hooks/useTransmission/useTransmission"
 
 type DmCallConference = {
   currentProfile: Profile
@@ -26,11 +33,41 @@ export default function DmCallConference({
   otherProfile,
   conversation,
 }: DmCallConference) {
+  const { devices } = useDetectDevices()
+  const { leaveCall } = useCall()
+  const { startTransmission } = useTransmission()
   const room = useRoomContext()
   const connection = useConnectionState(room)
-  const trackRef = useTracks([Track.Source.ScreenShare])
+  const screenShareTracks = useTracks([Track.Source.ScreenShare])
   const currentParticipant = useLocalParticipant().localParticipant
-  const otherParticipant = useRemoteParticipant(otherProfile.id)!
+  const participants = useParticipants()
+
+  useEffect(() => {
+    const disconnectCallHandler = () => {
+      leaveCall(conversation)
+    }
+
+    const startScreenSharingHandler = (
+      track: TrackPublication,
+      participant: Participant,
+    ) => {
+      if (track.source === Track.Source.ScreenShare) {
+        startTransmission(participant)
+      }
+    }
+
+    room.on("disconnected", disconnectCallHandler)
+    room.on("participantDisconnected", disconnectCallHandler)
+    room.on("trackPublished", startScreenSharingHandler)
+    room.on("localTrackPublished", startScreenSharingHandler)
+
+    return () => {
+      room.removeListener("disconnected", disconnectCallHandler)
+      room.removeListener("participantDisconnected", disconnectCallHandler)
+      room.removeListener("trackPublished", startScreenSharingHandler)
+      room.removeListener("localTrackPublished", startScreenSharingHandler)
+    }
+  }, [conversation.id])
 
   if (connection === "connecting") {
     return (
@@ -51,17 +88,17 @@ export default function DmCallConference({
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-2 p-5">
-      <div className="flex flex-1 flex-col gap-4">
+    <div className="absolute top-0 z-20 flex h-fit w-full flex-1 flex-col gap-2 bg-zinc-900 p-5">
+      <div className="flex flex-1 flex-col justify-center gap-4">
         {/* Screen share and video container */}
         <div className="flex">
           <ParticipantContext.Provider value={currentParticipant}>
-            {trackRef.map((track) => (
+            {screenShareTracks.map((track) => (
               <TrackRefContext.Provider
                 key={track.participant.sid}
                 value={track}
               >
-                <ScreenShareView track={track} />
+                <ScreenShareView />
               </TrackRefContext.Provider>
             ))}
           </ParticipantContext.Provider>
@@ -69,15 +106,18 @@ export default function DmCallConference({
 
         {/* Participants container */}
         <ParticipantContext.Provider value={currentParticipant}>
-          <div className="flex gap-2">
-            <DmParticipantView
-              participant={currentParticipant}
-              profile={currentProfile}
-            />
-            <DmParticipantView
-              participant={otherParticipant}
-              profile={otherProfile}
-            />
+          <div className="flex justify-center gap-2">
+            {participants.map((participant) => (
+              <DmParticipantView
+                key={participant.identity}
+                participant={participant}
+                profile={
+                  participant.identity === currentProfile.username
+                    ? currentProfile
+                    : otherProfile
+                }
+              />
+            ))}
           </div>
         </ParticipantContext.Provider>
       </div>
@@ -85,8 +125,8 @@ export default function DmCallConference({
       <ControlBar
         variation="minimal"
         controls={{
-          camera: true,
-          screenShare: true,
+          camera: devices.camera,
+          screenShare: devices.microphone,
         }}
       />
     </div>

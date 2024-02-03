@@ -35,12 +35,8 @@ export default function ChannelVideoConference({
   const participants = useParticipants()
   const remotes = useRemoteParticipants()
   const trackRef = useTracks([Track.Source.ScreenShare])
-  const { localParticipant } = useLocalParticipant()
+  const currentParticipant = useLocalParticipant().localParticipant
   const membersNum = participants.length
-  const screenSharingMembers = trackRef.filter(
-    (track) => track.participant.isScreenShareEnabled,
-  )
-  const screeenSharingMembersNum = screenSharingMembers.length
 
   const createMemberMap = () => {
     const membersMap = {} as Record<string, MemberWithProfile>
@@ -88,25 +84,25 @@ export default function ChannelVideoConference({
       <div className="flex flex-1 flex-col gap-4">
         {/* Screen share container */}
         <div className="flex">
-          <ParticipantContext.Provider value={localParticipant}>
+          <ParticipantContext.Provider value={currentParticipant}>
             {trackRef.map((track) => (
               <TrackRefContext.Provider
                 key={track.participant.sid}
                 value={track}
               >
-                <ScreenShareView track={track} />
+                <ScreenShareView />
               </TrackRefContext.Provider>
             ))}
           </ParticipantContext.Provider>
         </div>
 
         {/* Participants container */}
-        <ParticipantContext.Provider value={localParticipant}>
+        <ParticipantContext.Provider value={currentParticipant}>
           <div className="grid flex-1 grid-cols-4 grid-rows-4 gap-3">
             <div className="col-span-3 row-span-full flex flex-1 ">
               <ParticipantView
-                participant={localParticipant}
-                member={membersMap[localParticipant.identity]}
+                participant={currentParticipant}
+                member={membersMap[currentParticipant.identity]}
               />
             </div>
             <div

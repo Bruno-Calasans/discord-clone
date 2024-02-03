@@ -9,9 +9,11 @@ export const SOCKET_EVENTS = {
   "message:create": "message:create",
   "message:update": "message:update",
   "message:delete": "message:delete",
-  "screen-share:join": "screen-share:join",
-  "screen-share:leave": "screen-share:leave",
-  "screen-share:viewing": "screen-share:viewing",
+  "stream:start": "stream:start",
+  "stream:join": "stream:join",
+  "stream:leave": "stream:leave",
+  "stream:stop": "stream:stop",
+  "stream:update": "stream:update",
   "channel:join": "channel:join",
   "channel:leave": "channel:leave",
   "call:start": "call:start",
@@ -23,12 +25,13 @@ export const SOCKET_EVENTS = {
 
 export type SocketEvents = keyof typeof SOCKET_EVENTS
 
+export const SOCKET_EVENTS_ARRAY = Object.keys(SOCKET_EVENTS) as SocketEvents[]
+
 export type SocketData = {
   message?: MessageWithMemberProfile
   participant?: Participant
+  streamer?: Participant
   viewer?: Participant
-  transmitter?: Participant
-  currentViews?: Participant[]
   member?: MemberWithProfile
   channel?: Channel
   conversation?: ConversationWithProfiles

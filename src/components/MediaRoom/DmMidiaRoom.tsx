@@ -27,7 +27,7 @@ export default function DmMidiaRoom({
 
   if (!token) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center gap-1">
+      <div className=" flex flex-1 flex-col items-center justify-center gap-1 ">
         <Loader2 className="h-6 w-6 animate-spin text-zinc-500" />
         <p className="text-zinc-500">Loading...</p>
       </div>
@@ -42,7 +42,7 @@ export default function DmMidiaRoom({
       connect={true}
       serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL}
       data-lk-theme="default"
-      className="flex flex-1"
+      className="flex dark:bg-zinc-900"
     >
       <DmCallConference
         conversation={conversation}

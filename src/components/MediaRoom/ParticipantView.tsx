@@ -3,12 +3,10 @@ import { cn } from "@/utils/cn"
 import { useParticipantContext } from "@livekit/components-react"
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar"
 import { Eye, MicOff, Monitor, X } from "lucide-react"
-import useSocket from "@/hooks/useSocket/useSocket"
 import { MemberWithProfile } from "@/types/MemberProfile"
 import type { Participant } from "livekit-client"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover"
-import { useEffect, useState } from "react"
-import { SocketFn } from "@/types/Socket"
+import useTransmission from "@/hooks/useTransmission/useTransmission"
 
 type ParticipantViewProps = {
   participant: Participant
@@ -19,64 +17,24 @@ export default function ParticipantView({
   participant,
   member,
 }: ParticipantViewProps) {
-  const { socket } = useSocket()
-  const [isViewing, setViewing] = useState(false)
+  const { joinTransmission, leaveTransmission, getViewer } = useTransmission()
   const currentParticipant = useParticipantContext()
+  const isViewer = getViewer(currentParticipant)
   const {
+    identity,
     isLocal,
     isMicrophoneEnabled,
     isScreenShareEnabled,
     isSpeaking,
-    identity,
   } = participant
 
-  const startWatchHandler = () => {
-    if (!currentParticipant || !socket) return
-    socket.emit("screen-share:join", {
-      viewer: currentParticipant,
-      transmitter: participant,
-    })
+  const joinTransmissionHandler = () => {
+    joinTransmission(participant, currentParticipant)
   }
 
-  const stopWatchHandler = () => {
-    if (!currentParticipant || !socket) return
-    socket.emit("screen-share:leave", {
-      viewer: currentParticipant,
-      transmitter: participant,
-    })
+  const leaveTransmissionHandler = () => {
+    leaveTransmission(participant, currentParticipant)
   }
-
-  useEffect(() => {
-    const startViewHandler: SocketFn = ({ viewer, transmitter }) => {
-      if (
-        viewer &&
-        transmitter &&
-        viewer.identity === currentParticipant.identity &&
-        transmitter.identity === participant.identity
-      ) {
-        setViewing(true)
-      }
-    }
-
-    const stopViewHandler: SocketFn = ({ viewer, transmitter }) => {
-      if (
-        viewer &&
-        transmitter &&
-        viewer.identity === currentParticipant.identity &&
-        transmitter.identity === participant.identity
-      ) {
-        setViewing(false)
-      }
-    }
-
-    socket?.on("screen-share:join", startViewHandler)
-    socket?.on("screen-share:leave", stopViewHandler)
-
-    return () => {
-      socket?.removeListener("screen-share:join", startViewHandler)
-      socket?.removeListener("screen-share:leave", stopViewHandler)
-    }
-  }, [])
 
   return (
     <div
@@ -107,18 +65,18 @@ export default function ParticipantView({
           {identity}
         </div>
       </div>
-      {isScreenShareEnabled && !isLocal && !isViewing && (
+      {isScreenShareEnabled && !isLocal && !isViewer && (
         <button
-          onClick={startWatchHandler}
+          onClick={joinTransmissionHandler}
           className="invisible absolute flex items-center justify-center gap-1 rounded-md bg-emerald-500 p-2 font-bold transition group-hover:visible"
         >
           <Eye className="h-6 w-6" />
           <span>Watch Screen</span>
         </button>
       )}
-      {isScreenShareEnabled && !isLocal && isViewing && (
+      {isScreenShareEnabled && !isLocal && isViewer && (
         <button
-          onClick={stopWatchHandler}
+          onClick={leaveTransmissionHandler}
           className="invisible absolute flex items-center justify-center gap-1 rounded-md bg-rose-500 p-2 font-bold transition group-hover:visible"
         >
           <X className="h-6 w-6" />
