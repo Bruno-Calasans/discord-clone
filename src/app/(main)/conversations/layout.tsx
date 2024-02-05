@@ -4,6 +4,8 @@ import { getCurrentProfile } from "@/actions/profileActions"
 import { redirectToSignIn } from "@clerk/nextjs"
 import ConversationsSideBar from "@/components/ConversationsSideBar/ConversationsSideBar"
 import { getConversations } from "@/actions/conversationActions"
+import { getServersByProfileId } from "@/actions/serverActions"
+import NavigationSideBar from "@/components/NavigationSideBar/NavigationSideBar"
 
 export const metadata: Metadata = {
   title: "Direct Messages",
@@ -23,8 +25,12 @@ export default async function ConversationsLayout({
   const conversations = await getConversations(profile.id)
   if (!conversations) return redirect("/servers")
 
+  const servers = await getServersByProfileId(profile.id)
+  if (!servers) return redirect("/")
+
   return (
-    <main className="flex h-full">
+    <main className="flex h-full w-full">
+      <NavigationSideBar servers={servers} />
       <ConversationsSideBar profile={profile} conversations={conversations} />
       {children}
     </main>

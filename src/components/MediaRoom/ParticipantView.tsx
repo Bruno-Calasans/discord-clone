@@ -45,7 +45,7 @@ export default function ParticipantView({
     >
       <Avatar>
         <AvatarImage
-          src={member.profile.imgUrl ?? ""}
+          src={member?.profile?.imgUrl ?? ""}
           className="h-20 w-20 rounded-full bg-zinc-700"
         />
       </Avatar>
@@ -83,7 +83,6 @@ export default function ParticipantView({
           <span>Leave Transmission</span>
         </button>
       )}
-      <div></div>
     </div>
   )
 }

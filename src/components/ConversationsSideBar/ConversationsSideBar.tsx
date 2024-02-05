@@ -39,7 +39,7 @@ export default function ConversationsSideBar({
         conversations={conversations}
         selectedConversation={selectedConversation}
       />
-      <NavigationFooter classname="flex-row justify-around w-full" />
+      {/* <NavigationFooter classname="flex-row justify-around w-full" /> */}
     </aside>
   )
 }

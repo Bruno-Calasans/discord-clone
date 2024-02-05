@@ -22,7 +22,7 @@ export default async function ServersLayout({ children }: ServersLayoutProps) {
   if (!servers) return redirect("/")
 
   return (
-    <main className="flex h-full">
+    <main className="flex h-full w-full">
       <NavigationSideBar servers={servers} />
       {children}
     </main>

@@ -1,5 +1,5 @@
 function ServersPage() {
-  return <div>Servers</div>
+  return <div className="w-full">Servers</div>
 }
 
 export default ServersPage

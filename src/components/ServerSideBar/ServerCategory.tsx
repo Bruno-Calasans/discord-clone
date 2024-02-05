@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 import { useParams } from "next/navigation"
-import { CHANNEL_TYPE, type Channel } from "../../../prisma/output"
+import { type Channel } from "../../../prisma/output"
 import ActionTooltip from "../custom/ActionTooltip"
-import { Edit, MoreVertical, Plus, Trash, Volume2 } from "lucide-react"
+import { Edit, MoreVertical, Plus, Trash } from "lucide-react"
 import { cn } from "@/utils/cn"
 import { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
 import {
@@ -12,10 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu"
-import useChannel from "@/hooks/useChannel"
-import { useEffect } from "react"
 import { MemberWithProfile } from "@/types/MemberProfile"
-import { Avatar, AvatarImage } from "@radix-ui/react-avatar"
 import CHANNEL_ICON_MAP from "@/constants/channelIconMap"
 
 type ServerCategoryProps = {
@@ -38,34 +35,22 @@ export default function ServerCategory({
   onDeleteChannel,
   onClickChannel,
 }: ServerCategoryProps) {
-  const { socket, data, getChannel, getChannelMembers, getMemberInChannel } =
-    useChannel()
   const params = useParams()
   let selectedChannel = params?.channelId as string
 
-  const actionHandler = (e: React.MouseEvent, channel: Channel) => {
+  const deleteChannelHandler = (e: React.MouseEvent, channel: Channel) => {
     e.stopPropagation()
-    onEditChannel(channel)
     onDeleteChannel(channel)
   }
 
-  const clickChannelHandler = (channel: Channel) => {
-    const previousChannel = channels.find((c) => c.id === selectedChannel)
-    socket?.emit("channel:leave", { channel: previousChannel, member })
-    onClickChannel(channel)
+  const editChannelHandler = (e: React.MouseEvent, channel: Channel) => {
+    e.stopPropagation()
+    onEditChannel(channel)
   }
 
-  useEffect(() => {
-    if (!selectedChannel || !socket) return
-
-    const channel = channels.find((channel) => channel.id === selectedChannel)
-    if (!channel) return
-
-    const isInChannel = getMemberInChannel(member.id, channel.id)
-    if (isInChannel) return
-
-    socket.emit("channel:join", { channel, member })
-  }, [socket, member.id, selectedChannel])
+  const clickChannelHandler = (channel: Channel) => {
+    onClickChannel(channel)
+  }
 
   return (
     <div>
@@ -120,7 +105,7 @@ export default function ServerCategory({
                     sideOffset={-2}
                   >
                     <DropdownMenuItem
-                      onClick={(e) => actionHandler(e, channel)}
+                      onClick={(e) => editChannelHandler(e, channel)}
                     >
                       <div className="flex">
                         <Edit className="mr-1 h-4 w-4" />
@@ -129,7 +114,7 @@ export default function ServerCategory({
                     </DropdownMenuItem>
                     {/* <DropdownMenuSeparator /> */}
                     <DropdownMenuItem
-                      onClick={(e) => actionHandler(e, channel)}
+                      onClick={(e) => deleteChannelHandler(e, channel)}
                     >
                       <div className="flex text-rose-500">
                         <Trash className="mr-1 h-4 w-4 " />
@@ -140,28 +125,6 @@ export default function ServerCategory({
                 </DropdownMenu>
               )}
             </div>
-
-            {/* members on midia channel */}
-            {/* {[CHANNEL_TYPE.AUDIO, CHANNEL_TYPE.VIDEO].includes(
-              getChannel(channel.id)?.type,
-            ) && (
-              <div className="ml-3 mt-2 flex flex-col gap-2">
-                {getChannelMembers(channel.id)?.map((member) => (
-                  <div
-                    key={member.id}
-                    className="flex items-center gap-1 overflow-hidden"
-                  >
-                    <Avatar className="rounded-full">
-                      <AvatarImage
-                        className="h-6 w-6 rounded-full"
-                        src={member.profile.imgUrl}
-                      />
-                    </Avatar>
-                    <span className="text-ellipsis">{member.name}</span>
-                  </div>
-                ))}
-              </div>
-            )} */}
           </div>
         ))}
       </div>

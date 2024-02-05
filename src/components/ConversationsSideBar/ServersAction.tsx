@@ -12,7 +12,7 @@ export default function ServersAction() {
   return (
     <div
       onClick={clickHandler}
-      className="group rounded-sm transition hover:bg-emerald-500 hover:dark:bg-emerald-500"
+      className="group rounded-sm font-semibold transition hover:bg-emerald-500 hover:text-white hover:dark:bg-emerald-500"
     >
       <button className="flex h-full w-full items-center  gap-2 p-2">
         <Boxes

@@ -285,7 +285,7 @@ export default function ChannelMessage({
       </div>
 
       {/* Reply Quick Action */}
-      {!message.deleted && (
+      {/* {!message.deleted && (
         <button
           onClick={replyHandler}
           className={cn(
@@ -297,7 +297,7 @@ export default function ChannelMessage({
             <Reply className="h-4 w-4" />
           </ActionTooltip>
         </button>
-      )}
+      )} */}
 
       {/* Edit Quick Action */}
       {!message.deleted && canEditMsg && (
@@ -335,15 +335,15 @@ export default function ChannelMessage({
               sideOffset={8}
               className="flex flex-col gap-1 p-2"
             >
-              {/* Reply Action */}
-              <DropdownMenuItem>
+              {/* todo Reply Action */}
+              {/* <DropdownMenuItem>
                 <button
                   onClick={replyHandler}
                   className="flex items-center gap-1 text-sm"
                 >
                   <Reply className="h-4 w-4" /> <span>Reply</span>
                 </button>
-              </DropdownMenuItem>
+              </DropdownMenuItem>` */}
 
               {/* Edit Action */}
               {canEditMsg && (
@@ -357,15 +357,15 @@ export default function ChannelMessage({
                 </DropdownMenuItem>
               )}
 
-              {/* Addd Reaction Action */}
-              <DropdownMenuItem>
+              {/* todo Add Reaction Action */}
+              {/* <DropdownMenuItem>
                 <button
                   onClick={addReactionHandler}
                   className="flex items-center gap-1 text-sm"
                 >
                   <SmileIcon className="h-4 w-4" /> <span>Add reaction</span>
                 </button>
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
 
               {/* Copy ACtion */}
               <DropdownMenuItem>

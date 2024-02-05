@@ -38,21 +38,20 @@ export default function DeleteChannelModal() {
           </DialogTitle>
           <DialogDescription className="text-md py-3 font-semibold text-zinc-900">
             Are you sure you want to delete the channel{" "}
-            <span className="cursor-pointer font-bold text-indigo-500 hover:underline">
-              #{channel?.name}
-            </span>
-            ?
+            <span className="font-bold text-indigo-500">#{channel?.name}</span>?
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
+          {/* Cancel button */}
           <div className="flex w-full justify-between">
             <Button
               disabled={loading}
               onClick={close}
-              className="font-bold hover:bg-gray-200"
+              className="bg-zinc-600 font-bold text-white transition hover:bg-zinc-800"
             >
               Cancel
             </Button>
+            {/* Confirm button */}
             <Button
               disabled={loading}
               onClick={deleteChannelHandler}

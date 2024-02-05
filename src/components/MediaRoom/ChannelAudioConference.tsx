@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { MemberWithProfile } from "@/types/MemberProfile"
 import { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
 import {
@@ -13,7 +14,6 @@ import {
 import { Channel } from "../../../prisma/output"
 import { Loader2 } from "lucide-react"
 import { cn } from "@/utils/cn"
-import JoinRoom from "./JoinRoom"
 import ParticipantView from "./ParticipantView"
 import { Participant, Track, TrackPublication } from "livekit-client"
 import ScreenShareView from "./ScreenShareView"
@@ -27,7 +27,6 @@ type ChannelAudioConferenceProps = {
 }
 
 export default function ChannelAudioConference({
-  currentMember,
   server,
   channel,
 }: ChannelAudioConferenceProps) {
@@ -72,18 +71,7 @@ export default function ChannelAudioConference({
       room.removeListener("trackPublished", startScreenSharingHandler)
       room.removeListener("localTrackPublished", startScreenSharingHandler)
     }
-  }, [channel.id])
-
-  if (connection === "disconnected") {
-    return (
-      <JoinRoom
-        label="Join audio channel"
-        server={server}
-        channel={channel}
-        currentMember={currentMember}
-      />
-    )
-  }
+  }, [channel.id, room.sid])
 
   if (connection === "connecting") {
     return (
@@ -104,7 +92,7 @@ export default function ChannelAudioConference({
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-2 p-5">
+    <div className="flex flex-1 flex-col gap-2 bg-zinc-100 p-5 dark:bg-zinc-800">
       <div className="flex flex-1 flex-col gap-4">
         {/* Screen share container */}
         <div className="flex">

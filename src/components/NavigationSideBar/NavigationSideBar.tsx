@@ -22,7 +22,7 @@ export default function NavigationSideBar({
   return (
     <aside
       className={cn(
-        "flex h-full w-[80px] flex-col items-center space-y-3 overflow-hidden border-r-[1.5px] bg-slate-100 p-2 transition dark:bg-zinc-900 max-md:hidden",
+        "flex h-full w-[80px] flex-col items-center space-y-2 overflow-hidden border-r-[1.5px] bg-slate-100 p-2 transition dark:bg-zinc-900 max-md:hidden",
         classname,
       )}
     >

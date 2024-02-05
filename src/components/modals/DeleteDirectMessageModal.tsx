@@ -60,7 +60,7 @@ export default function DeleteDirectMessageModal() {
             <Button
               disabled={loading}
               onClick={close}
-              className="font-bold hover:bg-gray-200"
+              className="bg-zinc-600 font-bold text-white transition hover:bg-zinc-800"
             >
               Cancel
             </Button>

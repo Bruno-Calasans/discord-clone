@@ -69,17 +69,18 @@ export default function ServerSearch({ server }: ServerSearchProps) {
   }, [])
 
   return (
-    <div className="w-full border-b-2 text-sm font-semibold text-zinc-500 transition hover:text-zinc-700 dark:border-neutral-800 hover:dark:text-white">
+    <div className="w-full border-b-2 py-1  text-sm font-semibold text-zinc-500 transition hover:text-zinc-700 dark:border-neutral-800 hover:dark:text-white">
       <button
         onClick={() => setOpen(true)}
-        className="trasition flex w-full items-center justify-between p-2 hover:bg-zinc-700/10 hover:dark:bg-zinc-700/50"
+        className="trasition flex w-full items-center justify-between gap-2 p-2 hover:bg-zinc-700/10 hover:dark:bg-zinc-700/50"
       >
         <div className="flex items-center justify-center gap-1">
           <Search className="h-4 w-4" />
-          <p>Search</p>
+          <p className="text-xs">Search</p>
         </div>
-        <kbd className="rounded-sm bg-muted/50 p-1">CTRL + K</kbd>
+        <kbd className="rounded-sm bg-muted/50 p-1 text-xs">CTRL + K</kbd>
       </button>
+
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput placeholder="Search for a channel or member" />
         <CommandList>
