@@ -1,18 +1,21 @@
+"use client"
 import { useRouter, usePathname } from "next/navigation"
 import ActionTooltip from "../custom/ActionTooltip"
 import { MessagesSquare } from "lucide-react"
 import { cn } from "@/utils/cn"
+import useLast from "@/hooks/useLast"
 
 export default function DmAction() {
   const router = useRouter()
   const pathname = usePathname()
+  const { getLastConversation } = useLast()
 
   const isConversationSelected = pathname
     ?.toLocaleLowerCase()
     .includes("conversations")
 
   const clickHandler = () => {
-    router.push("/conversations")
+    router.push(`/conversations/${getLastConversation()}`)
   }
 
   return (

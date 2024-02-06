@@ -4,6 +4,7 @@ import type { ConversationWithProfiles } from "@/types/ConversationWithProfiles"
 import { Profile } from "../../../prisma/output"
 import { Avatar, AvatarImage } from "@/components/ui/Avatar"
 import { useParams, useRouter } from "next/navigation"
+import useLast from "@/hooks/useLast"
 
 type NavigationItemProps = {
   profile: Profile
@@ -16,8 +17,10 @@ export default function ConversationItem({
 }: NavigationItemProps) {
   const params = useParams()
   const router = useRouter()
+  const { saveLastConversation } = useLast()
 
   const clickMemberHandler = () => {
+    saveLastConversation(conversation.id)
     router.push(`/conversations/${conversation.id}`)
   }
 

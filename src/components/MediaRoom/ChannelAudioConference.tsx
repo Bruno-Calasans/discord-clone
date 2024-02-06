@@ -75,7 +75,7 @@ export default function ChannelAudioConference({
 
   if (connection === "connecting") {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center gap-1">
+      <div className="flex h-full w-full flex-col items-center justify-center gap-1">
         <Loader2 className="h-6 w-6 animate-spin text-zinc-500" />
         <p className="text-zinc-500">Connecting...</p>
       </div>

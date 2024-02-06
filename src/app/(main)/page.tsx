@@ -1,17 +1,16 @@
 import { createInitialProfile } from "@/actions/profileActions"
 import { getServersByProfileId } from "@/actions/serverActions"
-import InitialCreateServerModal from "@/components/modals/InitialCreateServerModal"
 import { redirect } from "next/navigation"
-import Mount from "@/components/custom/Mount"
 import { currentUser } from "@clerk/nextjs"
 import type { Metadata } from "next"
+import ServerRedirect from "@/components/RedirectPage/ServerRedirect"
 
 export const metadata: Metadata = {
   title: "Home",
 }
 
-export default async function Home() {
-  //
+export default async function HomePage() {
+  // getting current user
   const user = await currentUser()
   if (!user) return redirect("/sign-up")
 
@@ -22,18 +21,5 @@ export default async function Home() {
   const servers = await getServersByProfileId(profile.id)
   if (!servers) return redirect("/")
 
-  // getting start server
-  if (servers.length > 0) {
-    const firstServer = servers[0]
-    const firstChannel = firstServer.channels[0]
-    return redirect(`/servers/${firstServer.id}/channels/${firstChannel.id}`)
-  }
-
-  return (
-    <main>
-      <Mount>
-        <InitialCreateServerModal />
-      </Mount>
-    </main>
-  )
+  return <ServerRedirect servers={servers} />
 }
