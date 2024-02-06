@@ -145,7 +145,6 @@ export default function DmMessage({ message, currentProfile }: DmMessageProps) {
       <Avatar className="mt-1 h-6 w-6 cursor-pointer">
         <AvatarImage src={messageProfile.imgUrl} />
       </Avatar>
-
       {/* Content and informations */}
       <div className="group flex w-full cursor-pointer flex-col overflow-hidden">
         <div className="mb-[4px] flex flex-col">
@@ -276,8 +275,7 @@ export default function DmMessage({ message, currentProfile }: DmMessageProps) {
             </div>
           </div>
         )}
-      </div>p
-
+      </div>
       {/* Reply Quick Action */}
       {/* {!message.deleted && (
         <button
@@ -292,7 +290,6 @@ export default function DmMessage({ message, currentProfile }: DmMessageProps) {
           </ActionTooltip>
         </button>
       )} */}
-
       {/* Edit Quick Action */}
       {!message.deleted && canEditMsg && (
         <button
@@ -306,7 +303,6 @@ export default function DmMessage({ message, currentProfile }: DmMessageProps) {
           </ActionTooltip>
         </button>
       )}
-
       {/* More Actions */}
       {!message.deleted && (
         <div

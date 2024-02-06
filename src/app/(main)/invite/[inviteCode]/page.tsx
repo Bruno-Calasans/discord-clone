@@ -6,6 +6,12 @@ import {
 } from "@/actions/serverActions"
 import { redirect } from "next/navigation"
 
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Invite",
+}
+
 type InvitePageProps = {
   params: {
     inviteCode: string

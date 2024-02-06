@@ -11,6 +11,28 @@ type ConversationPageProps = {
   }
 }
 
+export async function generateMetadata({ params }: ConversationPageProps) {
+  const conversationId = params.conversationId
+
+  const profile = await getCurrentProfile()
+  if (!profile) return
+
+  const conversation = await getConversationById(conversationId)
+  if (!conversation) return
+
+  const { senderProfileId, senderProfile, receiverProfile } = conversation
+
+  const otherProfile =
+    profile.id === senderProfileId ? receiverProfile : senderProfile
+
+  return {
+    title: otherProfile.username,
+    icons: {
+      icon: otherProfile.imgUrl,
+    },
+  }
+}
+
 export default async function ConversationPage({
   params,
 }: ConversationPageProps) {

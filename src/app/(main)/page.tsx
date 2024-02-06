@@ -4,6 +4,11 @@ import InitialCreateServerModal from "@/components/modals/InitialCreateServerMod
 import { redirect } from "next/navigation"
 import Mount from "@/components/custom/Mount"
 import { currentUser } from "@clerk/nextjs"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Home",
+}
 
 export default async function Home() {
   //
