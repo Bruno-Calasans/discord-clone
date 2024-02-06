@@ -2,7 +2,6 @@ import type { Metadata } from "next"
 import { redirect } from "next/navigation"
 import { getCurrentProfile } from "@/actions/profileActions"
 import { getServersByProfileId } from "@/actions/serverActions"
-import { redirectToSignIn } from "@clerk/nextjs"
 import NavigationSideBar from "@/components/NavigationSideBar/NavigationSideBar"
 
 export const metadata: Metadata = {
@@ -15,7 +14,7 @@ type ServersLayoutProps = {
 
 export default async function ServersLayout({ children }: ServersLayoutProps) {
   const profile = await getCurrentProfile()
-  if (!profile) return redirectToSignIn()
+  if (!profile) return redirect("/sign-up")
 
   const servers = await getServersByProfileId(profile.id)
   if (!servers) return redirect("/")

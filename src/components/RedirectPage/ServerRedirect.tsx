@@ -27,7 +27,7 @@ export default function ServerRedirect({ servers }: HomeRedirectPageProps) {
 
     saveLastServer(serverId)
     saveLastChannel(channelId)
-    return redirect(`/servers/${serverId}/channels/${channelId}`)
+    redirect(`/servers/${serverId}/channels/${channelId}`)
   }
 
   useEffect(() => {
