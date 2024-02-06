@@ -13,7 +13,7 @@ export default async function HomePage() {
   // getting current user
   const user = await currentUser()
   if (!user) return redirect("/sign-up")
-
+  
   // getting profile
   const profile = await createInitialProfile(user)
   if (!profile) return redirect("/sign-up")
