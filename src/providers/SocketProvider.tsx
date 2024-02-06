@@ -16,7 +16,7 @@ export default function SocketProvider({ children }: SocketProviderProps) {
   const socketInitializer = async () => {
     if (socket) return
 
-    const socketInstance = io({
+    const socketInstance = io(process.env.NEXT_PUBLIC_URL!, {
       path: "/api/socket/io",
       addTrailingSlash: false,
     })
