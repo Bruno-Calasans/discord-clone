@@ -5,6 +5,7 @@ import { cn } from "@/utils/cn"
 import { useRouter } from "next/navigation"
 import { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
 import useLast from "@/hooks/useLast"
+import UserAvatar from "../custom/UserAvatar"
 
 type NavigationItemProps = {
   server: ServerWithMembersAndProfile
@@ -46,7 +47,7 @@ function NavigationItem({ server, selected }: NavigationItemProps) {
             className="rounded-full transition-all hover:rounded-[16px]"
             alt={server.name}
             fill
-            sizes="(max-width: 1200px): 30vw"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw"
           />
         </div>
       </button>

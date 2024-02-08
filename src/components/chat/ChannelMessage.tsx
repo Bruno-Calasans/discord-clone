@@ -253,6 +253,7 @@ export default function ChannelMessage({
               src={message.fileUrl}
               alt={message.content}
               fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw"
               className="object-cover"
             />
           </a>
