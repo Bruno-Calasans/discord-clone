@@ -2,8 +2,7 @@
 import { MemberWithProfile } from "@/types/MemberProfile"
 import type { Profile } from "../../../prisma/output"
 import MembersScrollArea from "./MembersScrollArea"
-import { UserRound } from "lucide-react"
-import { useState } from "react"
+import useHide from "@/hooks/useHide/useHide"
 
 type MembersSideBarProps = {
   profile: Profile
@@ -14,14 +13,9 @@ export default function MembersSideBar({
   profile,
   members,
 }: MembersSideBarProps) {
-  const [visible, setVisible] = useState(false)
+  const { serverMembers } = useHide()
 
-  if (!visible)
-    return (
-      <button className="absolute right-2 top-2">
-        <UserRound onClick={() => setVisible(true)} className="h4 w-4" />
-      </button>
-    )
+  if (!serverMembers) return null
 
   return (
     <div className="h-full max-w-[300px] dark:bg-zinc-900 max-md:hidden">

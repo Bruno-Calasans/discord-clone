@@ -2,6 +2,7 @@ import { Channel } from "../../../prisma/output"
 import MobileMenuToggle from "./MobileMenuToggle"
 import ConnectioIndicator from "./ConnectionIndicator"
 import CHANNEL_ICON_MAP from "@/constants/channelIconMap"
+import MembersToggle from "./MembersToggle"
 
 type ChatHeaderProps = {
   channel: Channel
@@ -19,7 +20,10 @@ export default function ChannelChatHeader({ channel }: ChatHeaderProps) {
           </p>
         </div>
       </div>
-      <ConnectioIndicator />
+      <div className="mx-2 flex items-center justify-center gap-2">
+        <ConnectioIndicator />
+        <MembersToggle />
+      </div>
     </div>
   )
 }

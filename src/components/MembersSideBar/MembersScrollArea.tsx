@@ -1,7 +1,7 @@
 "use client"
+
 import type { MemberWithProfile } from "@/types/MemberProfile"
 import type { Profile } from "../../../prisma/output"
-import { ScrollArea } from "../ui/ScrollArea"
 import MembersCategory from "./MembersCategory"
 import uniqueArray from "@/utils/uniqueValues"
 
