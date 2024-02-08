@@ -10,9 +10,9 @@ import {
   ContextMenuTrigger,
   ContextMenuSeparator,
 } from "@/components/ui/ContextMenu"
-import { Avatar, AvatarImage } from "@/components/ui/Avatar"
 import { findOrCreateConversation } from "@/actions/conversationActions"
 import { useRouter } from "next/navigation"
+import UserAvatar from "../custom/UserAvatar"
 
 type MemberItemProps = {
   label: React.ReactNode
@@ -39,29 +39,30 @@ export default function MembersCategory({
   }
 
   return (
-    <div>
+    <div className="mt-3 flex flex-col gap-3">
       {/* Header */}
-      <div className="mt-3 flex flex-col justify-between overflow-hidden text-xs font-semibold">
-        <div className="mb-2 ml-2 line-clamp-1 flex w-full text-start text-sm">
+      <div className="flex flex-col justify-between overflow-hidden text-xs font-semibold">
+        <div className="ml-2 line-clamp-1 flex w-full truncate text-start text-sm">
           {label}
         </div>
 
-        {/* members */}
-        <div className="item ml-2 mr-1 flex flex-col gap-2  overflow-hidden text-sm font-semibold">
+        {/* Members */}
+        <div className="item ml-1 flex flex-col gap-2 text-sm font-semibold">
           {members.map((member) => (
             <ContextMenu key={member.id}>
-              <ContextMenuTrigger>
+              <ContextMenuTrigger asChild>
                 <div
                   key={member.id}
                   className={cn(
-                    "hover:bg-text-700 group flex cursor-pointer items-center gap-2 rounded-sm p-[4px] text-zinc-600 transition hover:bg-zinc-700 hover:text-zinc-100 dark:text-zinc-400 hover:dark:text-zinc-200 ",
+                    "hover:bg-text-700 group flex cursor-pointer items-center  gap-2 overflow-hidden  rounded-sm p-[4px] text-zinc-600 transition hover:bg-zinc-700 hover:text-zinc-100 dark:text-zinc-400 hover:dark:text-zinc-200",
                   )}
                   onClick={() => clickMemberHandler(member)}
                 >
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={member.profile.imgUrl} />
-                  </Avatar>
-                  <p className="line-clamp-1">{member.name}</p>
+                  <UserAvatar
+                    imageUrl={member.profile.imgUrl}
+                    alt={member.name}
+                  />
+                  <p className="truncate">{member.name}</p>
                 </div>
               </ContextMenuTrigger>
               <ContextMenuContent className="p-2">

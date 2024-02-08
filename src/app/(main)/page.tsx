@@ -10,12 +10,8 @@ export const metadata: Metadata = {
 }
 
 export default async function HomePage() {
-  // getting current user
-  const user = await currentUser()
-  if (!user) return redirect("/sign-up")
-
   // getting profile
-  const profile = await createInitialProfile(user)
+  const profile = await createInitialProfile()
   if (!profile) return redirect("/sign-up")
 
   const servers = await getServersByProfileId(profile.id)

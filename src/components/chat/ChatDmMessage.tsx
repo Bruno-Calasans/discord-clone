@@ -39,6 +39,7 @@ import useSocket from "@/hooks/useSocket/useSocket"
 import { Profile } from "../../../prisma/output"
 import { DmWithProfileConversation } from "@/types/DmWithProfileConversation"
 import { editDirectMsg } from "@/actions/directMessageActions"
+import UserAvatar from "../custom/UserAvatar"
 
 const messageFormSchema = z.object({
   content: z
@@ -142,9 +143,10 @@ export default function DmMessage({ message, currentProfile }: DmMessageProps) {
   return (
     <div className="group relative flex w-full cursor-pointer items-start gap-2 rounded-sm px-2 pb-4 pt-2 hover:bg-zinc-200/30 hover:dark:bg-zinc-700/30">
       {/* Message sender's avatar */}
-      <Avatar className="mt-1 h-6 w-6 cursor-pointer">
-        <AvatarImage src={messageProfile.imgUrl} />
-      </Avatar>
+      <UserAvatar
+        imageUrl={messageProfile.imgUrl}
+        alt={messageProfile.username}
+      />
       {/* Content and informations */}
       <div className="group flex w-full cursor-pointer flex-col overflow-hidden">
         <div className="mb-[4px] flex flex-col">

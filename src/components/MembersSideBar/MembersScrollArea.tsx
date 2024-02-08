@@ -35,21 +35,19 @@ export default function MembersScrollArea({
   if (!profileMember) return null
 
   return (
-    <div className="flex flex-col items-center justify-between">
-      <ScrollArea className="flex w-full flex-col items-center justify-center gap-3 p-1">
-        {Object.keys(membersByRole).map((role) => (
-          <MembersCategory
-            key={role}
-            label={
-              <div className="capitalize">
-                {role} - {membersByRole[role].length}
-              </div>
-            }
-            members={membersByRole[role]}
-            profileMember={profileMember}
-          />
-        ))}
-      </ScrollArea>
+    <div className="flex h-full w-[200px] flex-1 flex-col gap-3 p-2 scrollbar-thin scrollbar-track-zinc-400 scrollbar-thumb-zinc-600 scrollbar-track-rounded-sm scrollbar-w-[4px] dark:scrollbar-track-zinc-700 dark:scrollbar-thumb-zinc-400">
+      {Object.keys(membersByRole).map((role) => (
+        <MembersCategory
+          key={role}
+          label={
+            <div className="capitalize">
+              {role} - {membersByRole[role].length}
+            </div>
+          }
+          members={membersByRole[role]}
+          profileMember={profileMember}
+        />
+      ))}
     </div>
   )
 }

@@ -4,14 +4,15 @@ import db from "@/config/db"
 import { currentUser } from "@clerk/nextjs"
 import type { Profile } from "../../prisma/output"
 import type { Omit } from "../../prisma/output/runtime/library"
-import { User } from "@clerk/nextjs/server"
 
 type ProfileInput = Omit<Profile, "id" | "createdAt" | "updatedAt">
 
-export async function createInitialProfile(
-  user: User,
-): Promise<Profile | null> {
+export async function createInitialProfile(): Promise<Profile | null> {
   try {
+    // getting current user
+    const user = await currentUser()
+    if (!user) throw new Error("User not found")
+
     const email = user.emailAddresses[0].emailAddress
     const isProfileExists = await getProfileByEmail(email)
 

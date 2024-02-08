@@ -1,4 +1,3 @@
-import { Hash } from "lucide-react"
 import { Channel } from "../../../prisma/output"
 import MobileMenuToggle from "./MobileMenuToggle"
 import ConnectioIndicator from "./ConnectionIndicator"

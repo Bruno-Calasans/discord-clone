@@ -21,7 +21,7 @@ export default function ConversationScrollBar({
         <button className="font-bold">+</button>
       </div>
       {conversations.length > 0 && (
-        <div className="flex flex-1 flex-col gap-3 scrollbar-thin scrollbar-track-zinc-400 scrollbar-thumb-zinc-600 scrollbar-track-rounded-sm scrollbar-w-[4px] dark:scrollbar-track-zinc-700 dark:scrollbar-thumb-zinc-400">
+        <div className="flex h-full flex-1 flex-col gap-3 scrollbar-thin scrollbar-track-zinc-400 scrollbar-thumb-zinc-600 scrollbar-track-rounded-sm scrollbar-w-[4px] dark:scrollbar-track-zinc-700 dark:scrollbar-thumb-zinc-400">
           {conversations.map((conversation) => (
             <ConversationItem
               key={conversation.id}

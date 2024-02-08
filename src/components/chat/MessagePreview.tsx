@@ -1,4 +1,3 @@
-import type { MemberWithProfile } from "@/types/MemberProfile"
 import type { MessageWithMemberProfile } from "@/types/MessageWithMemberProfile"
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar"
 import Image from "next/image"
@@ -7,6 +6,7 @@ import { File } from "lucide-react"
 import { differenceInSeconds } from "date-fns"
 import dateFormat from "@/utils/dateFormat"
 import ICON_ROLE_MAP from "@/constants/iconRoleMap"
+import UserAvatar from "../custom/UserAvatar"
 
 type MessagePreviewProps = {
   message: MessageWithMemberProfile
@@ -23,9 +23,7 @@ export default function MessagePreview({ message }: MessagePreviewProps) {
   return (
     <div className="group relative flex w-full items-start gap-2 rounded-sm bg-zinc-200 px-2 pb-4 pt-2">
       {/* Message sender's avatar */}
-      <Avatar className="mt-1 h-6 w-6">
-        <AvatarImage src={member.profile.imgUrl} className="rounded-full" />
-      </Avatar>
+      <UserAvatar imageUrl={member.profile.imgUrl} alt={member.name} />
 
       {/* Message  informations */}
       <div className="group flex w-full flex-col overflow-hidden">

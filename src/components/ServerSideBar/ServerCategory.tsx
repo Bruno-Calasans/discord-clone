@@ -70,7 +70,7 @@ export default function ServerCategory({
       </div>
 
       {/* channels */}
-      <div className="item ml-1 mt-2 flex flex-col gap-1 overflow-hidden text-sm  font-semibold">
+      <div className="item ml-1 mt-2 flex flex-col gap-1 text-sm font-semibold">
         {channels.map((channel) => (
           <div key={channel.id}>
             <div

@@ -40,12 +40,13 @@ function NavigationItem({ server, selected }: NavigationItemProps) {
           )}
         ></div>
 
-        <div className={`relative ml-2 h-10 w-10`}>
+        <div className="relative ml-2 h-10 w-10">
           <Image
             src={server.imgUrl}
             className="rounded-full transition-all hover:rounded-[16px]"
             alt={server.name}
             fill
+            sizes="(max-width: 1200px): 30vw"
           />
         </div>
       </button>

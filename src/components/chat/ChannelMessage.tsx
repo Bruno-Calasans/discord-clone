@@ -5,16 +5,8 @@ import { useRouter } from "next/navigation"
 import type { MessageWithMemberProfile } from "@/types/MessageWithMemberProfile"
 import { differenceInSeconds } from "date-fns"
 import type { MemberWithProfile } from "@/types/MemberProfile"
-import { Avatar, AvatarImage } from "@/components/ui/Avatar"
-import {
-  File,
-  MoreHorizontal,
-  Trash,
-  Reply,
-  Edit2,
-  Copy,
-  SmileIcon,
-} from "lucide-react"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/Avatar"
+import { File, MoreHorizontal, Trash, Edit2, Copy } from "lucide-react"
 import ActionTooltip from "@/components/custom/ActionTooltip"
 import Image from "next/image"
 import {
@@ -40,6 +32,7 @@ import useModal from "@/hooks/useModal/useModal"
 import dateFormat from "@/utils/dateFormat"
 import ICON_ROLE_MAP from "@/constants/iconRoleMap"
 import useSocket from "@/hooks/useSocket/useSocket"
+import UserAvatar from "../custom/UserAvatar"
 
 const messageFormSchema = z.object({
   content: z
@@ -148,9 +141,10 @@ export default function ChannelMessage({
   return (
     <div className="group relative flex w-full cursor-pointer items-start gap-2 rounded-sm px-2 pb-4 pt-2 hover:bg-zinc-200/30 hover:dark:bg-zinc-700/30">
       {/* Message sender's avatar */}
-      <Avatar className="mt-1 h-6 w-6 cursor-pointer">
-        <AvatarImage src={messageMember.profile.imgUrl} />
-      </Avatar>
+      <UserAvatar
+        imageUrl={messageMember.profile.imgUrl}
+        alt={messageMember.name}
+      />
 
       {/* Content and informations */}
       <div className="group flex w-full cursor-pointer flex-col overflow-hidden">
