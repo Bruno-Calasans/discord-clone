@@ -1,3 +1,5 @@
+"use client"
+
 function ServerPage() {
   return <div>Server Page</div>
 }

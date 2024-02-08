@@ -188,6 +188,18 @@ export async function regenerateServerInviteCode(
   }
 }
 
+export async function getServerBbyInviteCode(inviteCode: string) {
+  try {
+    return await db.server.findFirst({
+      where: {
+        inviteCode,
+      },
+    })
+  } catch (error) {
+    return null
+  }
+}
+
 export async function joinServer(serverId: string, profileId: string) {
   try {
     const profile = await getProfileById(profileId)
@@ -217,6 +229,9 @@ export async function getServerByInviteCode(inviteCode: string) {
     return await db.server.findFirst({
       where: {
         inviteCode,
+      },
+      include: {
+        channels: true,
       },
     })
   } catch (error) {
