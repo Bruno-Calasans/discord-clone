@@ -30,6 +30,7 @@ export default function SocketProvider({ children }: SocketProviderProps) {
     })
 
     socketInstance.on("connect_error", (error) => {
+      setConnected(false)
       console.log(error, error.message)
     })
 

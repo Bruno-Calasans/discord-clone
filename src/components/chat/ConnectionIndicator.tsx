@@ -8,14 +8,14 @@ export default function ConnectionIndicator() {
   if (!connected) {
     return (
       <Badge variant="outline" className="text-rose-500">
-        Offline
+        Real time: off
       </Badge>
     )
   }
 
   return (
     <Badge variant="outline" className="text-emerald-500">
-      Online
+      Real time: on
     </Badge>
   )
 }
