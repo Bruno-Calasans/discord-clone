@@ -1,7 +1,6 @@
 "use client"
 
 import { cn } from "@/utils/cn"
-import type { Member } from "../../../prisma/output"
 import type { MemberWithProfile } from "@/types/MemberProfile"
 import {
   ContextMenu,
@@ -10,34 +9,25 @@ import {
   ContextMenuTrigger,
   ContextMenuSeparator,
 } from "@/components/ui/ContextMenu"
-import { findOrCreateConversation } from "@/actions/conversationActions"
-import { useRouter } from "next/navigation"
 import UserAvatar from "../custom/UserAvatar"
+import RoleDropdown from "@/components/custom/RoleDropdown"
+import KickMemberButton from "../custom/KickMemberButton"
+import BanMemberButton from "../custom/BanMemberButton"
+import SeeProfileMemberButton from "../custom/SeeProfileButton"
+import AddFriendButton from "../custom/AddFriendButton"
+import CreateDmButton from "../custom/CreateDmButton"
 
 type MemberItemProps = {
-  label: React.ReactNode
-  profileMember: MemberWithProfile
+  currentMember: MemberWithProfile
   members: MemberWithProfile[]
+  label: React.ReactNode
 }
 
 export default function MembersCategory({
-  label,
-  profileMember,
+  currentMember,
   members,
+  label,
 }: MemberItemProps) {
-  const router = useRouter()
-
-  const clickMemberHandler = (member: Member) => {}
-
-  const createConversationHandler = async (member: Member) => {
-    const conversation = await findOrCreateConversation(
-      profileMember.profileId,
-      member.profileId,
-    )
-    if (!conversation) return
-    router.push(`/conversations/${conversation.id}`)
-  }
-
   return (
     <div className="mt-3 flex flex-col gap-3">
       {/* Header */}
@@ -56,7 +46,6 @@ export default function MembersCategory({
                   className={cn(
                     "hover:bg-text-700 group flex cursor-pointer items-center  gap-2 overflow-hidden  rounded-sm p-[4px] text-zinc-600 transition hover:bg-zinc-700 hover:text-zinc-100 dark:text-zinc-400 hover:dark:text-zinc-200",
                   )}
-                  onClick={() => clickMemberHandler(member)}
                 >
                   <UserAvatar
                     imageUrl={member.profile.imgUrl}
@@ -65,23 +54,50 @@ export default function MembersCategory({
                   <p className="truncate">{member.name}</p>
                 </div>
               </ContextMenuTrigger>
-              <ContextMenuContent className="p-2">
-                {member.profileId !== profileMember.profileId &&
-                  profileMember.role === "admin" && (
+
+              {/* Admin Actions */}
+              <ContextMenuContent className="flex flex-col gap-1 p-2">
+                {member.profileId !== currentMember.profileId &&
+                  currentMember.role === "admin" && (
                     <>
-                      <ContextMenuItem>Kick</ContextMenuItem>
-                      <ContextMenuItem>Ban</ContextMenuItem>
-                      <ContextMenuItem>Change Role</ContextMenuItem>
+                      <ContextMenuItem asChild className="flex gap-1 p-1">
+                        <>
+                          <KickMemberButton member={member} />
+                        </>
+                      </ContextMenuItem>
+                      <ContextMenuItem asChild className="flex gap-1 p-1">
+                        <>
+                          <BanMemberButton member={member} />
+                        </>
+                      </ContextMenuItem>
+                      <ContextMenuItem asChild>
+                        <>
+                          <RoleDropdown member={member} />
+                        </>
+                      </ContextMenuItem>
                       <ContextMenuSeparator />
                     </>
                   )}
-                <ContextMenuItem
-                  onClick={() => createConversationHandler(member)}
-                >
-                  Direct message
+
+                {/* Non-personal Public actions */}
+                {member.profileId !== currentMember.profileId && (
+                  <>
+                    <ContextMenuItem className="flex gap-1 p-1">
+                      <CreateDmButton
+                        currentProfile={currentMember.profile}
+                        otherProfile={member.profile}
+                      />
+                    </ContextMenuItem>
+
+                    <ContextMenuItem asChild className="flex gap-1 p-1">
+                      <AddFriendButton member={member} />
+                    </ContextMenuItem>
+                  </>
+                )}
+                {/* Public actions */}
+                <ContextMenuItem asChild className="flex gap-1 p-1">
+                  <SeeProfileMemberButton member={member} />
                 </ContextMenuItem>
-                <ContextMenuItem>See profile</ContextMenuItem>
-                <ContextMenuItem>Add friend</ContextMenuItem>
               </ContextMenuContent>
             </ContextMenu>
           ))}

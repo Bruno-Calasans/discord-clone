@@ -2,7 +2,7 @@ import type { Participant } from "livekit-client"
 import type { MessageWithMemberProfile } from "./MessageWithMemberProfile"
 import { Socket } from "socket.io"
 import { MemberWithProfile } from "./MemberProfile"
-import { Channel, Conversation, Profile } from "../../prisma/output"
+import { Channel, Profile, Server } from "../../prisma/output"
 import { ConversationWithProfiles } from "./ConversationWithProfiles"
 
 export const SOCKET_EVENTS = {
@@ -21,6 +21,8 @@ export const SOCKET_EVENTS = {
   "call:stop": "call:stop",
   "call:join": "call:join",
   "call:leave": "call:leave",
+  "server:join": "server:join",
+  "server:leave": "server:leave",
 } as const
 
 export type SocketEvents = keyof typeof SOCKET_EVENTS
@@ -38,6 +40,7 @@ export type SocketData = {
   caller?: Profile
   called?: Profile
   startCallId?: NodeJS.Timeout
+  server?: Server
 }
 
 export type SocketFn = (data: SocketData) => void

@@ -60,11 +60,16 @@ export default async function ServerLayout({
   )
   if (!isUserOnServer) return redirect(`/`)
 
+  const currentMember = server.members.find(
+    (member) => member.profileId === profile.id,
+  )
+  if (!currentMember) return redirect(`/`)
+
   return (
     <>
       <ServerSideBar server={server} profile={profile} member={member} />
       {children}
-      <MembersSideBar profile={profile} members={server.members} />
+      <MembersSideBar currentMember={currentMember} members={server.members} />
     </>
   )
 }

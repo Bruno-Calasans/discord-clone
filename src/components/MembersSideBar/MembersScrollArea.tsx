@@ -1,17 +1,16 @@
 "use client"
 
 import type { MemberWithProfile } from "@/types/MemberProfile"
-import type { Profile } from "../../../prisma/output"
 import MembersCategory from "./MembersCategory"
 import uniqueArray from "@/utils/uniqueValues"
 
 type MembersScrollAreaProps = {
-  profile: Profile
+  currentMember: MemberWithProfile
   members: MemberWithProfile[]
 }
 
 export default function MembersScrollArea({
-  profile,
+  currentMember,
   members,
 }: MembersScrollAreaProps) {
   const groupMembersByRole = () => {
@@ -26,13 +25,7 @@ export default function MembersScrollArea({
 
     return membersGroupByRole
   }
-
   const membersByRole = groupMembersByRole()
-
-  const profileMember = members.find(
-    (member) => member.profileId === profile.id,
-  )
-  if (!profileMember) return null
 
   return (
     <div className="flex h-full w-[200px] flex-1 flex-col gap-3 p-2 scrollbar-thin scrollbar-track-zinc-400 scrollbar-thumb-zinc-600 scrollbar-track-rounded-sm scrollbar-w-[4px] dark:scrollbar-track-zinc-700 dark:scrollbar-thumb-zinc-400">
@@ -45,7 +38,7 @@ export default function MembersScrollArea({
             </div>
           }
           members={membersByRole[role]}
-          profileMember={profileMember}
+          currentMember={currentMember}
         />
       ))}
     </div>

@@ -5,7 +5,6 @@ import { cn } from "@/utils/cn"
 import { useRouter } from "next/navigation"
 import { ServerWithMembersAndProfile } from "@/types/ServerMembersProfile"
 import useLast from "@/hooks/useLast"
-import UserAvatar from "../custom/UserAvatar"
 
 type NavigationItemProps = {
   server: ServerWithMembersAndProfile

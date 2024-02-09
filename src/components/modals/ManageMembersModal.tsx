@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client"
+
 import useModal from "@/hooks/useModal/useModal"
-import MemberAvatar from "@/components/custom/MemberAvatar"
+import ServerMembersDropmenu from "@/components/custom/ServerMembersDropmenu"
 import {
   Dialog,
   DialogContent,
@@ -11,20 +12,17 @@ import {
 } from "@/components/ui/Dialog"
 import { ScrollArea } from "@/components/ui/ScrollArea"
 import { getCompleteServer } from "@/actions/serverActions"
-import { useRouter } from "next/navigation"
 
 export default function ManageMembersModal() {
   const { isOpen, type, data, open, close } = useModal()
-  const router = useRouter()
 
   const isModalOpen = isOpen && type === "ManageMembers"
   const { server, profile } = data
 
-  const updateServer = async () => {
+  const reopenModal = async () => {
     if (!server) return
     const updatedServer = await getCompleteServer(server.id)
     if (!updatedServer) return
-    router.refresh()
     open("ManageMembers", { server: updatedServer, profile })
   }
 
@@ -42,9 +40,9 @@ export default function ManageMembersModal() {
         <ScrollArea className="max-h-[400px]">
           <div className="flex flex-col gap-5">
             {server?.members.map((member) => (
-              <MemberAvatar
-                onChange={updateServer}
+              <ServerMembersDropmenu
                 key={member.id}
+                onChange={reopenModal}
                 member={member}
                 profile={profile}
               />
