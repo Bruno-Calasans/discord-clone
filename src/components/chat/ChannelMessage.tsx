@@ -29,7 +29,7 @@ import { useForm } from "react-hook-form"
 import Button from "../ui/Button"
 import { editChannelMsg } from "@/actions/channelMessageActions"
 import useModal from "@/hooks/useModal/useModal"
-import dateFormat from "@/utils/dateFormat"
+import formatDate from "@/utils/formatDate"
 import ICON_ROLE_MAP from "@/constants/iconRoleMap"
 import useSocket from "@/hooks/useSocket/useSocket"
 import UserAvatar from "../custom/UserAvatar"
@@ -161,7 +161,7 @@ export default function ChannelMessage({
             </div>
 
             <p className="text-xs text-zinc-700 dark:text-zinc-400">
-              {dateFormat(message.createdAt)}
+              {formatDate(message.createdAt)}
             </p>
           </div>
         </div>

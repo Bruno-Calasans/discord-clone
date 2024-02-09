@@ -9,6 +9,7 @@ import GoingCall from "./GoingCall"
 import useDetectDevices from "@/hooks/useDetectDevices"
 import useCall from "@/hooks/useCall/useCall"
 import DmMidiaRoom from "../MediaRoom/DmMidiaRoom"
+import UserAvatar from "../custom/UserAvatar"
 
 type ChatHeaderProps = {
   conversation: ConversationWithProfiles
@@ -43,9 +44,10 @@ export default function DMChatHeader({
       <div className="relative flex h-fit w-full items-center  justify-between gap-2 p-2 px-4 transition ">
         {/* Profile name and img */}
         <div className="flex items-center gap-1">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={otherProfile.imgUrl} />
-          </Avatar>
+          <UserAvatar
+            imageUrl={otherProfile.imgUrl}
+            alt={otherProfile.username}
+          />
           <p className="text-md font-semibold capitalize ">
             {otherProfile.username}
           </p>

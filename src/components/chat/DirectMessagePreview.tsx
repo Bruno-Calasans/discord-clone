@@ -2,7 +2,7 @@ import { Avatar, AvatarImage } from "@radix-ui/react-avatar"
 import Image from "next/image"
 import { File } from "lucide-react"
 import { differenceInSeconds } from "date-fns"
-import dateFormat from "@/utils/dateFormat"
+import formatDate from "@/utils/formatDate"
 import type { DmWithProfileConversation } from "@/types/DmWithProfileConversation"
 
 type MessagePreviewProps = {
@@ -36,7 +36,7 @@ export default function DirectMessagePreview({ message }: MessagePreviewProps) {
             </div>
 
             <p className="text-xs text-zinc-700">
-              {dateFormat(message.createdAt)}
+              {formatDate(message.createdAt)}
             </p>
           </div>
         </div>

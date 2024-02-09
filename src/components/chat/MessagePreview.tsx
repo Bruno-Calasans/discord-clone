@@ -4,7 +4,7 @@ import Image from "next/image"
 import ActionTooltip from "../custom/ActionTooltip"
 import { File } from "lucide-react"
 import { differenceInSeconds } from "date-fns"
-import dateFormat from "@/utils/dateFormat"
+import formatDate from "@/utils/formatDate"
 import ICON_ROLE_MAP from "@/constants/iconRoleMap"
 import UserAvatar from "../custom/UserAvatar"
 
@@ -37,7 +37,7 @@ export default function MessagePreview({ message }: MessagePreviewProps) {
             </div>
 
             <p className="text-xs text-zinc-700">
-              {dateFormat(message.createdAt)}
+              {formatDate(message.createdAt)}
             </p>
           </div>
         </div>

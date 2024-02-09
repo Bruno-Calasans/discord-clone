@@ -34,7 +34,7 @@ import Input from "../ui/Input"
 import { useForm } from "react-hook-form"
 import Button from "../ui/Button"
 import useModal from "@/hooks/useModal/useModal"
-import dateFormat from "@/utils/dateFormat"
+import formatDate from "@/utils/formatDate"
 import useSocket from "@/hooks/useSocket/useSocket"
 import { Profile } from "../../../prisma/output"
 import { DmWithProfileConversation } from "@/types/DmWithProfileConversation"
@@ -162,7 +162,7 @@ export default function DmMessage({ message, currentProfile }: DmMessageProps) {
             </div>
 
             <p className="text-xs text-zinc-700 dark:text-zinc-400">
-              {dateFormat(message.createdAt)}
+              {formatDate(message.createdAt)}
             </p>
           </div>
         </div>
