@@ -1,8 +1,20 @@
 "use client"
 
-import { useStore } from "zustand"
+import { useEffect, useState } from "react"
 import hideStore from "./hideStore"
+import { useStore } from "zustand"
 
 export default function useHide() {
-  return useStore(hideStore)
+  const store = useStore(hideStore)
+  const [hasHydrated, setHasHydrated] = useState(false)
+
+  // Rehydrate the store on page load
+  useEffect(() => {
+    hideStore.persist.rehydrate()
+    setHasHydrated(true)
+  }, [])
+
+  if (!hasHydrated) return null
+
+  return store
 }

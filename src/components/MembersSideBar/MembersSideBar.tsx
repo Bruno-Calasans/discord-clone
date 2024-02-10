@@ -13,8 +13,8 @@ export default function MembersSideBar({
   currentMember,
   members,
 }: MembersSideBarProps) {
-  const { serverMembers } = useHide()
-  if (!serverMembers) return null
+  const hideStore = useHide()
+  if (!hideStore || !hideStore.showServerMembers) return null
 
   return (
     <div className="h-full max-w-[300px] dark:bg-zinc-900 max-md:hidden">
