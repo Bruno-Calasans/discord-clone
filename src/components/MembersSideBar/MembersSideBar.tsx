@@ -17,7 +17,7 @@ export default function MembersSideBar({
   if (!hideStore || !hideStore.showServerMembers) return null
 
   return (
-    <div className="h-full max-w-[300px] dark:bg-zinc-900 max-md:hidden">
+    <div className="max-w-[250px] dark:bg-zinc-900 ">
       <MembersScrollArea currentMember={currentMember} members={members} />
     </div>
   )

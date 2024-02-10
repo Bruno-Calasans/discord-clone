@@ -9,12 +9,12 @@ import { cn } from "@/utils/cn"
 
 type NavigationSideBarProps = {
   servers: ServerWithMembersAndProfile[]
-  classname?: string
+  show?: boolean
 }
 
 export default function NavigationSideBar({
   servers,
-  classname,
+  show,
 }: NavigationSideBarProps) {
   const params = useParams()
   const selectedServer = params?.serverId as string | undefined
@@ -23,7 +23,7 @@ export default function NavigationSideBar({
     <aside
       className={cn(
         "flex h-full w-[80px] flex-col items-center space-y-2 overflow-hidden border-r-[1.5px] bg-slate-100 p-2 transition dark:bg-zinc-900 max-md:hidden",
-        classname,
+        show && "max-md:flex",
       )}
     >
       <DmAction />
