@@ -68,7 +68,7 @@ export default function ChannelMessage({
   const isEdited =
     differenceInSeconds(message.createdAt, message.updatedAt) !== 0
 
-  const canDeleteMsg = !message.deleted && (isOwner || isAdmin)
+  const canDeleteMsg = !message.deleted && isOwner
   const canEditMsg = !message.deleted && isOwner && !message.fileUrl
 
   const fileType = message.fileUrl?.split(".").pop()

@@ -58,6 +58,7 @@ export default function MembersCategory({
               {/* Admin Actions */}
               <ContextMenuContent className="flex flex-col gap-1 p-2">
                 {member.profileId !== currentMember.profileId &&
+                  member.role.toLowerCase() !== "admin" &&
                   currentMember.role === "admin" && (
                     <>
                       <ContextMenuItem asChild className="flex gap-1 p-1">
