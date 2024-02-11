@@ -80,7 +80,7 @@ export default function DmCallConference({
 
   if (connection === "reconnecting") {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center gap-1">
+      <div className="flex flex-1 flex-col items-center justify-center gap-1 ">
         <Loader2 className="h-6 w-6 animate-spin text-zinc-500" />
         <p className="text-zinc-500">Reconnecting...</p>
       </div>
@@ -88,7 +88,7 @@ export default function DmCallConference({
   }
 
   return (
-    <div className="absolute top-0 z-20 flex h-fit w-full flex-1 flex-col gap-2 bg-zinc-900 p-5">
+    <div className="flex h-fit w-full flex-1 flex-col gap-2 bg-zinc-900 p-5">
       <div className="flex flex-1 flex-col justify-center gap-4">
         {/* Screen share and video container */}
         <div className="flex">

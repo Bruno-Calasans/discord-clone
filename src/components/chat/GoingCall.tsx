@@ -29,7 +29,7 @@ export default function GoingCall({
   }
 
   return (
-    <div className="flex h-48 w-full flex-col items-center justify-center gap-3 bg-zinc-900">
+    <div className="absolute left-0 top-12 z-50 flex h-48 w-full flex-col items-center justify-center gap-3 bg-zinc-900">
       <div className="flex items-center justify-center gap-5">
         {/* Calling */}
         <Avatar className="h-16 w-16 rounded-full">
