@@ -3,6 +3,8 @@ Este é um projeto de mensagens instantâneas em tempo real usando o **Next.js 1
 
 # Tecnologias e Bibliotecas
 * Next.js
+* React.js
+* Typescript
 * Socket.io
 * Mysql com PlanetScale
 * Tailwind
