@@ -20,11 +20,21 @@ export async function createInitialProfile(): Promise<Profile | null> {
       return isProfileExists
     }
 
+    let username = ""
+
+    if (user.firstName && user.lastName) {
+      username = `${user.firstName} ${user.lastName}`
+    } else if (user.username) {
+      username = user.username
+    } else {
+      username = email.split("@")[0]
+    }
+
     const profile = await db.profile.create({
       data: {
         id: user.id,
         email,
-        username: user.username || email.split("@")[0],
+        username,
         imgUrl: user.imageUrl,
       },
     })

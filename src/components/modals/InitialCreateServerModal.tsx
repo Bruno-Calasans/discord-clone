@@ -48,7 +48,7 @@ export default function InitialCreateServerModal() {
     const server = await createServer(inputs)
     if (!server) return
     form.reset()
-    router.refresh()
+    router.push("/")
   }
 
   const uploadServerImageHandler = (files: string[]) => {

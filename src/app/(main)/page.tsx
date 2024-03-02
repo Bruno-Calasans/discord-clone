@@ -1,7 +1,6 @@
 import { createInitialProfile } from "@/actions/profileActions"
 import { getServersByProfileId } from "@/actions/serverActions"
 import { redirect } from "next/navigation"
-import { currentUser } from "@clerk/nextjs"
 import type { Metadata } from "next"
 import ServerRedirect from "@/components/RedirectPage/ServerRedirect"
 
